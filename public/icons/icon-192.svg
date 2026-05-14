@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <!-- Fond rouge arrondi -->
+  <rect width="192" height="192" rx="34.56" fill="#e63946"/>
+  <!-- Bobine de film -->
+  <rect x="28.799999999999997" y="53.760000000000005" width="134.39999999999998" height="84.48" rx="13.440000000000001" fill="none" stroke="white" stroke-width="13.440000000000001"/>
+  <circle cx="65.28" cy="96" r="17.28" fill="none" stroke="white" stroke-width="11.52"/>
+  <circle cx="126.72" cy="96" r="17.28" fill="none" stroke="white" stroke-width="11.52"/>
+  <line x1="82.56" y1="96" x2="109.44" y2="96" stroke="white" stroke-width="9.600000000000001"/>
+  <line x1="65.28" y1="53.760000000000005" x2="65.28" y2="38.400000000000006" stroke="white" stroke-width="9.600000000000001"/>
+  <line x1="126.72" y1="53.760000000000005" x2="126.72" y2="38.400000000000006" stroke="white" stroke-width="9.600000000000001"/>
+  <line x1="65.28" y1="138.24" x2="65.28" y2="153.60000000000002" stroke="white" stroke-width="9.600000000000001"/>
+  <line x1="126.72" y1="138.24" x2="126.72" y2="153.60000000000002" stroke="white" stroke-width="9.600000000000001"/>
+</svg>

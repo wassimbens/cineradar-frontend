@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://cineradar.fr/sitemap.xml
+
+# Pas d'indexation des pages auth / API
+Disallow: /auth/
+Disallow: /api/

@@ -1,0 +1,1192 @@
+
+> cineradar-frontend@1.0.0 dev
+> next dev -p 3002
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3002
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1785ms
+ ○ Compiling /parametres ...
+ ✓ Compiled /parametres in 3.2s (532 modules)
+ ✓ Compiled in 188ms (269 modules)
+ ○ Compiling /profil ...
+ ✓ Compiled /profil in 2.8s (553 modules)
+ GET /profil 200 in 132ms
+ ✓ Compiled / in 328ms (586 modules)
+ GET / 200 in 199ms
+ GET / 200 in 70ms
+ ✓ Compiled /premium in 264ms (592 modules)
+ GET /premium 200 in 97ms
+ GET /premium 200 in 56ms
+ GET /profil 200 in 63ms
+ ✓ Compiled in 314ms (575 modules)
+ ✓ Compiled /parametres in 126ms (281 modules)
+ GET /parametres 200 in 212ms
+ GET /premium 200 in 75ms
+ GET /premium 200 in 144ms
+ GET /profil 200 in 88ms
+ ✓ Compiled in 626ms (575 modules)
+ ✓ Compiled in 476ms (575 modules)
+ ✓ Compiled in 279ms (575 modules)
+ ✓ Compiled in 297ms (575 modules)
+ ✓ Compiled in 184ms (575 modules)
+ ✓ Compiled in 181ms (575 modules)
+ ✓ Compiled in 336ms (575 modules)
+ GET /profil 200 in 115ms
+ ✓ Compiled in 406ms (575 modules)
+ ✓ Compiled /parametres in 166ms (281 modules)
+ ✓ Compiled in 215ms (579 modules)
+ ✓ Compiled in 323ms (579 modules)
+ ✓ Compiled in 444ms (579 modules)
+ GET /parametres 200 in 106ms
+ ✓ Compiled in 337ms (579 modules)
+ ✓ Compiled in 320ms (579 modules)
+ ✓ Compiled / in 202ms (308 modules)
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 859ms (819 modules)
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fw33FjNunvkvunTwirQ4E2dRBUUU.jpg&w=384&q=75 500 in 1041ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fw33FjNunvkvunTwirQ4E2dRBUUU.jpg&w=384&q=75 500 in 999ms
+ GET / 200 in 308ms
+ ○ Compiling /films/[id] ...
+ ✓ Compiled /films/[id] in 1247ms (848 modules)
+ ✓ Compiled /recherche in 465ms (852 modules)
+ GET /recherche?q=Frances%20McDormand 200 in 267ms
+ GET /films/cmop3vrft001biqy46t290c4s 200 in 250ms
+ GET /recherche?q=William%20H.%20Macy 200 in 130ms
+ GET /films/cmop3vrft001biqy46t290c4s 200 in 78ms
+ GET /recherche?q=Olivia%20Cooke 200 in 138ms
+ GET /films/cmonlm8600gyd10znuroc5pp8 200 in 90ms
+ GET /recherche?q=Leonardo%20DiCaprio 200 in 134ms
+ GET /films/cmoxthhbq000gk514xoljob5e 200 in 84ms
+ GET /recherche?q=Steven%20Spielberg 200 in 129ms
+ GET / 200 in 59ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ✓ Compiled /_error in 451ms (862 modules)
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F55lEECwWtRWltEa6u3TbiljaoOd.jpg&w=384&q=75 500 in 545ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F55lEECwWtRWltEa6u3TbiljaoOd.jpg&w=384&q=75 500 in 486ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F55lEECwWtRWltEa6u3TbiljaoOd.jpg&w=384&q=75 500 in 23ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F55lEECwWtRWltEa6u3TbiljaoOd.jpg&w=384&q=75 500 in 7ms
+ GET / 200 in 147ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F55lEECwWtRWltEa6u3TbiljaoOd.jpg&w=384&q=75 500 in 58ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F55lEECwWtRWltEa6u3TbiljaoOd.jpg&w=384&q=75 500 in 14ms
+ GET / 200 in 68ms
+ GET / 200 in 67ms
+ GET / 200 in 57ms
+ ○ Compiling /cinemas/[id] ...
+ ✓ Compiled /cinemas/[id] in 549ms (885 modules)
+ GET /cinemas/cmoxc1u6p0000is4gahg152yr 200 in 99ms
+ ✓ Compiled /_not-found in 309ms (884 modules)
+ GET /_next/undefined 404 in 404ms
+ ✓ Compiled /films in 242ms (891 modules)
+ GET /films 200 in 46ms
+ GET /films 200 in 54ms
+ GET /films 200 in 73ms
+ GET /films 200 in 30ms
+ GET / 200 in 63ms
+ ○ Compiling /films/classiques ...
+ ✓ Compiled /films/classiques in 534ms (896 modules)
+Failed to set fetch cache http://localhost:3003/api/films/all-classics Error: Failed to set Next.js data cache, items over 2MB can not be cached (4628964 bytes)
+    at IncrementalCache.set (C:\Users\mbens\Wassim BEN SLIMENE\IA\Projets\CinéRadar\frontend\node_modules\next\dist\server\lib\incremental-cache\index.js:388:23)
+    at eval (webpack-internal:///(rsc)/./node_modules/next/dist/server/lib/patch-fetch.js:456:74)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async apiFetch (webpack-internal:///(rsc)/./src/lib/api.ts:17:17)
+    at async ClassiquesPage (webpack-internal:///(rsc)/./src/app/films/classiques/page.tsx:25:19)
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ○ Compiling /_error ...
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ✓ Compiled /_error in 532ms (884 modules)
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2Ys0Wb2ZzgaqpyJ5zh10rWoA50t.jpg&w=96&q=75 500 in 685ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2Ys0Wb2ZzgaqpyJ5zh10rWoA50t.jpg&w=96&q=75 500 in 601ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FwtGgCxW4TylnDAXtIf3yuXixipC.jpg&w=96&q=75 500 in 684ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FwtGgCxW4TylnDAXtIf3yuXixipC.jpg&w=96&q=75 500 in 600ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FhQtvQYlxfEHl45TR41lNSywrq4K.jpg&w=96&q=75 500 in 675ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FhQtvQYlxfEHl45TR41lNSywrq4K.jpg&w=96&q=75 500 in 595ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F7VMyUd9D6Zet4F7kDP8FDbNdF9U.jpg&w=96&q=75 500 in 679ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F7VMyUd9D6Zet4F7kDP8FDbNdF9U.jpg&w=96&q=75 500 in 595ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F1bpul8zoiLmqg8StlAhUG1O0FNu.jpg&w=96&q=75 500 in 272ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F1bpul8zoiLmqg8StlAhUG1O0FNu.jpg&w=96&q=75 500 in 92ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F47UsTTsaVgO9S3DlLl6BHmqAr1S.jpg&w=96&q=75 500 in 82ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F47UsTTsaVgO9S3DlLl6BHmqAr1S.jpg&w=96&q=75 500 in 27ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FtwX9BoM6XpbklfvjSIX9NQmPuxT.jpg&w=96&q=75 500 in 82ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FtwX9BoM6XpbklfvjSIX9NQmPuxT.jpg&w=96&q=75 500 in 25ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FvTFjSY38LdJtJO6VYIqgAA3EUIY.jpg&w=96&q=75 500 in 86ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FvTFjSY38LdJtJO6VYIqgAA3EUIY.jpg&w=96&q=75 500 in 25ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fa8jn5ML3vRT4nnMMBmFGXRaRhqO.jpg&w=96&q=75 500 in 83ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fa8jn5ML3vRT4nnMMBmFGXRaRhqO.jpg&w=96&q=75 500 in 42ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FcJN2PcKyuqAMlKjAPypeFXhn7ev.jpg&w=96&q=75 500 in 83ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FcJN2PcKyuqAMlKjAPypeFXhn7ev.jpg&w=96&q=75 500 in 34ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F5KPGZANTmTj1U8esbC71typFVQH.jpg&w=96&q=75 500 in 59ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F5KPGZANTmTj1U8esbC71typFVQH.jpg&w=96&q=75 500 in 29ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FaXQ8cAv0oiYSQROQK8ySSNbYJew.jpg&w=96&q=75 500 in 126ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FaXQ8cAv0oiYSQROQK8ySSNbYJew.jpg&w=96&q=75 500 in 23ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FnPzZ0DVolHLUMcu8dhQ6EKdNNrW.jpg&w=96&q=75 500 in 141ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FnPzZ0DVolHLUMcu8dhQ6EKdNNrW.jpg&w=96&q=75 500 in 21ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FoEdSd4wVg9kfGkUklGEmiCl2L2Y.jpg&w=96&q=75 500 in 148ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FoEdSd4wVg9kfGkUklGEmiCl2L2Y.jpg&w=96&q=75 500 in 20ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Ftquh5DEbgRPFBHukUp9mcPbjEBb.jpg&w=96&q=75 500 in 44ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Ftquh5DEbgRPFBHukUp9mcPbjEBb.jpg&w=96&q=75 500 in 11ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpvL6LqlC8UM79EG0Dh1yyPqzLfP.jpg&w=96&q=75 500 in 135ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpvL6LqlC8UM79EG0Dh1yyPqzLfP.jpg&w=96&q=75 500 in 12ms
+Failed to set fetch cache http://localhost:3003/api/films?q= Error: Failed to set Next.js data cache, items over 2MB can not be cached (4833846 bytes)
+    at IncrementalCache.set (C:\Users\mbens\Wassim BEN SLIMENE\IA\Projets\CinéRadar\frontend\node_modules\next\dist\server\lib\incremental-cache\index.js:388:23)
+    at eval (webpack-internal:///(rsc)/./node_modules/next/dist/server/lib/patch-fetch.js:456:74)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async apiFetch (webpack-internal:///(rsc)/./src/lib/api.ts:17:17)
+    at async RecherchePage (webpack-internal:///(rsc)/./src/app/recherche/page.tsx:39:17)
+ GET /recherche?type=films 200 in 2869ms
+ GET /recherche?q=Tom%20Cruise 200 in 121ms
+ GET /films/cmow2vupr001zj7m4rkfwql1l 200 in 74ms
+ GET /recherche?q=Kelly%20McGillis 200 in 102ms
+ GET /films/cmow2vupr001zj7m4rkfwql1l 200 in 99ms
+ GET /recherche?q=Val%20Kilmer 200 in 114ms
+ GET /films/cmow2vupr001zj7m4rkfwql1l 200 in 62ms
+ ✓ Compiled /profil in 304ms (376 modules)
+ ○ Compiling /profil/[pseudo] ...
+ ✓ Compiled /profil/[pseudo] in 568ms (882 modules)
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ✓ Compiled /_error in 219ms (849 modules)
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 291ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 262ms
+ GET /profil 200 in 110ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 56ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 14ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 34ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 6ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 33ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FecBRkXerAZqRRUfR8Lt3L3Dh6J5.jpg&w=384&q=75 500 in 8ms
+ ✓ Compiled /premium in 257ms (359 modules)
+ ○ Compiling /legal/mentions-legales ...
+ ✓ Compiled /legal/mentions-legales in 572ms (863 modules)
+ GET /legal/mentions-legales 200 in 720ms
+ GET /premium 200 in 59ms
+ ✓ Compiled /legal/confidentialite in 421ms (857 modules)
+ GET /legal/confidentialite 200 in 554ms
+ ✓ Compiled /legal/cgu in 361ms (835 modules)
+ GET /legal/cgu 200 in 510ms
+ ✓ Compiled /parametres in 287ms (328 modules)
+ GET /profil 200 in 98ms
+ GET /parametres 200 in 65ms
+ ✓ Compiled / in 286ms (351 modules)
+ ✓ Compiled /films in 135ms (356 modules)
+ ✓ Compiled in 244ms (506 modules)
+ ✓ Compiled in 123ms (506 modules)
+ GET /profil 200 in 158ms
+ ✓ Compiled in 239ms (506 modules)
+ ✓ Compiled /parametres in 134ms (354 modules)
+ ✓ Compiled in 399ms (860 modules)
+ GET /parametres 200 in 90ms
+ GET /profil 200 in 47ms
+ GET /profil 200 in 62ms
+ GET /profil 200 in 72ms
+ GET /parametres 200 in 75ms
+ GET /parametres 200 in 30ms
+ GET /films 200 in 44ms
+ GET / 200 in 172ms
+ GET / 200 in 67ms
+ GET /films 200 in 99ms
+ GET / 200 in 49ms
+ ✓ Compiled in 538ms (858 modules)
+ ✓ Compiled in 323ms (858 modules)
+ ✓ Compiled in 196ms (858 modules)
+ ✓ Compiled in 254ms (858 modules)
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "3900633828"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "2222917131"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "2222917131"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ GET / 500 in 131ms
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "2222917131"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "2222917131"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ GET / 500 in 83ms
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "2222917131"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ ⨯ src\app\page.tsx (152:10) @ filmDuMoment
+ ⨯ ReferenceError: filmDuMoment is not defined
+    at HomePage (./src/app/page.tsx:279:21)
+digest: "2222917131"
+[0m [90m 150 |[39m[0m
+[0m [90m 151 |[39m         {[90m/* ── Film du moment ── */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 152 |[39m         {filmDuMoment [33m&&[39m filmDuMoment[33m.[39maffiche [33m&&[39m ([0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 153 |[39m           [33m<[39m[33msection[39m className[33m=[39m[32m"mb-14"[39m[33m>[39m[0m
+[0m [90m 154 |[39m             [33m<[39m[33mdiv[39m[0m
+[0m [90m 155 |[39m               className[33m=[39m[32m"relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"[39m[0m
+ GET / 500 in 92ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 243ms (858 modules)
+ GET / 200 in 337ms
+ GET / 200 in 71ms
+ ✓ Compiled /films/[id] in 233ms (375 modules)
+ GET /films/cmp3yp3bk04n1135vdk4nzlq5 200 in 569ms
+ GET / 200 in 46ms
+ GET / 200 in 60ms
+ GET / 200 in 51ms
+ GET / 200 in 34ms
+ ✓ Compiled /recherche in 182ms (375 modules)
+ ✓ Compiled /films/classiques in 133ms (374 modules)
+Failed to set fetch cache http://localhost:3003/api/films/all-classics Error: Failed to set Next.js data cache, items over 2MB can not be cached (12551708 bytes)
+    at IncrementalCache.set (C:\Users\mbens\Wassim BEN SLIMENE\IA\Projets\CinéRadar\frontend\node_modules\next\dist\server\lib\incremental-cache\index.js:388:23)
+    at eval (webpack-internal:///(rsc)/./node_modules/next/dist/server/lib/patch-fetch.js:456:74)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async apiFetch (webpack-internal:///(rsc)/./src/lib/api.ts:17:17)
+    at async ClassiquesPage (webpack-internal:///(rsc)/./src/app/films/classiques/page.tsx:25:19)
+ GET / 200 in 374ms
+ GET / 200 in 109ms
+Failed to set fetch cache http://localhost:3003/api/films/all-classics Error: Failed to set Next.js data cache, items over 2MB can not be cached (12551707 bytes)
+    at IncrementalCache.set (C:\Users\mbens\Wassim BEN SLIMENE\IA\Projets\CinéRadar\frontend\node_modules\next\dist\server\lib\incremental-cache\index.js:388:23)
+    at eval (webpack-internal:///(rsc)/./node_modules/next/dist/server/lib/patch-fetch.js:456:74)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async apiFetch (webpack-internal:///(rsc)/./src/lib/api.ts:17:17)
+    at async ClassiquesPage (webpack-internal:///(rsc)/./src/app/films/classiques/page.tsx:25:19)
+ GET / 200 in 352ms
+ GET / 200 in 625ms
+ GET / 200 in 483ms
+ ○ Compiling /listes ...
+ ✓ Compiled /listes in 600ms (882 modules)
+ ✓ Compiled in 118ms (508 modules)
+ ✓ Compiled /profil in 135ms (380 modules)
+ GET / 200 in 403ms
+ GET /films 200 in 84ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 858ms (864 modules)
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F4iuPPvfn8RVkAv98J5uENlRLZcb.jpg&w=384&q=75 500 in 1045ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F4iuPPvfn8RVkAv98J5uENlRLZcb.jpg&w=384&q=75 500 in 1004ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpeLj36BkjP7zdm5voS5QOoye2kC.jpg&w=384&q=75 500 in 1059ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpeLj36BkjP7zdm5voS5QOoye2kC.jpg&w=384&q=75 500 in 1001ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FqBTAcQjFCNFbLmHdvU2wZaUwyVT.jpg&w=384&q=75 500 in 1044ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FqBTAcQjFCNFbLmHdvU2wZaUwyVT.jpg&w=384&q=75 500 in 996ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FAg6PNIKAglnvbS4ht0orDaMlMw5.jpg&w=384&q=75 500 in 94ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FAg6PNIKAglnvbS4ht0orDaMlMw5.jpg&w=384&q=75 500 in 49ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F7lUGWlBinGqm82KESkLr8lC1FK3.jpg&w=384&q=75 500 in 81ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F7lUGWlBinGqm82KESkLr8lC1FK3.jpg&w=384&q=75 500 in 44ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FrzdghiBzSi2Jgfhu9zINJyayxQP.jpg&w=384&q=75 500 in 91ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FrzdghiBzSi2Jgfhu9zINJyayxQP.jpg&w=384&q=75 500 in 43ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2q6PV1Dl6htx5fqwPXcOwTTahcx.jpg&w=384&q=75 500 in 80ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2q6PV1Dl6htx5fqwPXcOwTTahcx.jpg&w=384&q=75 500 in 42ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fd66DnAknB0tK5trwhDLSXtjhcV2.jpg&w=384&q=75 500 in 80ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fd66DnAknB0tK5trwhDLSXtjhcV2.jpg&w=384&q=75 500 in 41ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FfqMHedzcFA9rOnlWPuazaKMzV0H.jpg&w=384&q=75 500 in 136ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FfqMHedzcFA9rOnlWPuazaKMzV0H.jpg&w=384&q=75 500 in 88ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FegZcLEf6DSapJ70jGqSSi7Iv0pd.jpg&w=384&q=75 500 in 134ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FegZcLEf6DSapJ70jGqSSi7Iv0pd.jpg&w=384&q=75 500 in 79ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FuXGqYv2cahBG062OQ93oMqWQCs5.jpg&w=384&q=75 500 in 40ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FuXGqYv2cahBG062OQ93oMqWQCs5.jpg&w=384&q=75 500 in 17ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FvqCecnz96j6DWxI92yYLt5krdwX.jpg&w=384&q=75 500 in 36ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FvqCecnz96j6DWxI92yYLt5krdwX.jpg&w=384&q=75 500 in 15ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FgtmENvIUyH4J7x8UcrsdFkmTpJq.jpg&w=384&q=75 500 in 27ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FgtmENvIUyH4J7x8UcrsdFkmTpJq.jpg&w=384&q=75 500 in 10ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9M8tTHbYFrGxCXxNMvAkvRbhtER.jpg&w=384&q=75 500 in 127ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9M8tTHbYFrGxCXxNMvAkvRbhtER.jpg&w=384&q=75 500 in 59ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FxgvaTE9ctxjF1hAIKsy0t2jZjTt.jpg&w=384&q=75 500 in 126ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FxgvaTE9ctxjF1hAIKsy0t2jZjTt.jpg&w=384&q=75 500 in 52ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FeG9lz41mJqsI4J6ubMtVqD26q2J.jpg&w=384&q=75 500 in 122ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FeG9lz41mJqsI4J6ubMtVqD26q2J.jpg&w=384&q=75 500 in 47ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FbGbCNEGn0kLwamrEEWysowzhGDJ.jpg&w=384&q=75 500 in 119ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FbGbCNEGn0kLwamrEEWysowzhGDJ.jpg&w=384&q=75 500 in 44ms
+ ✓ Compiled /films/[id] in 379ms (377 modules)
+ GET /films/cmop3vrfh0016iqy4s8gq5u2n 200 in 890ms
+ GET /films/cmp4q6zb61xwuo5ttootlp629 200 in 779ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 619ms (868 modules)
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpUPR2pgiVfWMkHcE0SqaE4skDl9.jpg&w=384&q=75 500 in 727ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpUPR2pgiVfWMkHcE0SqaE4skDl9.jpg&w=384&q=75 500 in 690ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FsDdkV0qHQHlP1hpLaSGUWBhUe9z.jpg&w=384&q=75 500 in 726ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FsDdkV0qHQHlP1hpLaSGUWBhUe9z.jpg&w=384&q=75 500 in 688ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fo8Ob85i772akIhwUlkBWpu5yRUu.jpg&w=384&q=75 500 in 724ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fo8Ob85i772akIhwUlkBWpu5yRUu.jpg&w=384&q=75 500 in 687ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fu61noSAr4IGVostCNbVApRXC4FZ.jpg&w=384&q=75 500 in 719ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fu61noSAr4IGVostCNbVApRXC4FZ.jpg&w=384&q=75 500 in 684ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Ffz5NYI8PUmPplu3UA70AOqEDJL7.jpg&w=384&q=75 500 in 718ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Ffz5NYI8PUmPplu3UA70AOqEDJL7.jpg&w=384&q=75 500 in 681ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fx4ZLWoqsXFrkwA1m1T3OQg4P5Z7.jpg&w=384&q=75 500 in 73ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fx4ZLWoqsXFrkwA1m1T3OQg4P5Z7.jpg&w=384&q=75 500 in 42ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fx9A0AtEg5EEYbDGfP8NqH3C9w8M.jpg&w=384&q=75 500 in 73ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fx9A0AtEg5EEYbDGfP8NqH3C9w8M.jpg&w=384&q=75 500 in 41ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpWDtjs568ZfOTMbURQBYuT4Qxka.jpg&w=384&q=75 500 in 73ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FpWDtjs568ZfOTMbURQBYuT4Qxka.jpg&w=384&q=75 500 in 41ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FnjLeFen5DO62pBk6yCmvpc0ROa7.jpg&w=384&q=75 500 in 68ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FnjLeFen5DO62pBk6yCmvpc0ROa7.jpg&w=384&q=75 500 in 40ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FkjOuNoHNy8IF6v6BHzfEbli1G3W.jpg&w=384&q=75 500 in 68ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FkjOuNoHNy8IF6v6BHzfEbli1G3W.jpg&w=384&q=75 500 in 39ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FcMYCDADoLKLbB83g4WnJegaZimC.jpg&w=384&q=75 500 in 64ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FcMYCDADoLKLbB83g4WnJegaZimC.jpg&w=384&q=75 500 in 38ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fto6jUaLJonMuKW2YovtWfQKtLYP.jpg&w=384&q=75 500 in 63ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fto6jUaLJonMuKW2YovtWfQKtLYP.jpg&w=384&q=75 500 in 37ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9j5sUu1aBnEuccARKFdWHJANqu9.jpg&w=384&q=75 500 in 62ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9j5sUu1aBnEuccARKFdWHJANqu9.jpg&w=384&q=75 500 in 37ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F37btEnSbp19VTGLH2xhI7Quc9FW.jpg&w=384&q=75 500 in 65ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F37btEnSbp19VTGLH2xhI7Quc9FW.jpg&w=384&q=75 500 in 36ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FeZOB9UurVQjpdIp72L49pyd3anw.jpg&w=384&q=75 500 in 66ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FeZOB9UurVQjpdIp72L49pyd3anw.jpg&w=384&q=75 500 in 36ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fev3Gf0epb7srDa5tL7CSw72vngu.jpg&w=384&q=75 500 in 40ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fev3Gf0epb7srDa5tL7CSw72vngu.jpg&w=384&q=75 500 in 23ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F1Taf2lmuIArvp6zq1jbioUjK1nD.jpg&w=384&q=75 500 in 49ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F1Taf2lmuIArvp6zq1jbioUjK1nD.jpg&w=384&q=75 500 in 24ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F5zjaVIEg82cCPQLA4POf4FJqkTg.jpg&w=384&q=75 500 in 47ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F5zjaVIEg82cCPQLA4POf4FJqkTg.jpg&w=384&q=75 500 in 26ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FBzi1wEVSgdAApKkmzcFFZHxgZo.jpg&w=384&q=75 500 in 52ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FBzi1wEVSgdAApKkmzcFFZHxgZo.jpg&w=384&q=75 500 in 22ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FuAYVMTscCciqLFhbAbzqFJx6g33.jpg&w=384&q=75 500 in 50ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FuAYVMTscCciqLFhbAbzqFJx6g33.jpg&w=384&q=75 500 in 22ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2okYZVVw7RdMwlOKcAJsQ7Nsrpr.jpg&w=384&q=75 500 in 50ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2okYZVVw7RdMwlOKcAJsQ7Nsrpr.jpg&w=384&q=75 500 in 20ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FlO2VPN5eGiJVoOmFb60NuXGP3mW.jpg&w=384&q=75 500 in 69ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FlO2VPN5eGiJVoOmFb60NuXGP3mW.jpg&w=384&q=75 500 in 21ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fqxk1T8UDJXQIgGCfNfp6mTYi7bL.jpg&w=384&q=75 500 in 42ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fqxk1T8UDJXQIgGCfNfp6mTYi7bL.jpg&w=384&q=75 500 in 17ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fy6wKOjiRTg66tHfqdBP11TK6HNT.jpg&w=384&q=75 500 in 43ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fy6wKOjiRTg66tHfqdBP11TK6HNT.jpg&w=384&q=75 500 in 16ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fvjumsjks4kyfrXX0AjOdWUswKpW.jpg&w=384&q=75 500 in 45ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fvjumsjks4kyfrXX0AjOdWUswKpW.jpg&w=384&q=75 500 in 16ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fi268GVIlp777W1Ykws5R3LYYLIw.jpg&w=384&q=75 500 in 67ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fi268GVIlp777W1Ykws5R3LYYLIw.jpg&w=384&q=75 500 in 36ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FdcEUGvckbePFzPKhGXnS9T3kZMG.jpg&w=384&q=75 500 in 66ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FdcEUGvckbePFzPKhGXnS9T3kZMG.jpg&w=384&q=75 500 in 35ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FlxwtsPHs8tA7KP2YJAv3Xm2pIsF.jpg&w=384&q=75 500 in 49ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FlxwtsPHs8tA7KP2YJAv3Xm2pIsF.jpg&w=384&q=75 500 in 20ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FyTsaoXtBndypAQJj5C16d3Zmfxf.jpg&w=384&q=75 500 in 34ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FyTsaoXtBndypAQJj5C16d3Zmfxf.jpg&w=384&q=75 500 in 6ms
+ GET /films/cmop3vrdf0002iqy44ifgu8sr 200 in 1141ms
+ GET /films/cmp4q24af0vhso5tt6gih2l3x 200 in 692ms
+ GET /films/cmop3vrpp005uiqy4540yd7ro 200 in 273ms
+ GET /films/cmop3vrhd0024iqy4eyze4qdc 200 in 782ms
+ GET /films/cmoxtik12002fk514rn7c96b5 200 in 867ms
+ GET /films/cmop3vrh6001ziqy4dxden8ug 200 in 371ms
+ GET /films/cmoxttlcg000zmz9afw3hk6qc 200 in 299ms
+ GET /films/cmox56v1e003u98ppldsu959e 200 in 272ms
+ GET /films/cmp4q8s4h29pvo5tt0ur8lz4o 200 in 772ms
+ GET /films/cmoxtuwjc006tmz9axt3m2hot 200 in 279ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F3sNEK3Yk4lLD8XoXVuMxFFMvCAF.jpg&w=384&q=75 500 in 95ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F3sNEK3Yk4lLD8XoXVuMxFFMvCAF.jpg&w=384&q=75 500 in 42ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FyHIAt0xdPis7UwoJuM2AwORsLAM.jpg&w=384&q=75 500 in 97ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FyHIAt0xdPis7UwoJuM2AwORsLAM.jpg&w=384&q=75 500 in 42ms
+ GET /films/cmoo6ln72000hd4uhlksn7pre 200 in 276ms
+ GET /films/cmoxtjxdc0049k5143gt66fo8 200 in 699ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Ferm3VSYLnuBDiy8hme10na1bvMY.jpg&w=384&q=75 500 in 71ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Ferm3VSYLnuBDiy8hme10na1bvMY.jpg&w=384&q=75 500 in 40ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FqpI6e75yTjbAAsLLHTCZfXZTTDP.jpg&w=384&q=75 500 in 73ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FqpI6e75yTjbAAsLLHTCZfXZTTDP.jpg&w=384&q=75 500 in 38ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F3Uwomg3lr8NhWVXY1cbv8SwFlwX.jpg&w=384&q=75 500 in 67ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F3Uwomg3lr8NhWVXY1cbv8SwFlwX.jpg&w=384&q=75 500 in 36ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fyoj0ha9lShk42cIs1594GkCxgH7.jpg&w=384&q=75 500 in 67ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fyoj0ha9lShk42cIs1594GkCxgH7.jpg&w=384&q=75 500 in 36ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FddNmoSy1Jd3PBF5XDZvrrBIfrja.jpg&w=384&q=75 500 in 65ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FddNmoSy1Jd3PBF5XDZvrrBIfrja.jpg&w=384&q=75 500 in 34ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FkbOV3t9rQMkLaARTkb4DumTdJdw.jpg&w=384&q=75 500 in 56ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FkbOV3t9rQMkLaARTkb4DumTdJdw.jpg&w=384&q=75 500 in 22ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9zfwPffUXpBrEP26yp0q1ckXDcj.jpg&w=384&q=75 500 in 51ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9zfwPffUXpBrEP26yp0q1ckXDcj.jpg&w=384&q=75 500 in 20ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fyn8A0RmrrFc4oLCeXnyPSM9ysBb.jpg&w=384&q=75 500 in 58ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fyn8A0RmrrFc4oLCeXnyPSM9ysBb.jpg&w=384&q=75 500 in 28ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9BjFzzbke1sWu9IqJEFSTvTtTuU.jpg&w=384&q=75 500 in 47ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F9BjFzzbke1sWu9IqJEFSTvTtTuU.jpg&w=384&q=75 500 in 22ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FqmOQssz4GfbdtOmxwMP0jBj4P4F.jpg&w=384&q=75 500 in 45ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FqmOQssz4GfbdtOmxwMP0jBj4P4F.jpg&w=384&q=75 500 in 19ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FeKdSqv9wPPhdzb6cVrcEujSo3lp.jpg&w=384&q=75 500 in 59ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FeKdSqv9wPPhdzb6cVrcEujSo3lp.jpg&w=384&q=75 500 in 29ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fym1dxyOk4jFcSl4Q2zmRrA5BEEN.jpg&w=384&q=75 500 in 61ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fym1dxyOk4jFcSl4Q2zmRrA5BEEN.jpg&w=384&q=75 500 in 28ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fm3ycrZfaDeTt3ITh9MOmV6fGp7R.jpg&w=384&q=75 500 in 66ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2Fm3ycrZfaDeTt3ITh9MOmV6fGp7R.jpg&w=384&q=75 500 in 25ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2rcR4ep2XEreDyEG3TTJW6saNi5.jpg&w=384&q=75 500 in 78ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2F2rcR4ep2XEreDyEG3TTJW6saNi5.jpg&w=384&q=75 500 in 22ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FlSSA64WF0M0BXnjwr2quMh6shCl.jpg&w=384&q=75 500 in 52ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FlSSA64WF0M0BXnjwr2quMh6shCl.jpg&w=384&q=75 500 in 20ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FmgTzk9VDEnYapejmXkCv5fI5NAa.jpg&w=384&q=75 500 in 45ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FmgTzk9VDEnYapejmXkCv5fI5NAa.jpg&w=384&q=75 500 in 22ms
+[TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FgIVrAA6Cs2RhloZbtg0RMpuh9VP.jpg&w=384&q=75 500 in 37ms
+ GET /_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Fw500%2FgIVrAA6Cs2RhloZbtg0RMpuh9VP.jpg&w=384&q=75 500 in 16ms
+ GET / 200 in 114ms
+ ○ Compiling /cinemas/[id] ...
+ ✓ Compiled /cinemas/[id] in 682ms (391 modules)
+ ✓ Compiled /recherche in 325ms (393 modules)
+ ✓ Compiled /parametres in 305ms (392 modules)
+ ✓ Compiled /films in 247ms (373 modules)
+ GET /recherche?q=Uma%20Thurman 200 in 474ms
+ ✓ Compiled /listes in 416ms (377 modules)
+ GET /listes 200 in 612ms
+ ○ Compiling /listes/[slug] ...
+ ✓ Compiled /listes/[slug] in 719ms (872 modules)
+ GET /listes/mafieux-npux 200 in 178ms
+ GET /listes/mafieux-npux 200 in 69ms
+ GET /listes/mafieux-npux 200 in 70ms
+ GET /listes/mafieux-npux 200 in 45ms
+ GET /films 200 in 101ms
+ GET /listes/mafieux-npux 200 in 63ms
+ GET /listes/mafieux-npux 200 in 94ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 756ms (861 modules)
+ GET /listes/mafieux-npux 200 in 144ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /listes/mafieux-npux 200 in 89ms
+ GET /listes/mafieux-npux 200 in 69ms
+ GET /listes/mafieux-npux 200 in 66ms
+ GET /listes/mafieux-npux 200 in 66ms
+ ✓ Compiled / in 218ms (376 modules)

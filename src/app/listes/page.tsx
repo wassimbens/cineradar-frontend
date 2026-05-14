@@ -1,0 +1,384 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
+// ── Types ─────────────────────────────────────────────────
+
+interface ListeResume {
+  id: string;
+  slug: string;
+  titre: string;
+  description: string | null;
+  isPublic: boolean;
+  emoji: string | null;
+  updatedAt: string;
+  _count: { films: number };
+}
+
+// ── Helpers ───────────────────────────────────────────────
+
+function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("cineradar_token");
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const EMOJIS = ["🎬", "🎭", "🏆", "😂", "💀", "🌟", "🎞️", "🍿"];
+
+// ── Composant ─────────────────────────────────────────────
+
+export default function MesListesPage() {
+  const [token, setToken] = useState<string | null>(null);
+  const [listes, setListes] = useState<ListeResume[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Formulaire création
+  const [titre, setTitre] = useState("");
+  const [description, setDescription] = useState("");
+  const [emoji, setEmoji] = useState("🎬");
+  const [isPublic, setIsPublic] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState("");
+
+  // Suppression
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  useEffect(() => {
+    setToken(getToken());
+  }, []);
+
+  const fetchListes = useCallback(async (tok: string) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${API_URL}/api/listes/mes-listes`, {
+        headers: { Authorization: `Bearer ${tok}` },
+        credentials: "include",
+      });
+      if (!res.ok) { setError("Impossible de charger vos listes."); return; }
+      const data = await res.json();
+      setListes(data);
+    } catch {
+      setError("Erreur réseau.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) fetchListes(token);
+    else setLoading(false);
+  }, [token, fetchListes]);
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!token || !titre.trim()) return;
+    setCreating(true);
+    setCreateError("");
+    try {
+      const res = await fetch(`${API_URL}/api/listes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          titre: titre.trim(),
+          description: description.trim() || undefined,
+          emoji,
+          isPublic,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setCreateError(data.error ?? "Erreur lors de la création."); return; }
+      setListes((prev) => [data, ...prev]);
+      setTitre("");
+      setDescription("");
+      setEmoji("🎬");
+      setIsPublic(true);
+    } catch {
+      setCreateError("Impossible de contacter le serveur.");
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleDelete = async (slug: string) => {
+    if (!token) return;
+    if (!window.confirm("Supprimer cette liste définitivement ?")) return;
+    setDeleting(slug);
+    try {
+      const res = await fetch(`${API_URL}/api/listes/${slug}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
+      });
+      if (res.ok) {
+        setListes((prev) => prev.filter((l) => l.slug !== slug));
+      }
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  // ── Non connecté ──────────────────────────────────────────
+
+  if (!loading && !token) {
+    return (
+      <div className="px-6 py-24 mx-auto text-center" style={{ maxWidth: 500 }}>
+        <p className="text-5xl mb-4">📋</p>
+        <h1 className="text-2xl font-extrabold mb-2" style={{ color: "var(--text)" }}>
+          Mes listes
+        </h1>
+        <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
+          Connectez-vous pour créer des listes thématiques et partager vos sélections.
+        </p>
+        <Link
+          href="/profil"
+          className="px-6 py-3 rounded-xl text-sm font-semibold text-white no-underline"
+          style={{ background: "var(--red)" }}
+        >
+          Se connecter
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-6 py-10 mx-auto" style={{ maxWidth: 800 }}>
+      <h1
+        className="text-3xl font-extrabold mb-2"
+        style={{ color: "var(--text)", letterSpacing: "-0.03em" }}
+      >
+        Mes listes
+      </h1>
+      <p className="text-sm mb-8" style={{ color: "var(--text-3)" }}>
+        Créez des sélections thématiques de films et partagez-les.
+      </p>
+
+      {/* ── Formulaire de création ─────────────────────────── */}
+      <div
+        className="rounded-2xl p-6 mb-8"
+        style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
+      >
+        <h2 className="text-base font-extrabold mb-4" style={{ color: "var(--text)" }}>
+          Nouvelle liste
+        </h2>
+
+        <form onSubmit={handleCreate} className="flex flex-col gap-4">
+          {/* Titre */}
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: "var(--text-2)" }}>
+              Titre *
+            </label>
+            <input
+              type="text"
+              value={titre}
+              onChange={(e) => setTitre(e.target.value)}
+              placeholder="Ex : Meilleurs films des années 80…"
+              required
+              maxLength={100}
+              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+              style={{ background: "var(--bg-3)", border: "1.5px solid var(--border)", color: "var(--text)" }}
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: "var(--text-2)" }}>
+              Description (optionnel)
+            </label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Une courte description de votre liste…"
+              maxLength={300}
+              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+              style={{ background: "var(--bg-3)", border: "1.5px solid var(--border)", color: "var(--text)" }}
+            />
+          </div>
+
+          {/* Emoji picker */}
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: "var(--text-2)" }}>
+              Emoji
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {EMOJIS.map((e) => (
+                <button
+                  key={e}
+                  type="button"
+                  onClick={() => setEmoji(e)}
+                  className="text-xl rounded-xl p-2 transition-colors"
+                  style={{
+                    background: emoji === e ? "var(--bg-3)" : "transparent",
+                    border: `2px solid ${emoji === e ? "var(--red)" : "var(--border)"}`,
+                    cursor: "pointer",
+                    lineHeight: 1,
+                  }}
+                >
+                  {e}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Toggle public/privé */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setIsPublic((v) => !v)}
+              className="relative flex-shrink-0"
+              style={{
+                width: 44,
+                height: 24,
+                borderRadius: 12,
+                background: isPublic ? "var(--red)" : "var(--bg-3)",
+                border: "1.5px solid var(--border)",
+                cursor: "pointer",
+                transition: "background 0.2s",
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: 2,
+                  left: isPublic ? 22 : 2,
+                  width: 16,
+                  height: 16,
+                  borderRadius: "50%",
+                  background: "white",
+                  transition: "left 0.2s",
+                }}
+              />
+            </button>
+            <span className="text-sm" style={{ color: "var(--text-2)" }}>
+              {isPublic ? "Publique — visible par tous" : "Privée — visible uniquement par vous"}
+            </span>
+          </div>
+
+          {createError && (
+            <p
+              className="text-sm px-3 py-2 rounded-xl"
+              style={{ background: "#fee2e2", color: "#991b1b" }}
+            >
+              {createError}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={creating || !titre.trim()}
+            className="self-start px-6 py-2.5 rounded-xl text-sm font-semibold text-white"
+            style={{
+              background: creating || !titre.trim() ? "var(--text-3)" : "var(--red)",
+              border: "none",
+              cursor: creating || !titre.trim() ? "not-allowed" : "pointer",
+            }}
+          >
+            {creating ? "Création…" : "Créer la liste →"}
+          </button>
+        </form>
+      </div>
+
+      {/* ── Liste des listes ───────────────────────────────── */}
+      {loading ? (
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="rounded-2xl"
+              style={{ height: 76, background: "var(--bg-2)", border: "1px solid var(--border)", opacity: 0.5 }}
+            />
+          ))}
+        </div>
+      ) : error ? (
+        <p className="text-sm text-center py-8" style={{ color: "var(--text-3)" }}>{error}</p>
+      ) : listes.length === 0 ? (
+        <div
+          className="text-center py-16 rounded-2xl"
+          style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
+        >
+          <p className="text-4xl mb-3">🎞️</p>
+          <p className="font-semibold mb-1" style={{ color: "var(--text)" }}>
+            Aucune liste pour l&apos;instant
+          </p>
+          <p className="text-sm" style={{ color: "var(--text-3)" }}>
+            Créez votre première sélection de films ci-dessus.
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {listes.map((liste) => (
+            <div
+              key={liste.id}
+              className="rounded-2xl px-5 py-4 flex items-center gap-4"
+              style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
+            >
+              {/* Emoji */}
+              <span className="text-2xl flex-shrink-0" style={{ minWidth: 36 }}>
+                {liste.emoji ?? "📋"}
+              </span>
+
+              {/* Infos */}
+              <div className="flex-1 min-w-0">
+                <Link
+                  href={`/listes/${liste.slug}`}
+                  className="no-underline"
+                  style={{ color: "var(--text)" }}
+                >
+                  <p className="font-semibold text-sm leading-snug">{liste.titre}</p>
+                </Link>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>
+                  {liste._count.films} film{liste._count.films !== 1 ? "s" : ""}
+                  {" · "}
+                  {liste.isPublic ? "Publique" : "Privée"}
+                  {" · "}
+                  Modifiée le {formatDate(liste.updatedAt)}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Link
+                  href={`/listes/${liste.slug}`}
+                  className="text-xs px-3 py-1.5 rounded-lg no-underline"
+                  style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}
+                >
+                  Voir
+                </Link>
+                <button
+                  onClick={() => handleDelete(liste.slug)}
+                  disabled={deleting === liste.slug}
+                  className="text-xs px-3 py-1.5 rounded-lg"
+                  style={{
+                    background: "transparent",
+                    color: "#ef4444",
+                    border: "1px solid #fca5a5",
+                    cursor: deleting === liste.slug ? "not-allowed" : "pointer",
+                    opacity: deleting === liste.slug ? 0.6 : 1,
+                  }}
+                >
+                  {deleting === liste.slug ? "…" : "Supprimer"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

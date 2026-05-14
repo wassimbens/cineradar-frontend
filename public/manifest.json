@@ -1,0 +1,61 @@
+{
+  "name": "CinéRadar",
+  "short_name": "CinéRadar",
+  "description": "Tous les cinémas, tous les films — UGC, Pathé, MK2 et indépendants",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0f0f0f",
+  "theme_color": "#e63946",
+  "orientation": "portrait-primary",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["entertainment", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Catalogue films",
+      "short_name": "Films",
+      "description": "Parcourir tous les films",
+      "url": "/films",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Classiques",
+      "short_name": "Classiques",
+      "description": "Les grands classiques du cinéma",
+      "url": "/films/classiques",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Rechercher",
+      "short_name": "Recherche",
+      "description": "Trouver un film ou un cinéma",
+      "url": "/recherche",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mes alertes",
+      "short_name": "Alertes",
+      "description": "Gérer mes alertes de séances",
+      "url": "/alertes",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

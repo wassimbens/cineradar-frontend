@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Tokens couleur ──────────────────────────────────────── */
+:root {
+  --red:     #dc2626;
+  --red-dk:  #b91c1c;
+  --red-lt:  #fee2e2;
+  --red-dim: rgba(220, 38, 38, 0.1);
+
+  --bg:      #ffffff;
+  --bg-2:    #f9fafb;
+  --bg-3:    #f3f4f6;
+  --border:  #e5e7eb;
+  --text:    #111111;
+  --text-2:  #374151;
+  --text-3:  #6b7280;
+}
+
+[data-theme="dark"] {
+  --bg:      #0a0a0a;
+  --bg-2:    #141414;
+  --bg-3:    #1e1e1e;
+  --border:  #2a2a2a;
+  --text:    #f5f5f5;
+  --text-2:  #d1d5db;
+  --text-3:  #6b7280;
+  --red-lt:  rgba(220, 38, 38, 0.15);
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s, color 0.2s;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Classes utilitaires ─────────────────────────────────── */
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+  border-color: var(--red);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.badge-red {
+  background: var(--red-lt);
+  color: var(--red);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.slot {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-2);
+  padding: 8px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  min-width: 84px;
+}
+
+.slot:hover {
+  border-color: var(--red);
+  background: var(--red-lt);
+}
+
+/* ── Poster container (container queries) ────────────────── */
+.poster-container {
+  container-type: size;
+}
+
+/* ── Skeleton shimmer ────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-3) 25%,
+    var(--bg-2) 50%,
+    var(--bg-3) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}

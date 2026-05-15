@@ -57,7 +57,8 @@ Données techniques automatiques :
           titre: "5. Partage des données",
           contenu: `CinéRadar ne vend ni ne partage vos données personnelles avec des tiers à des fins commerciales.
 Sous-traitants techniques :
-• Hetzner Online GmbH (hébergement, Allemagne — RGPD)
+• Vercel Inc. (hébergement frontend, États-Unis — Privacy Shield)
+• Railway Corp. (hébergement backend et base de données, États-Unis)
 • Resend Inc. (envoi d'emails transactionnels)
 Ces prestataires traitent vos données uniquement pour le service rendu et sont soumis à des obligations contractuelles strictes de confidentialité.`,
         },

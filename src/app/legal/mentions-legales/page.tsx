@@ -19,8 +19,9 @@ export default function MentionsLegalesPage() {
         <p style={{ color: "var(--text-2)", lineHeight: 1.8, fontSize: "0.9rem" }}>
           Le site <strong>CinéRadar</strong> (cineradar.fr) est édité par :<br /><br />
           <strong>Wassim BEN SLIMENE</strong><br />
-          Particulier — non soumis à immatriculation<br />
-          Adresse : France<br />
+          Auto-entrepreneur<br />
+          SIRET : <em>en cours d&apos;enregistrement</em><br />
+          Adresse : 34 rue Madame Renoux Prieux, 77510 Doué<br />
           Contact : <a href="mailto:contact@cineradar.fr" style={{ color: "var(--red)" }}>contact@cineradar.fr</a>
         </p>
       </section>
@@ -30,11 +31,18 @@ export default function MentionsLegalesPage() {
           Hébergement
         </h2>
         <p style={{ color: "var(--text-2)", lineHeight: 1.8, fontSize: "0.9rem" }}>
-          Le site est hébergé par :<br /><br />
-          <strong>Hetzner Online GmbH</strong><br />
-          Industriestr. 25, 91710 Gunzenhausen, Allemagne<br />
-          <a href="https://www.hetzner.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--red)" }}>
-            www.hetzner.com
+          Le frontend est hébergé par :<br /><br />
+          <strong>Vercel Inc.</strong><br />
+          440 N Barranca Ave #4133, Covina, CA 91723, États-Unis<br />
+          <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--red)" }}>
+            vercel.com
+          </a><br /><br />
+
+          Le backend et la base de données sont hébergés par :<br /><br />
+          <strong>Railway Corp.</strong><br />
+          San Francisco, CA, États-Unis<br />
+          <a href="https://railway.app" target="_blank" rel="noopener noreferrer" style={{ color: "var(--red)" }}>
+            railway.app
           </a>
         </p>
       </section>
@@ -44,9 +52,9 @@ export default function MentionsLegalesPage() {
           Propriété intellectuelle
         </h2>
         <p style={{ color: "var(--text-2)", lineHeight: 1.8, fontSize: "0.9rem" }}>
-          Les données de séances sont issues des sites officiels des cinémas (AlloCiné, UGC, Pathé, MK2)
-          dans le cadre d&apos;un usage informatif non commercial. Les affiches et informations films
-          proviennent de l&apos;API TMDB (The Movie Database). CinéRadar n&apos;est pas affilié à ces entités.
+          Les données de séances sont issues des sites officiels des cinémas dans le cadre d&apos;un
+          usage informatif. Les affiches et informations films proviennent de l&apos;API TMDB
+          (The Movie Database). CinéRadar n&apos;est pas affilié à ces entités.
         </p>
       </section>
 

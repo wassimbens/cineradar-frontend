@@ -2,7 +2,7 @@ import SearchBar from "@/components/SearchBar";
 import FilmCard from "@/components/FilmCard";
 import CinemaCard from "@/components/CinemaCard";
 import CommentCaMarche from "@/components/CommentCaMarche";
-import CinemasProches from "@/components/CinemasProches";
+
 import FilmsLocaux from "@/components/FilmsLocaux";
 import Image from "next/image";
 import { api, Film } from "@/lib/api";
@@ -352,9 +352,6 @@ export default async function HomePage() {
             </div>
           </section>
         )}
-
-        {/* Cinémas près de moi (géolocalisation) */}
-        <CinemasProches />
 
         {/* Comment ça marche */}
         <CommentCaMarche />

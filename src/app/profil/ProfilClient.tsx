@@ -1322,7 +1322,7 @@ export default function ProfilClient() {
 
   const TABS: { id: Tab; label: string; icon: string; count?: number }[] = [
     { id: "vitrine",    label: "Vitrine",      icon: "🎬" },
-    { id: "stats",      label: "Stats",        icon: "📊" },
+    { id: "stats",      label: "CinéScope",    icon: "🔭" },
     { id: "vus",        label: "Films vus",    icon: "✓",   count: profil.stats.filmsVus },
     { id: "favoris",    label: "Favoris",      icon: "❤️",  count: profil.stats.favoris },
     { id: "watchlist",  label: "À voir",       icon: "🔖",  count: profil.stats.watchlist },
@@ -1465,7 +1465,26 @@ export default function ProfilClient() {
         />
       )}
 
-      {activeTab === "stats" && <StatsSection profil={profil} />}
+      {activeTab === "stats" && (
+        isPro ? (
+          <StatsSection profil={profil} />
+        ) : (
+          <div className="text-center py-16 px-4">
+            <p className="text-4xl mb-3">🔭</p>
+            <p className="text-lg font-extrabold mb-2" style={{ color: "var(--text)" }}>CinéScope — réservé aux membres Pro</p>
+            <p className="text-sm mb-6" style={{ color: "var(--text-3)", maxWidth: 360, margin: "0 auto 1.5rem" }}>
+              Accédez à votre tableau de bord complet : genres préférés, réalisateurs, évolution mensuelle et bien plus.
+            </p>
+            <a
+              href="/premium"
+              className="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white no-underline"
+              style={{ background: "var(--red)" }}
+            >
+              Passer à Pro →
+            </a>
+          </div>
+        )
+      )}
 
       {activeTab === "vus" && (
         profil.filmsVus.length === 0

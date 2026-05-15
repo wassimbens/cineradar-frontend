@@ -24,7 +24,6 @@ const FEATURES_PRO = [
   { icon: "👥", label: "Fil d'activité de vos abonnés (complet)" },
   { icon: "🎨", label: "Affiches personnalisées ✦" },
   { icon: "🗂️", label: "Listes thématiques partageables" },
-  { icon: "🤖", label: "Recommandations personnalisées par IA" },
   { icon: "⭐", label: "Badge Pro visible sur le profil public" },
   { icon: "💬", label: "Support prioritaire" },
 ];

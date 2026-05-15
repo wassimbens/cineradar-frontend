@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import FilmPoster from "@/components/FilmPoster";
 import { api, formatDuree, SeancesParCinema } from "@/lib/api";
-import { SeanceGroupByCinema } from "@/components/SeanceGroup";
+import SeancesListWithSearch from "@/components/SeancesListWithSearch";
 import AlerteButton from "./AlerteButton";
 import SynopsisCollapsible from "@/components/SynopsisCollapsible";
 import SeancesFiltres from "@/components/SeancesFiltres";
@@ -106,11 +106,11 @@ async function SeancesSection({ filmId, filmTitre, searchParams }: SeancesSectio
           <AlerteButton filmTitre={filmTitre} />
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          {seancesParCinema.map((groupe) => (
-            <SeanceGroupByCinema key={groupe.cinema.id} groupe={groupe} filmId={filmId} filmTitre={filmTitre} />
-          ))}
-        </div>
+        <SeancesListWithSearch
+          seancesParCinema={seancesParCinema}
+          filmId={filmId}
+          filmTitre={filmTitre}
+        />
       )}
     </>
   );

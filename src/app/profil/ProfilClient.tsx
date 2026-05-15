@@ -1298,7 +1298,7 @@ export default function ProfilClient() {
     if (!file.type.startsWith("image/")) return;
     setUploadingAvatar(true);
     try {
-      const dataUrl = await resizeImage(file, 120);
+      const dataUrl = await resizeImage(file, 300);
       await profilApi.updateProfil(email, { avatar: dataUrl });
       await loadProfil(email);
     } catch (err) { console.error("Erreur upload avatar", err); }

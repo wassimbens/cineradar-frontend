@@ -84,6 +84,15 @@ body {
   container-type: size;
 }
 
+/* ── Mobile responsive ───────────────────────────────────── */
+@media (max-width: 640px) {
+  .slot {
+    min-width: 60px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+}
+
 /* ── Skeleton shimmer ────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% center; }

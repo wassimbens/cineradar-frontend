@@ -114,7 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             {/* Liens */}
-            <div className="flex gap-12 flex-wrap">
+            <div className="flex gap-6 sm:gap-12 flex-wrap">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--text-2)" }}>
                   Films

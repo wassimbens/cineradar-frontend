@@ -199,12 +199,12 @@ export default async function FilmPage({ params, searchParams }: Props) {
       </Link>
 
       {/* En-tête film — s'affiche immédiatement */}
-      <div className="flex gap-8 mb-10 items-start">
-        {/* Affiche — taille généreuse, pas de compression */}
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-8 sm:mb-10 items-start">
+        {/* Affiche */}
         <div
-          className="flex-shrink-0 rounded-2xl overflow-hidden shadow-xl poster-container"
+          className="flex-shrink-0 rounded-2xl overflow-hidden shadow-xl poster-container self-center sm:self-start"
           style={{
-            width: "clamp(140px, 22vw, 220px)",
+            width: "clamp(120px, 40vw, 220px)",
             aspectRatio: "2/3",
             background: "var(--bg-3)",
             position: "relative",
@@ -214,7 +214,7 @@ export default async function FilmPage({ params, searchParams }: Props) {
             src={film.affiche}
             alt={film.titre}
             fill
-            sizes="(max-width: 600px) 140px, 220px"
+            sizes="(max-width: 640px) 40vw, 220px"
             priority
           />
         </div>
@@ -236,7 +236,7 @@ export default async function FilmPage({ params, searchParams }: Props) {
           )}
 
           <h1
-            className="text-3xl font-extrabold mb-1"
+            className="text-2xl sm:text-3xl font-extrabold mb-1"
             style={{ color: "var(--text)", letterSpacing: "0.01em", lineHeight: 1.2, textTransform: "uppercase" }}
           >
             {film.titre}

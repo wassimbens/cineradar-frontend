@@ -233,7 +233,7 @@ export default function FilmCatalog() {
       {/* ── Barre de filtres ──────────────────────────── */}
       <div className="flex flex-wrap gap-3 mb-8">
         {/* Recherche */}
-        <div className="relative flex-1" style={{ minWidth: 220 }}>
+        <div className="relative flex-1" style={{ minWidth: 160 }}>
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none" style={{ color: "var(--text-3)" }}>
             🔍
           </span>

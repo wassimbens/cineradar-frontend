@@ -92,7 +92,7 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section
-        className="px-6 py-20 text-center"
+        className="px-6 py-12 sm:py-20 text-center"
         style={{
           background: "linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%)",
           borderBottom: "1px solid var(--border)",
@@ -106,7 +106,7 @@ export default async function HomePage() {
             Tous les cinémas français
           </p>
           <h1
-            className="text-4xl font-extrabold mb-4"
+            className="text-3xl sm:text-4xl font-extrabold mb-4"
             style={{ color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1.15 }}
           >
             Trouvez vos séances,<br />

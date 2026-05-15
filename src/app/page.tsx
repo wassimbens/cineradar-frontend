@@ -3,7 +3,6 @@ import FilmCard from "@/components/FilmCard";
 import CinemaCard from "@/components/CinemaCard";
 import CommentCaMarche from "@/components/CommentCaMarche";
 
-import FilmsLocaux from "@/components/FilmsLocaux";
 import Image from "next/image";
 import { api, Film } from "@/lib/api";
 
@@ -149,18 +148,11 @@ export default async function HomePage() {
         {filmDuJour && filmDuJour.affiche && (
           <section className="mb-14">
             <div
-              className="relative overflow-hidden rounded-2xl flex flex-col sm:flex-row gap-0"
-              style={{
-                background: "var(--bg-2)",
-                border: "1px solid var(--border)",
-                minHeight: 220,
-              }}
+              className="relative overflow-hidden rounded-2xl"
+              style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
             >
-              {/* Poster flou en arrière-plan (effet cinéma) */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ zIndex: 0 }}
-              >
+              {/* Fond flou */}
+              <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
                 <Image
                   src={filmDuJour.affiche}
                   alt=""
@@ -172,101 +164,98 @@ export default async function HomePage() {
                 />
               </div>
 
-              {/* Poster net */}
-              <div
-                className="relative flex-shrink-0"
-                style={{ width: 140, minHeight: 210, position: "relative", zIndex: 1 }}
-              >
-                <Image
-                  src={filmDuJour.affiche}
-                  alt={filmDuJour.titre}
-                  fill
-                  sizes="140px"
-                  style={{ objectFit: "cover", objectPosition: "center top" }}
-                  unoptimized
-                />
-              </div>
+              {/* Layout : row sur desktop, column sur mobile */}
+              <div className="relative flex flex-row sm:flex-row gap-0" style={{ zIndex: 1, minHeight: 180 }}>
 
-              {/* Contenu */}
-              <div
-                className="relative flex flex-col justify-between px-6 py-5 flex-1"
-                style={{ zIndex: 1 }}
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
-                      style={{ background: "var(--red)", color: "white" }}
+                {/* Poster net — largeur fixe desktop, hauteur auto mobile */}
+                <div
+                  className="flex-shrink-0 self-stretch"
+                  style={{ width: "clamp(90px, 28vw, 160px)", position: "relative", minHeight: 160 }}
+                >
+                  <Image
+                    src={filmDuJour.affiche}
+                    alt={filmDuJour.titre}
+                    fill
+                    sizes="(max-width: 640px) 28vw, 160px"
+                    style={{ objectFit: "cover", objectPosition: "center top" }}
+                    unoptimized
+                  />
+                </div>
+
+                {/* Contenu texte */}
+                <div className="flex flex-col justify-between px-4 py-4 sm:px-6 sm:py-5 flex-1 min-w-0">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span
+                        className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-full flex-shrink-0"
+                        style={{ background: "var(--red)", color: "white" }}
+                      >
+                        🎬 Film du jour
+                      </span>
+                      {filmDuJour.seancesCount != null && filmDuJour.seancesCount > 0 && (
+                        <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
+                          {filmDuJour.seancesCount} séance{filmDuJour.seancesCount > 1 ? "s" : ""}
+                        </span>
+                      )}
+                    </div>
+                    <h2
+                      className="text-base sm:text-2xl font-extrabold mb-1 leading-tight"
+                      style={{ color: "white", letterSpacing: "-0.02em" }}
                     >
-                      🎬 Film du jour
-                    </span>
-                    {filmDuJour.seancesCount != null && filmDuJour.seancesCount > 0 && (
-                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
-                        {filmDuJour.seancesCount} séance{filmDuJour.seancesCount > 1 ? "s" : ""} aujourd&apos;hui
+                      {filmDuJour.titre}
+                    </h2>
+                    {filmDuJour.realisateur && (
+                      <p className="text-xs sm:text-sm mb-1" style={{ color: "rgba(255,255,255,0.65)" }}>
+                        {filmDuJour.realisateur}{filmDuJour.annee ? ` · ${filmDuJour.annee}` : ""}
+                      </p>
+                    )}
+                    {filmDuJour.genres.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {filmDuJour.genres.slice(0, 2).map(g => (
+                          <span
+                            key={g}
+                            className="text-xs px-2 py-0.5 rounded-full"
+                            style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
+                          >
+                            {g}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {filmDuJour.synopsis && (
+                      <p
+                        className="hidden sm:block text-sm leading-relaxed"
+                        style={{
+                          color: "rgba(255,255,255,0.7)",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {filmDuJour.synopsis}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 mt-3">
+                    <a
+                      href={`/films/${filmDuJour.id}`}
+                      className="text-xs sm:text-sm font-bold px-4 py-2 rounded-xl text-white no-underline flex-shrink-0"
+                      style={{ background: "var(--red)", display: "inline-block" }}
+                    >
+                      Voir les séances →
+                    </a>
+                    {(filmDuJour.imdbNote ?? filmDuJour.tmdbNote) && (
+                      <span className="text-xs sm:text-sm font-semibold" style={{ color: "rgba(255,255,255,0.65)" }}>
+                        ⭐ {(filmDuJour.imdbNote ?? filmDuJour.tmdbNote)?.toFixed(1)}/10
                       </span>
                     )}
                   </div>
-                  <h2
-                    className="text-2xl font-extrabold mb-1 leading-tight"
-                    style={{ color: "white", letterSpacing: "-0.02em" }}
-                  >
-                    {filmDuJour.titre}
-                  </h2>
-                  {filmDuJour.realisateur && (
-                    <p className="text-sm mb-1" style={{ color: "rgba(255,255,255,0.65)" }}>
-                      de {filmDuJour.realisateur}
-                      {filmDuJour.annee ? ` · ${filmDuJour.annee}` : ""}
-                    </p>
-                  )}
-                  {filmDuJour.genres.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {filmDuJour.genres.slice(0, 3).map(g => (
-                        <span
-                          key={g}
-                          className="text-xs px-2 py-0.5 rounded-full"
-                          style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
-                        >
-                          {g}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {filmDuJour.synopsis && (
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{
-                        color: "rgba(255,255,255,0.7)",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {filmDuJour.synopsis}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 mt-4">
-                  <a
-                    href={`/films/${filmDuJour.id}`}
-                    className="text-sm font-bold px-5 py-2 rounded-xl text-white no-underline"
-                    style={{ background: "var(--red)", display: "inline-block" }}
-                  >
-                    Voir les séances →
-                  </a>
-                  {(filmDuJour.imdbNote ?? filmDuJour.tmdbNote) && (
-                    <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.65)" }}>
-                      ⭐ {(filmDuJour.imdbNote ?? filmDuJour.tmdbNote)?.toFixed(1)}/10
-                    </span>
-                  )}
                 </div>
               </div>
             </div>
           </section>
         )}
-
-        {/* Films locaux personnalisés (localStorage city) */}
-        <FilmsLocaux />
 
         {/* Nouveautés au cinéma */}
         {trending.length > 0 && (

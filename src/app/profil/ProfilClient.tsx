@@ -1320,16 +1320,16 @@ export default function ProfilClient() {
   const emailVerified = (authUser as (AuthUser & { emailVerified?: boolean }) | null)?.emailVerified ?? true;
   const initiales = getInitiales(email, profil.nom);
 
-  const TABS: { id: Tab; label: string; icon: string; count?: number }[] = [
-    { id: "vitrine",    label: "Vitrine",      icon: "🎬" },
-    { id: "stats",      label: "CinéScope",    icon: "🔭" },
-    { id: "vus",        label: "Films vus",    icon: "✓",   count: profil.stats.filmsVus },
-    { id: "favoris",    label: "Favoris",      icon: "❤️",  count: profil.stats.favoris },
-    { id: "watchlist",  label: "À voir",       icon: "🔖",  count: profil.stats.watchlist },
-    { id: "avis",       label: "Avis",         icon: "⭐",  count: profil.stats.avis },
-    { id: "cinemas",    label: "Cinémas",      icon: "🏛️",  count: profil.stats.cinemas },
-    { id: "communaute",    label: "Communauté",    icon: "👥" },
-    { id: "notifications", label: "Notifications", icon: "🔔", count: unreadNotifs > 0 ? unreadNotifs : undefined },
+  const TABS: { id: Tab; label: string; short: string; icon: string; count?: number }[] = [
+    { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
+    { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
+    { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
+    { id: "favoris",       label: "Favoris",       short: "Favoris",  icon: "❤️", count: profil.stats.favoris },
+    { id: "watchlist",     label: "À voir",        short: "À voir",   icon: "🔖", count: profil.stats.watchlist },
+    { id: "avis",          label: "Avis",          short: "Avis",     icon: "⭐", count: profil.stats.avis },
+    { id: "cinemas",       label: "Cinémas",       short: "Cinémas",  icon: "🏛️", count: profil.stats.cinemas },
+    { id: "communaute",    label: "Communauté",    short: "Commu.",   icon: "👥" },
+    { id: "notifications", label: "Notifications", short: "Notifs",   icon: "🔔", count: unreadNotifs > 0 ? unreadNotifs : undefined },
   ];
 
   return (
@@ -1482,17 +1482,26 @@ export default function ProfilClient() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-medium whitespace-nowrap transition-colors"
+            className="flex-shrink-0 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 px-2 sm:px-3 py-2 sm:py-3 transition-colors"
             style={{
               background: activeTab === tab.id ? "var(--red)" : "var(--bg-2)",
               color: activeTab === tab.id ? "white" : "var(--text-2)",
-              border: "none", cursor: "pointer", minWidth: 80,
+              border: "none", cursor: "pointer", minWidth: 56,
+              fontSize: "0.7rem", fontWeight: 500,
             }}
           >
-            <span>{tab.icon}</span>
-            <span>{tab.label}</span>
+            <span style={{ fontSize: "1rem", lineHeight: 1 }}>{tab.icon}</span>
+            <span className="hidden sm:inline whitespace-nowrap" style={{ fontSize: "0.75rem" }}>{tab.label}</span>
+            <span className="sm:hidden whitespace-nowrap" style={{ fontSize: "0.6rem" }}>{tab.short}</span>
             {tab.count !== undefined && tab.count > 0 && (
-              <span className="text-xs px-1 py-0.5 rounded-full" style={{ background: activeTab === tab.id ? "rgba(255,255,255,0.25)" : "var(--bg-3)", color: activeTab === tab.id ? "white" : "var(--text-3)" }}>
+              <span
+                className="rounded-full"
+                style={{
+                  background: activeTab === tab.id ? "rgba(255,255,255,0.25)" : "var(--bg-3)",
+                  color: activeTab === tab.id ? "white" : "var(--text-3)",
+                  fontSize: "0.55rem", padding: "1px 4px", lineHeight: 1.4,
+                }}
+              >
                 {tab.count}
               </span>
             )}

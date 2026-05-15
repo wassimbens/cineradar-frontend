@@ -1341,86 +1341,136 @@ export default function ProfilClient() {
       )}
 
       {/* ── En-tête profil ─────────────────────────────── */}
-      <div className="flex flex-wrap items-center gap-6 mb-8 p-6 rounded-2xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
-        {/* Avatar — plus grand, cliquable pour changer */}
-        <label className="group relative flex-shrink-0 w-28 h-28 rounded-full overflow-hidden cursor-pointer shadow-lg" title="Changer la photo" style={{ background: "var(--red)" }}>
-          {profil.avatar
-            // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={profil.avatar} alt="Avatar" className="w-full h-full object-cover" />
-            : <span className="w-full h-full flex items-center justify-center text-3xl font-extrabold text-white">{initiales}</span>
-          }
-          <span className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.55)" }}>
-            {uploadingAvatar ? <span className="text-white text-sm">…</span> : <><span className="text-white text-2xl">📷</span><span className="text-white text-xs mt-1">Modifier</span></>}
-          </span>
-          <input type="file" accept="image/*" className="sr-only" onChange={handleAvatarFile} disabled={uploadingAvatar} />
-        </label>
+      <div className="mb-8 rounded-2xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)", overflow: "hidden" }}>
 
-        {/* Infos — pseudo en vedette, bio, ville */}
-        <div className="flex-1 min-w-0">
-          {/* Pseudo */}
-          {editingPseudo ? (
-            <div className="flex flex-col gap-1 mb-2">
-              <div className="flex gap-2 items-center">
-                <input value={pseudoInput} onChange={(e) => setPseudoInput(e.target.value)} placeholder="@pseudo (3–20 caractères)" className="px-3 py-1.5 rounded-lg text-sm outline-none" style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }} />
-                <button onClick={handleSavePseudo} className="px-3 py-1 rounded-lg text-sm text-white" style={{ background: "var(--red)", cursor: "pointer" }}>OK</button>
-                <button onClick={() => { setEditingPseudo(false); setPseudoError(""); }} className="px-3 py-1 rounded-lg text-sm" style={{ color: "var(--text-3)", cursor: "pointer" }}>Annuler</button>
+        {/* Ligne 1 : avatar + infos */}
+        <div className="flex items-start gap-4 p-4 sm:p-6">
+          {/* Avatar */}
+          <label
+            className="group relative flex-shrink-0 rounded-full overflow-hidden cursor-pointer shadow-md"
+            title="Changer la photo"
+            style={{ background: "var(--red)", width: 64, height: 64 }}
+          >
+            {profil.avatar
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={profil.avatar} alt="Avatar" className="w-full h-full object-cover" />
+              : <span className="w-full h-full flex items-center justify-center text-xl font-extrabold text-white">{initiales}</span>
+            }
+            <span className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.55)" }}>
+              {uploadingAvatar
+                ? <span className="text-white text-xs">…</span>
+                : <span className="text-white text-lg">📷</span>
+              }
+            </span>
+            <input type="file" accept="image/*" className="sr-only" onChange={handleAvatarFile} disabled={uploadingAvatar} />
+          </label>
+
+          {/* Infos */}
+          <div className="flex-1 min-w-0">
+
+            {/* Pseudo */}
+            {editingPseudo ? (
+              <div className="flex flex-col gap-1 mb-2">
+                <div className="flex gap-2 items-center flex-wrap">
+                  <input
+                    value={pseudoInput}
+                    onChange={(e) => setPseudoInput(e.target.value)}
+                    placeholder="@pseudo (3–20 car.)"
+                    className="flex-1 px-3 py-1.5 rounded-lg text-sm outline-none"
+                    style={{ minWidth: 0, background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+                  />
+                  <button onClick={handleSavePseudo} className="px-3 py-1.5 rounded-lg text-sm text-white flex-shrink-0" style={{ background: "var(--red)", cursor: "pointer" }}>OK</button>
+                  <button onClick={() => { setEditingPseudo(false); setPseudoError(""); }} className="px-3 py-1.5 rounded-lg text-sm flex-shrink-0" style={{ color: "var(--text-3)", cursor: "pointer" }}>✕</button>
+                </div>
+                {pseudoError && <p className="text-xs" style={{ color: "#dc2626" }}>{pseudoError}</p>}
               </div>
-              {pseudoError && <p className="text-xs" style={{ color: "#dc2626" }}>{pseudoError}</p>}
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <h1 className="text-xl font-extrabold" style={{ color: "var(--text)", letterSpacing: "-0.02em" }}>
-                {pseudo ? `@${pseudo}` : <span style={{ color: "var(--text-3)", fontStyle: "italic", fontSize: "0.9rem" }}>Pas encore de pseudo</span>}
-              </h1>
-              {isPro && (
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "var(--red)", color: "white" }}>✦ Pro</span>
-              )}
-              <button onClick={() => { setEditingPseudo(true); setPseudoInput(pseudo ?? ""); }} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }} title="Modifier le pseudo">✏️</button>
-            </div>
-          )}
-
-          {/* Bio */}
-          {editingBio ? (
-            <div className="flex flex-col gap-1 mb-2">
-              <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Une courte présentation…" rows={2} className="px-3 py-1.5 rounded-lg text-xs outline-none resize-none" style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }} />
-              <div className="flex gap-2">
-                <button onClick={handleSaveBio} className="px-3 py-1 rounded-lg text-xs text-white" style={{ background: "var(--red)", cursor: "pointer" }}>OK</button>
-                <button onClick={() => setEditingBio(false)} className="px-3 py-1 rounded-lg text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>Annuler</button>
+            ) : (
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h1 className="text-base sm:text-lg font-extrabold truncate" style={{ color: "var(--text)", letterSpacing: "-0.02em" }}>
+                  {pseudo ? `@${pseudo}` : <span style={{ color: "var(--text-3)", fontStyle: "italic", fontSize: "0.85rem" }}>Pas de pseudo</span>}
+                </h1>
+                {isPro && (
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0" style={{ background: "var(--red)", color: "white" }}>✦ Pro</span>
+                )}
+                <button onClick={() => { setEditingPseudo(true); setPseudoInput(pseudo ?? ""); }} className="text-xs flex-shrink-0" style={{ color: "var(--text-3)", cursor: "pointer" }} title="Modifier">✏️</button>
               </div>
-            </div>
-          ) : (
-            <div className="flex items-start gap-1 mb-2">
-              <p className="text-sm italic" style={{ color: "var(--text-2)" }}>{profil.bio || <span style={{ color: "var(--text-3)" }}>Ajouter une bio…</span>}</p>
-              <button onClick={() => setEditingBio(true)} className="text-xs flex-shrink-0 mt-px" style={{ color: "var(--text-3)", cursor: "pointer" }}>✏️</button>
-            </div>
-          )}
+            )}
 
-          {/* Ville */}
-          {editingVille ? (
-            <div className="flex gap-2 items-center">
-              <input value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Votre ville" className="px-3 py-1 rounded-lg text-xs outline-none" style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }} />
-              <button onClick={handleSaveVille} className="px-3 py-1 rounded-lg text-xs text-white" style={{ background: "var(--red)", cursor: "pointer" }}>OK</button>
-              <button onClick={() => setEditingVille(false)} className="px-3 py-1 rounded-lg text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>Annuler</button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1">
-              <span className="text-xs" style={{ color: "var(--text-3)" }}>{profil.ville ? `📍 ${profil.ville}` : <span style={{ opacity: 0.6 }}>📍 Ville…</span>}</span>
-              <button onClick={() => setEditingVille(true)} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>✏️</button>
-            </div>
-          )}
+            {/* Bio */}
+            {editingBio ? (
+              <div className="flex flex-col gap-1 mb-2">
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Une courte présentation…"
+                  rows={2}
+                  className="w-full px-3 py-1.5 rounded-lg text-xs outline-none resize-none"
+                  style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+                />
+                <div className="flex gap-2">
+                  <button onClick={handleSaveBio} className="px-3 py-1 rounded-lg text-xs text-white" style={{ background: "var(--red)", cursor: "pointer" }}>OK</button>
+                  <button onClick={() => setEditingBio(false)} className="px-3 py-1 rounded-lg text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>Annuler</button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-start gap-1 mb-1">
+                <p className="text-xs italic truncate" style={{ color: "var(--text-2)" }}>
+                  {profil.bio || <span style={{ color: "var(--text-3)" }}>Ajouter une bio…</span>}
+                </p>
+                <button onClick={() => setEditingBio(true)} className="text-xs flex-shrink-0" style={{ color: "var(--text-3)", cursor: "pointer" }}>✏️</button>
+              </div>
+            )}
+
+            {/* Ville */}
+            {editingVille ? (
+              <div className="flex gap-2 items-center flex-wrap">
+                <input
+                  value={ville}
+                  onChange={(e) => setVille(e.target.value)}
+                  placeholder="Votre ville"
+                  className="flex-1 px-3 py-1 rounded-lg text-xs outline-none"
+                  style={{ minWidth: 0, background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+                />
+                <button onClick={handleSaveVille} className="px-3 py-1 rounded-lg text-xs text-white flex-shrink-0" style={{ background: "var(--red)", cursor: "pointer" }}>OK</button>
+                <button onClick={() => setEditingVille(false)} className="px-3 py-1 rounded-lg text-xs flex-shrink-0" style={{ color: "var(--text-3)", cursor: "pointer" }}>✕</button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <span className="text-xs" style={{ color: "var(--text-3)" }}>
+                  {profil.ville ? `📍 ${profil.ville}` : <span style={{ opacity: 0.5 }}>📍 Ville…</span>}
+                </span>
+                <button onClick={() => setEditingVille(true)} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>✏️</button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Boutons droite */}
-        <div className="flex flex-col gap-2 flex-shrink-0 items-end">
+        {/* Ligne 2 : boutons CTA — toujours en bas, jamais superposés */}
+        <div
+          className="flex flex-wrap gap-2 px-4 sm:px-6 py-3"
+          style={{ borderTop: "1px solid var(--border)" }}
+        >
           {pseudo && (
-            <Link href={`/profil/${pseudo}`} className="text-xs px-3 py-1.5 rounded-lg no-underline text-center" style={{ color: "var(--text-2)", border: "1px solid var(--border)", background: "var(--bg-3)" }}>
-              Profil public
+            <Link
+              href={`/profil/${pseudo}`}
+              className="text-xs px-3 py-1.5 rounded-lg no-underline"
+              style={{ color: "var(--text-2)", border: "1px solid var(--border)", background: "var(--bg-3)" }}
+            >
+              👤 Profil public
             </Link>
           )}
-          <Link href="/parametres" className="text-xs px-3 py-1.5 rounded-lg no-underline text-center" style={{ color: "var(--text-2)", border: "1px solid var(--border)", background: "var(--bg-3)" }}>
+          <Link
+            href="/parametres"
+            className="text-xs px-3 py-1.5 rounded-lg no-underline"
+            style={{ color: "var(--text-2)", border: "1px solid var(--border)", background: "var(--bg-3)" }}
+          >
             ⚙️ Paramètres
           </Link>
-          <button onClick={handleLogout} className="text-xs px-3 py-1.5 rounded-lg" style={{ color: "var(--text-3)", border: "1px solid var(--border)", background: "var(--bg-3)", cursor: "pointer" }}>
+          <button
+            onClick={handleLogout}
+            className="text-xs px-3 py-1.5 rounded-lg"
+            style={{ color: "var(--text-3)", border: "1px solid var(--border)", background: "var(--bg-3)", cursor: "pointer" }}
+          >
             Se déconnecter
           </button>
         </div>

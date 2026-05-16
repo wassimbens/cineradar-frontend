@@ -1972,7 +1972,7 @@ export default function ProfilClient() {
     { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
     ...(!isPro ? [{ id: "simple-stats" as Tab, label: "Stats",      short: "Stats",    icon: "📊" }] : []),
     { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
-    { id: "pour-vous",    label: "Pour vous",     short: "Reco.",     icon: "✨" },
+    { id: "pour-vous",    label: "Pour vous",     short: "Pour vous", icon: "✨" },
     { id: "listes",        label: "Mes listes",    short: "Listes",   icon: "📋" },
     { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
     { id: "favoris",       label: "Favoris",       short: "Favoris",  icon: "❤️", count: profil.stats.favoris },

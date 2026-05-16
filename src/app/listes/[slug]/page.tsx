@@ -490,11 +490,11 @@ export default function ListePubliquePage() {
         ← Mes listes
       </Link>
 
-      {/* Cover image banner */}
+      {/* Cover image banner — ratio 4:1, hauteur clampée */}
       {liste.coverImage ? (
         <div
           className="relative rounded-2xl overflow-hidden mb-4"
-          style={{ height: 200 }}
+          style={{ height: "clamp(110px, 28vw, 200px)" }}
         >
           <Image
             src={liste.coverImage}
@@ -503,147 +503,117 @@ export default function ListePubliquePage() {
             className="object-cover"
             sizes="(max-width: 900px) 100vw, 900px"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55))" }}
-          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.5))" }} />
           {isOwner && (
             <label
-              className="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
+              className="absolute bottom-2 right-2 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
               style={{ background: "rgba(0,0,0,0.55)", color: "white", backdropFilter: "blur(4px)" }}
             >
               {coverUploading ? "…" : "📷 Changer"}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCoverUpload(f); e.target.value = ""; }}
-              />
+              <input type="file" accept="image/*" className="hidden"
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCoverUpload(f); e.target.value = ""; }} />
             </label>
           )}
         </div>
       ) : isOwner ? (
         <label
-          className="flex items-center justify-center gap-2 rounded-2xl mb-4 cursor-pointer"
-          style={{ height: 80, background: "var(--bg-2)", border: "2px dashed var(--border)", color: "var(--text-3)" }}
+          className="flex items-center justify-center gap-2 rounded-2xl mb-4 cursor-pointer text-sm"
+          style={{ height: 60, background: "var(--bg-2)", border: "2px dashed var(--border)", color: "var(--text-3)" }}
         >
-          {coverUploading ? "Traitement…" : "📷 Ajouter une photo de couverture"}
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCoverUpload(f); e.target.value = ""; }}
-          />
+          {coverUploading ? "Traitement…" : "📷 Ajouter une bannière"}
+          <input type="file" accept="image/*" className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCoverUpload(f); e.target.value = ""; }} />
         </label>
       ) : null}
 
-      {/* Header */}
+      {/* Header — layout vertical sur mobile, plus de superposition */}
       <div
-        className="rounded-2xl p-6 mb-8"
+        className="rounded-2xl p-4 mb-6"
         style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
       >
-        <div className="flex items-start justify-between gap-4 flex-wrap">
+        {/* Ligne 1 : icône + titre + badge */}
+        <div className="flex items-center gap-3 mb-3 flex-wrap">
+          {/* Icône ronde */}
+          {isOwner ? (
+            <label className="relative cursor-pointer flex-shrink-0" title="Changer la photo">
+              <div className="flex items-center justify-center overflow-hidden"
+                style={{ width: 52, height: 52, borderRadius: "50%", background: "var(--bg-3)", border: "2px solid var(--border)" }}>
+                {thumbUploading ? <span style={{ fontSize: 12, color: "var(--text-3)" }}>…</span>
+                  : liste.thumbnail ? <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <span className="text-3xl">{liste.emoji ?? "🎬"}</span>}
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 hover:opacity-100"
+                style={{ background: "rgba(0,0,0,0.45)", transition: "opacity 0.15s" }}>
+                <span style={{ fontSize: 16 }}>📷</span>
+              </div>
+              <input type="file" accept="image/*" className="hidden"
+                onChange={async (e) => { const f = e.target.files?.[0]; if (f) await handleThumbnailUpload(f); e.target.value = ""; }} />
+            </label>
+          ) : (
+            <div className="flex items-center justify-center overflow-hidden flex-shrink-0"
+              style={{ width: 52, height: 52, borderRadius: "50%", background: "var(--bg-3)", border: "1px solid var(--border)" }}>
+              {liste.thumbnail
+                ? <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : <span className="text-3xl">{liste.emoji ?? "🎬"}</span>}
+            </div>
+          )}
+
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-2 flex-wrap">
-              {/* Icône ronde — cliquable pour l'auteur */}
-              {isOwner ? (
-                <label className="relative cursor-pointer flex-shrink-0" title="Changer la photo">
-                  <div
-                    className="flex items-center justify-center overflow-hidden"
-                    style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-3)", border: "2px solid var(--border)" }}
-                  >
-                    {thumbUploading ? (
-                      <span style={{ fontSize: 13, color: "var(--text-3)" }}>…</span>
-                    ) : liste.thumbnail ? (
-                      <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    ) : (
-                      <span className="text-3xl">{liste.emoji ?? "🎬"}</span>
-                    )}
-                  </div>
-                  <div
-                    className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 hover:opacity-100"
-                    style={{ background: "rgba(0,0,0,0.45)", transition: "opacity 0.15s" }}
-                  >
-                    <span style={{ fontSize: 18 }}>📷</span>
-                  </div>
-                  <input
-                    type="file" accept="image/*" className="hidden"
-                    onChange={async (e) => { const f = e.target.files?.[0]; if (f) await handleThumbnailUpload(f); e.target.value = ""; }}
-                  />
-                </label>
-              ) : (
-                <div
-                  className="flex items-center justify-center overflow-hidden flex-shrink-0"
-                  style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-3)", border: "1px solid var(--border)" }}
-                >
-                  {liste.thumbnail ? (
-                    <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ) : (
-                    <span className="text-3xl">{liste.emoji ?? "🎬"}</span>
-                  )}
-                </div>
-              )}
-              <h1
-                className="text-2xl font-extrabold"
-                style={{ color: "var(--text)", letterSpacing: "-0.02em" }}
-              >
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl font-extrabold" style={{ color: "var(--text)", letterSpacing: "-0.02em" }}>
                 {liste.titre}
               </h1>
-              {/* Badge public/privé */}
-              <span
-                className="px-2 py-0.5 rounded-full text-xs font-semibold"
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0"
                 style={{
                   background: liste.isPublic ? "#dcfce7" : "var(--bg-3)",
                   color: liste.isPublic ? "#16a34a" : "var(--text-3)",
                   border: `1px solid ${liste.isPublic ? "#86efac" : "var(--border)"}`,
-                }}
-              >
+                }}>
                 {liste.isPublic ? "Publique" : "Privée"}
               </span>
             </div>
-
-            {liste.description && (
-              <p className="text-sm mb-3" style={{ color: "var(--text-2)", lineHeight: 1.6 }}>
-                {liste.description}
-              </p>
-            )}
-
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: "var(--text-3)" }}>
-              <span>Par <strong style={{ color: "var(--text-2)" }}>{nomAuteur}</strong></span>
-              <span>Créée le {formatDate(liste.createdAt)}</span>
-              <span>{liste.films.length} film{liste.films.length !== 1 ? "s" : ""}</span>
-            </div>
           </div>
+        </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {isOwner && (
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
-                style={{
-                  background: "var(--red)",
-                  color: "white",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                + Ajouter un film
-              </button>
-            )}
+        {/* Description */}
+        {liste.description && (
+          <p className="text-sm mb-3" style={{ color: "var(--text-2)", lineHeight: 1.6 }}>
+            {liste.description}
+          </p>
+        )}
+
+        {/* Méta */}
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs mb-4" style={{ color: "var(--text-3)" }}>
+          <span>Par <strong style={{ color: "var(--text-2)" }}>{nomAuteur}</strong></span>
+          <span>·</span>
+          <span>{formatDate(liste.createdAt)}</span>
+          <span>·</span>
+          <span>{liste.films.length} film{liste.films.length !== 1 ? "s" : ""}</span>
+        </div>
+
+        {/* CTAs — toujours sous le contenu, jamais en regard */}
+        <div className="flex gap-2 flex-wrap">
+          {isOwner && (
             <button
-              onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
-              style={{
-                background: copied ? "#dcfce7" : "var(--bg-3)",
-                color: copied ? "#16a34a" : "var(--text-2)",
-                border: `1px solid ${copied ? "#86efac" : "var(--border)"}`,
-                cursor: "pointer",
-              }}
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold"
+              style={{ background: "var(--red)", color: "white", border: "none", cursor: "pointer" }}
             >
-              {copied ? "✓ Lien copié !" : "🔗 Partager"}
+              + Ajouter un film
             </button>
-          </div>
+          )}
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold"
+            style={{
+              background: copied ? "#dcfce7" : "var(--bg-3)",
+              color: copied ? "#16a34a" : "var(--text-2)",
+              border: `1px solid ${copied ? "#86efac" : "var(--border)"}`,
+              cursor: "pointer",
+            }}
+          >
+            {copied ? "✓ Copié !" : "🔗 Partager"}
+          </button>
         </div>
       </div>
 

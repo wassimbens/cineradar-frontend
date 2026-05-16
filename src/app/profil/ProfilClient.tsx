@@ -1125,7 +1125,192 @@ function EmailVerifBanner({ email }: { email: string }) {
   );
 }
 
-type Tab = "vitrine" | "simple-stats" | "stats" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
+type Tab = "vitrine" | "simple-stats" | "stats" | "listes" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
+
+// ─────────────────────────────────────────────────────────
+//  Onglet Mes listes
+// ─────────────────────────────────────────────────────────
+
+interface ListeResume {
+  id: string;
+  slug: string;
+  titre: string;
+  description?: string | null;
+  emoji: string | null;
+  isPublic: boolean;
+  _count: { films: number; membres: number };
+  updatedAt: string;
+}
+
+const API_URL_PROFIL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
+function MesListesSection() {
+  const [listes, setListes] = useState<ListeResume[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [newTitre, setNewTitre] = useState("");
+  const [newEmoji, setNewEmoji] = useState("🎬");
+  const [newPublic, setNewPublic] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
+
+  const fetchListes = useCallback(async () => {
+    if (!token) { setLoading(false); return; }
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL_PROFIL}/api/listes/mes-listes`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) setListes(await res.json());
+    } finally { setLoading(false); }
+  }, [token]);
+
+  useEffect(() => { fetchListes(); }, [fetchListes]);
+
+  const handleCreate = async () => {
+    if (!token || !newTitre.trim()) return;
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL_PROFIL}/api/listes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ titre: newTitre.trim(), emoji: newEmoji, isPublic: newPublic }),
+      });
+      if (res.ok) {
+        setNewTitre("");
+        setCreating(false);
+        await fetchListes();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Erreur création");
+      }
+    } catch { setError("Erreur réseau"); }
+  };
+
+  const handleDelete = async (slug: string) => {
+    if (!token || !confirm("Supprimer cette liste ?")) return;
+    await fetch(`${API_URL_PROFIL}/api/listes/${slug}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    await fetchListes();
+  };
+
+  if (!token) {
+    return <EmptyState icon="📋" titre="Connectez-vous" texte="Vous devez être connecté pour gérer vos listes." />;
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* En-tête + bouton créer */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <h2 className="text-base font-extrabold" style={{ color: "var(--text)" }}>Mes listes</h2>
+        <button
+          onClick={() => setCreating((v) => !v)}
+          className="text-sm font-semibold px-3 py-1.5 rounded-lg"
+          style={{ background: "var(--red)", color: "white", border: "none", cursor: "pointer" }}
+        >
+          {creating ? "Annuler" : "+ Nouvelle liste"}
+        </button>
+      </div>
+
+      {/* Formulaire création */}
+      {creating && (
+        <div
+          className="rounded-xl p-4 flex flex-col gap-3"
+          style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
+        >
+          <div className="flex gap-2">
+            <input
+              value={newEmoji}
+              onChange={(e) => setNewEmoji(e.target.value.slice(0, 4))}
+              className="w-12 text-center rounded-lg px-2 py-2 outline-none text-lg"
+              style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+              placeholder="🎬"
+            />
+            <input
+              value={newTitre}
+              onChange={(e) => setNewTitre(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+              placeholder="Nom de la liste…"
+              className="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+              autoFocus
+            />
+          </div>
+          <label className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: "var(--text-2)" }}>
+            <input
+              type="checkbox"
+              checked={newPublic}
+              onChange={(e) => setNewPublic(e.target.checked)}
+              className="rounded"
+            />
+            Liste publique
+          </label>
+          {error && <p className="text-xs" style={{ color: "var(--red)" }}>{error}</p>}
+          <button
+            onClick={handleCreate}
+            disabled={!newTitre.trim()}
+            className="self-start px-4 py-2 rounded-lg text-sm font-semibold text-white"
+            style={{ background: "var(--red)", cursor: newTitre.trim() ? "pointer" : "not-allowed", opacity: newTitre.trim() ? 1 : 0.5 }}
+          >
+            Créer
+          </button>
+        </div>
+      )}
+
+      {/* Contenu */}
+      {loading ? (
+        <div className="text-sm" style={{ color: "var(--text-3)" }}>Chargement…</div>
+      ) : listes.length === 0 ? (
+        <EmptyState icon="📋" titre="Aucune liste" texte="Créez votre première liste pour organiser vos films." />
+      ) : (
+        <div className="flex flex-col gap-2">
+          {listes.map((liste) => (
+            <div
+              key={liste.id}
+              className="flex items-center gap-3 rounded-xl px-4 py-3"
+              style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
+            >
+              <span className="text-2xl flex-shrink-0">{liste.emoji ?? "🎬"}</span>
+              <div className="flex-1 min-w-0">
+                <a
+                  href={`/listes/${liste.slug}`}
+                  className="font-semibold text-sm no-underline hover:underline truncate block"
+                  style={{ color: "var(--text)" }}
+                >
+                  {liste.titre}
+                </a>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>
+                  {liste._count.films} film{liste._count.films !== 1 ? "s" : ""} · {liste.isPublic ? "Publique" : "Privée"}
+                  {liste._count.membres > 0 && ` · ${liste._count.membres} membre${liste._count.membres !== 1 ? "s" : ""}`}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <a
+                  href={`/listes/${liste.slug}`}
+                  className="text-xs px-2 py-1 rounded-lg no-underline"
+                  style={{ color: "var(--text-2)", border: "1px solid var(--border)", background: "var(--bg-3)" }}
+                >
+                  Voir →
+                </a>
+                <button
+                  onClick={() => handleDelete(liste.slug)}
+                  className="text-xs px-2 py-1 rounded-lg"
+                  style={{ color: "var(--text-3)", border: "1px solid var(--border)", background: "var(--bg-3)", cursor: "pointer" }}
+                  title="Supprimer"
+                >
+                  🗑
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────────────────
 //  Composant Notifications
@@ -1478,6 +1663,7 @@ export default function ProfilClient() {
     { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
     ...(!isPro ? [{ id: "simple-stats" as Tab, label: "Stats",      short: "Stats",    icon: "📊" }] : []),
     { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
+    { id: "listes",        label: "Mes listes",    short: "Listes",   icon: "📋" },
     { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
     { id: "favoris",       label: "Favoris",       short: "Favoris",  icon: "❤️", count: profil.stats.favoris },
     { id: "watchlist",     label: "À voir",        short: "À voir",   icon: "🔖", count: profil.stats.watchlist },
@@ -1632,7 +1818,7 @@ export default function ProfilClient() {
       </div>
 
       {/* ── Onglets ─────────────────────────────────────── */}
-      <div className="flex overflow-x-auto rounded-xl mb-6" style={{ border: "1px solid var(--border)", scrollbarWidth: "none" }}>
+      <div className="flex overflow-x-auto rounded-xl mb-6 no-scrollbar" style={{ border: "1px solid var(--border)" }}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -1702,6 +1888,10 @@ export default function ProfilClient() {
             </a>
           </div>
         )
+      )}
+
+      {activeTab === "listes" && (
+        <MesListesSection />
       )}
 
       {activeTab === "vus" && (

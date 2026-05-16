@@ -33,7 +33,6 @@ interface ListeResume {
 // ── Bouton Ajouter à une liste ────────────────────────────
 
 function AjouterListeButton({ filmId }: { filmId: string }) {
-  const [token, setToken] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [listes, setListes] = useState<ListeResume[]>([]);
   const [loadingListes, setLoadingListes] = useState(false);
@@ -41,9 +40,8 @@ function AjouterListeButton({ filmId }: { filmId: string }) {
   const [adding, setAdding] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setToken(getToken());
-  }, []);
+  // Lire le token directement (pas via state) pour éviter le problème de timing useEffect
+  const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
 
   // Fermer le dropdown en cliquant ailleurs
   useEffect(() => {

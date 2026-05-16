@@ -1120,6 +1120,7 @@ interface ListeResume {
   description?: string | null;
   emoji: string | null;
   coverImage?: string | null;
+  thumbnail?: string | null;
   isPublic: boolean;
   _count: { films: number; membres: number };
   updatedAt: string;
@@ -1354,13 +1355,16 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
               className="flex items-center gap-3 rounded-xl px-4 py-3"
               style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
             >
-              {liste.coverImage ? (
-                <div className="flex-shrink-0 rounded-lg overflow-hidden" style={{ width: 40, height: 40 }}>
-                  <img src={liste.coverImage} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-              ) : (
-                <span className="text-2xl flex-shrink-0">{liste.emoji ?? "🎬"}</span>
-              )}
+              <div
+                className="flex-shrink-0 flex items-center justify-center overflow-hidden"
+                style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--bg-3)", border: "1px solid var(--border)" }}
+              >
+                {liste.thumbnail ? (
+                  <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <span className="text-2xl">{liste.emoji ?? "🎬"}</span>
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <a
                   href={`/listes/${liste.slug}`}

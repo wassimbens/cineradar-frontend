@@ -39,6 +39,7 @@ interface ListePublique {
   isPublic: boolean;
   emoji: string | null;
   coverImage: string | null;
+  thumbnail: string | null;
   createdAt: string;
   updatedAt: string;
   author: {
@@ -72,6 +73,26 @@ function formatDate(iso: string) {
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("cineradar_token");
+}
+
+function compressImage(file: File, maxPx = 400, quality = 0.82): Promise<string> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = ev.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function getUserIdFromToken(token: string | null): string | null {
@@ -230,6 +251,7 @@ export default function ListePubliquePage() {
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [coverUploading, setCoverUploading] = useState(false);
+  const [thumbUploading, setThumbUploading] = useState(false);
 
   const token = typeof window !== "undefined" ? getToken() : null;
   const currentUserId = getUserIdFromToken(token);
@@ -429,6 +451,21 @@ export default function ListePubliquePage() {
     finally { setCoverUploading(false); }
   };
 
+  const handleThumbnailUpload = async (file: File) => {
+    setThumbUploading(true);
+    try {
+      const dataUrl = await compressImage(file, 400, 0.82);
+      const t = getToken();
+      await fetch(`${API_URL}/api/listes/${slug}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", ...(t ? { Authorization: `Bearer ${t}` } : {}) },
+        body: JSON.stringify({ thumbnail: dataUrl }),
+      });
+      setListe((prev) => prev ? { ...prev, thumbnail: dataUrl } : prev);
+    } catch { /* ignore */ }
+    finally { setThumbUploading(false); }
+  };
+
   const handleFilmAdded = (film: FilmResume) => {
     setListe((prev) => {
       if (!prev) return prev;
@@ -508,8 +545,43 @@ export default function ListePubliquePage() {
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2 flex-wrap">
-              {liste.emoji && (
-                <span className="text-4xl">{liste.emoji}</span>
+              {/* Icône ronde — cliquable pour l'auteur */}
+              {isOwner ? (
+                <label className="relative cursor-pointer flex-shrink-0" title="Changer la photo">
+                  <div
+                    className="flex items-center justify-center overflow-hidden"
+                    style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-3)", border: "2px solid var(--border)" }}
+                  >
+                    {thumbUploading ? (
+                      <span style={{ fontSize: 13, color: "var(--text-3)" }}>…</span>
+                    ) : liste.thumbnail ? (
+                      <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : (
+                      <span className="text-3xl">{liste.emoji ?? "🎬"}</span>
+                    )}
+                  </div>
+                  <div
+                    className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 hover:opacity-100"
+                    style={{ background: "rgba(0,0,0,0.45)", transition: "opacity 0.15s" }}
+                  >
+                    <span style={{ fontSize: 18 }}>📷</span>
+                  </div>
+                  <input
+                    type="file" accept="image/*" className="hidden"
+                    onChange={async (e) => { const f = e.target.files?.[0]; if (f) await handleThumbnailUpload(f); e.target.value = ""; }}
+                  />
+                </label>
+              ) : (
+                <div
+                  className="flex items-center justify-center overflow-hidden flex-shrink-0"
+                  style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-3)", border: "1px solid var(--border)" }}
+                >
+                  {liste.thumbnail ? (
+                    <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <span className="text-3xl">{liste.emoji ?? "🎬"}</span>
+                  )}
+                </div>
               )}
               <h1
                 className="text-2xl font-extrabold"

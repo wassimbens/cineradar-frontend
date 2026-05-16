@@ -1119,6 +1119,7 @@ interface ListeResume {
   titre: string;
   description?: string | null;
   emoji: string | null;
+  coverImage?: string | null;
   isPublic: boolean;
   _count: { films: number; membres: number };
   updatedAt: string;
@@ -1133,6 +1134,7 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
   const [creating, setCreating] = useState(false);
   const [newTitre, setNewTitre] = useState("");
   const [newEmoji, setNewEmoji] = useState("🎬");
+  const [newCoverImage, setNewCoverImage] = useState("");
   const [newPublic, setNewPublic] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -1165,10 +1167,11 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
       const res = await fetch(`${API_URL_PROFIL}/api/listes`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ titre: newTitre.trim(), emoji: newEmoji, isPublic: newPublic }),
+        body: JSON.stringify({ titre: newTitre.trim(), emoji: newEmoji, isPublic: newPublic, coverImage: newCoverImage.trim() || null }),
       });
       if (res.ok) {
         setNewTitre("");
+        setNewCoverImage("");
         setCreating(false);
         await fetchListes();
       } else {
@@ -1270,6 +1273,18 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
               autoFocus
             />
           </div>
+          <input
+            value={newCoverImage}
+            onChange={(e) => setNewCoverImage(e.target.value)}
+            placeholder="URL d'une image de couverture (optionnel)…"
+            className="rounded-lg px-3 py-2 text-sm outline-none"
+            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+          />
+          {newCoverImage.trim() && (
+            <div className="rounded-lg overflow-hidden" style={{ height: 80, background: "var(--bg-3)" }}>
+              <img src={newCoverImage.trim()} alt="Aperçu" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
+          )}
           <label className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: "var(--text-2)" }}>
             <input
               type="checkbox"
@@ -1304,7 +1319,13 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
               className="flex items-center gap-3 rounded-xl px-4 py-3"
               style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
             >
-              <span className="text-2xl flex-shrink-0">{liste.emoji ?? "🎬"}</span>
+              {liste.coverImage ? (
+                <div className="flex-shrink-0 rounded-lg overflow-hidden" style={{ width: 40, height: 40 }}>
+                  <img src={liste.coverImage} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              ) : (
+                <span className="text-2xl flex-shrink-0">{liste.emoji ?? "🎬"}</span>
+              )}
               <div className="flex-1 min-w-0">
                 <a
                   href={`/listes/${liste.slug}`}

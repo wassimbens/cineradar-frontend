@@ -540,7 +540,7 @@ function UserCard({ user, myPseudo }: { user: UserSearch; myPseudo: string | nul
       className="flex items-center gap-3 p-3 rounded-xl"
       style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
     >
-      <Link href={`/profils/${user.pseudo}`} className="no-underline flex-shrink-0">
+      <Link href={`/profil/${user.pseudo}`} className="no-underline flex-shrink-0">
         <div
           className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white overflow-hidden"
           style={{ background: "var(--red)" }}
@@ -553,7 +553,7 @@ function UserCard({ user, myPseudo }: { user: UserSearch; myPseudo: string | nul
         </div>
       </Link>
       <div className="flex-1 min-w-0">
-        <Link href={`/profils/${user.pseudo}`} className="no-underline">
+        <Link href={`/profil/${user.pseudo}`} className="no-underline">
           <p className="text-sm font-bold" style={{ color: "var(--text)" }}>@{user.pseudo}</p>
         </Link>
         {user.nom && <p className="text-xs" style={{ color: "var(--text-2)" }}>{user.nom}</p>}
@@ -566,10 +566,12 @@ function UserCard({ user, myPseudo }: { user: UserSearch; myPseudo: string | nul
           <Link
             href={`/messages/${user.pseudo}`}
             className="flex items-center justify-center w-8 h-8 rounded-full no-underline"
-            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-2)", fontSize: "0.9rem" }}
+            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-2)" }}
             title="Envoyer un message"
           >
-            ✉️
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
           </Link>
           <button
             onClick={toggle}

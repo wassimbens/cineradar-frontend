@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   profilApi, authApi, socialApi,
@@ -1793,12 +1794,17 @@ function ManageSubscriptionButton() {
 }
 
 export default function ProfilClient() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [profil, setProfil] = useState<Profil | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>("vitrine");
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const t = searchParams?.get("tab");
+    if (t === "notifications" || t === "vitrine" || t === "stats" || t === "simple-stats" || t === "pour-vous" || t === "classiques") return t as Tab;
+    return "vitrine";
+  });
   const [unreadNotifs, setUnreadNotifs] = useState(0);
 
   // ── Affiches personnalisées (Pro) ─────────────────────
@@ -2075,7 +2081,14 @@ export default function ProfilClient() {
           <label
             className="group relative flex-shrink-0 rounded-full overflow-hidden cursor-pointer shadow-md"
             title="Changer la photo"
-            style={{ background: "var(--red)", width: 64, height: 64 }}
+            style={{
+              background: "var(--red)",
+              width: "clamp(64px, 10vw, 96px)",
+              height: "clamp(64px, 10vw, 96px)",
+              WebkitUserSelect: "none",
+              userSelect: "none",
+              WebkitTouchCallout: "none",
+            } as React.CSSProperties}
             onContextMenu={(e) => { e.preventDefault(); if (profil.avatar) setViewingImage(profil.avatar); }}
             onMouseDown={() => { if (profil.avatar) startAvatarLongPress(profil.avatar); }}
             onMouseUp={cancelAvatarLongPress}

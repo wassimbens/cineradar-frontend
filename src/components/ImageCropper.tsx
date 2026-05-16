@@ -17,7 +17,7 @@ export default function ImageCropper({ file, onCrop, onCancel }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
-  const CANVAS_SIZE = 300;
+  const SIZE = 280;
 
   useEffect(() => {
     const reader = new FileReader();
@@ -25,154 +25,144 @@ export default function ImageCropper({ file, onCrop, onCancel }: Props) {
       const img = new window.Image();
       img.onload = () => {
         imgRef.current = img;
-        drawCanvas();
+        draw();
       };
       img.src = e.target!.result as string;
     };
     reader.readAsDataURL(file);
   }, []);
 
-  const drawCanvas = () => {
-    if (!canvasRef.current || !imgRef.current) return;
-    const ctx = canvasRef.current.getContext("2d");
+  const draw = () => {
+    const canvas = canvasRef.current;
+    const img = imgRef.current;
+    if (!canvas || !img) return;
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = imgRef.current;
+    ctx.clearRect(0, 0, SIZE, SIZE);
+
+    // Calcul correct : quelle portion de l'image source afficher
+    const srcW = img.naturalWidth / zoom;
+    const srcH = img.naturalHeight / zoom;
+    const srcX = (img.naturalWidth - srcW) / 2 - offsetX / zoom;
+    const srcY = (img.naturalHeight - srcH) / 2 - offsetY / zoom;
+
+    // Fond noir
     ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.fillRect(0, 0, SIZE, SIZE);
 
-    const displayWidth = img.naturalWidth * zoom;
-    const displayHeight = img.naturalHeight * zoom;
+    // Clip circulaire pour l'aperçu
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, SIZE, SIZE);
+    ctx.restore();
 
-    ctx.drawImage(
-      img,
-      offsetX,
-      offsetY,
-      displayWidth,
-      displayHeight,
-      0,
-      0,
-      CANVAS_SIZE,
-      CANVAS_SIZE
-    );
+    // Contour du cercle
+    ctx.beginPath();
+    ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 1, 0, Math.PI * 2);
+    ctx.strokeStyle = "var(--red, #e63946)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
   };
 
-  useEffect(() => {
-    drawCanvas();
-  }, [zoom, offsetX, offsetY]);
+  useEffect(() => { draw(); }, [zoom, offsetX, offsetY]);
 
-  const handleZoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setZoom(parseFloat(e.target.value));
-  };
-
-  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDragging(true);
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
-  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging || !imgRef.current) return;
-
+    const img = imgRef.current;
     const dx = e.clientX - dragStart.x;
     const dy = e.clientY - dragStart.y;
-
-    const maxOffsetX = (imgRef.current.naturalWidth * zoom - CANVAS_SIZE) / 2;
-    const maxOffsetY = (imgRef.current.naturalHeight * zoom - CANVAS_SIZE) / 2;
-
-    const newOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX + dx));
-    const newOffsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, offsetY + dy));
-
-    setOffsetX(newOffsetX);
-    setOffsetY(newOffsetY);
+    const maxX = (img.naturalWidth * zoom - SIZE) / 2;
+    const maxY = (img.naturalHeight * zoom - SIZE) / 2;
+    setOffsetX(v => Math.max(-maxX, Math.min(maxX, v + dx)));
+    setOffsetY(v => Math.max(-maxY, Math.min(maxY, v + dy)));
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
-  const handleCanvasMouseUp = () => {
-    setIsDragging(false);
-  };
-
   const handleCrop = () => {
-    if (!canvasRef.current) return;
-    const dataUrl = canvasRef.current.toDataURL("image/jpeg", 0.82);
-    onCrop(dataUrl);
+    const img = imgRef.current;
+    if (!img) return;
+
+    // Export en carré (le CSS de l'avatar gère le cercle)
+    const out = document.createElement("canvas");
+    out.width = SIZE;
+    out.height = SIZE;
+    const ctx = out.getContext("2d")!;
+
+    const srcW = img.naturalWidth / zoom;
+    const srcH = img.naturalHeight / zoom;
+    const srcX = (img.naturalWidth - srcW) / 2 - offsetX / zoom;
+    const srcY = (img.naturalHeight - srcH) / 2 - offsetY / zoom;
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, SIZE, SIZE);
+
+    onCrop(out.toDataURL("image/jpeg", 0.85));
   };
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.7)" }}
+      style={{ background: "rgba(0,0,0,0.75)" }}
       onClick={onCancel}
     >
       <div
-        className="bg-white rounded-2xl p-6 flex flex-col gap-4 w-full"
-        style={{ maxWidth: 400, background: "var(--bg-2)", border: "1px solid var(--border)" }}
-        onClick={(e) => e.stopPropagation()}
+        className="rounded-2xl p-6 flex flex-col gap-4 w-full"
+        style={{ maxWidth: 380, background: "var(--bg-2)", border: "1px solid var(--border)" }}
+        onClick={e => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold" style={{ color: "var(--text)" }}>
+        <h2 className="text-lg font-bold text-center" style={{ color: "var(--text)" }}>
           Ajuster votre photo
         </h2>
 
-        {/* Canvas — zone de crop */}
         <div className="flex justify-center">
           <canvas
             ref={canvasRef}
-            width={CANVAS_SIZE}
-            height={CANVAS_SIZE}
-            className="rounded-xl cursor-move border-2"
-            style={{ borderColor: "var(--red)", background: "#000" }}
-            onMouseDown={handleCanvasMouseDown}
-            onMouseMove={handleCanvasMouseMove}
-            onMouseUp={handleCanvasMouseUp}
-            onMouseLeave={handleCanvasMouseUp}
+            width={SIZE}
+            height={SIZE}
+            className="cursor-move"
+            style={{ borderRadius: "50%", background: "#000" }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={() => setIsDragging(false)}
+            onMouseLeave={() => setIsDragging(false)}
           />
         </div>
 
-        {/* Slider de zoom */}
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold" style={{ color: "var(--text)" }}>
-            Zoom : {zoom.toFixed(1)}x
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium" style={{ color: "var(--text-3)" }}>
+            Zoom : {zoom.toFixed(1)}×
           </label>
           <input
-            type="range"
-            min="1"
-            max="3"
-            step="0.1"
+            type="range" min="1" max="3" step="0.05"
             value={zoom}
-            onChange={handleZoomChange}
+            onChange={e => setZoom(parseFloat(e.target.value))}
             className="w-full"
-            style={{
-              accentColor: "var(--red)",
-            }}
+            style={{ accentColor: "var(--red)" }}
           />
         </div>
 
-        {/* Instructions */}
         <p className="text-xs text-center" style={{ color: "var(--text-3)" }}>
-          Glissez pour positionner, utilisez le zoom pour ajuster la taille
+          Glissez pour recentrer · zoomez pour cadrer
         </p>
 
-        {/* Boutons */}
         <div className="flex gap-3">
           <button
             onClick={onCancel}
             className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold"
-            style={{
-              background: "var(--bg-3)",
-              color: "var(--text-2)",
-              border: "1px solid var(--border)",
-              cursor: "pointer",
-            }}
+            style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)", cursor: "pointer" }}
           >
             Annuler
           </button>
           <button
             onClick={handleCrop}
             className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white"
-            style={{
-              background: "var(--red)",
-              border: "none",
-              cursor: "pointer",
-            }}
+            style={{ background: "var(--red)", border: "none", cursor: "pointer" }}
           >
             Confirmer
           </button>

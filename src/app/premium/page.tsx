@@ -66,10 +66,10 @@ export default function PremiumPage() {
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
       if (!token) { window.location.href = "/profil?redirect=/premium"; return; }
-      const res = await fetch(`${API}/api/stripe/create-checkout`, {
+      const res = await fetch(`${API}/api/stripe/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ billing }),
+        body: JSON.stringify({ plan: billing === "yearly" ? "annual" : "monthly" }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({})) as { error?: string };

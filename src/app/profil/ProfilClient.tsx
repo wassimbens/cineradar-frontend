@@ -356,7 +356,7 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
             </span>
           )}
         </div>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {slots.map(({ pos, film }) => (
             <div key={pos} className="flex flex-col">
               {film ? (
@@ -365,7 +365,7 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
                   style={{ aspectRatio: "2/3", background: "var(--bg-3)" }}
                 >
                   <Link href={`/films/${film.id}`} className="block w-full h-full" draggable={false}>
-                    <FilmPoster src={posterFor(film)} alt={film.titre} fill sizes="(max-width: 640px) 25vw, 200px" />
+                    <FilmPoster src={posterFor(film)} alt={film.titre} fill sizes="(max-width: 640px) 50vw, 200px" />
                   </Link>
 
                   {/* Bouton changer affiche — desktop clic, mobile long-press */}
@@ -437,7 +437,7 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
           <h2 className="text-sm font-bold mb-4" style={{ color: "var(--text)" }}>
             ✓ Films récemment vus
           </h2>
-          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))" }}>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {recentFilms.map((fv) => {
               const note = avisMap.get(fv.film.id) ?? null;
               const date = new Date(fv.dateVu).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });

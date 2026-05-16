@@ -90,7 +90,7 @@ function VitrineTab({ profil, posterChoices }: { profil: PublicProfil; posterCho
         <h2 className="text-sm font-bold mb-4" style={{ color: "var(--text)" }}>
           🎬 Films préférés
         </h2>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {slots.map(({ pos, film }) => (
             <div key={pos}>
               {film ? (
@@ -124,7 +124,7 @@ function VitrineTab({ profil, posterChoices }: { profil: PublicProfil; posterCho
           <h2 className="text-sm font-bold mb-4" style={{ color: "var(--text)" }}>
             ✓ Films récemment vus
           </h2>
-          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))" }}>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {recentFilms.map((fv) => {
               const note = avisMap.get(fv.film.id) ?? null;
               const date = new Date(fv.dateVu).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
@@ -163,7 +163,7 @@ function FilmsVusTab({ filmsVus, posterChoices }: { filmsVus: FilmVuItem[]; post
     );
   }
   return (
-    <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))" }}>
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
       {filmsVus.map((fv) => {
         const date = new Date(fv.dateVu).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
         return (
@@ -315,9 +315,9 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
   ];
 
   return (
-    <div className="px-6 py-10 mx-auto" style={{ maxWidth: 900 }}>
+    <div className="px-4 sm:px-6 py-6 sm:py-10 mx-auto" style={{ maxWidth: 900 }}>
       {/* Breadcrumb */}
-      <div className="mb-6 text-xs" style={{ color: "var(--text-3)" }}>
+      <div className="mb-4 text-xs" style={{ color: "var(--text-3)" }}>
         <Link href="/" className="no-underline" style={{ color: "var(--text-3)" }}>Accueil</Link>
         {" / "}
         <Link href="/profil" className="no-underline" style={{ color: "var(--text-3)" }}>Profil</Link>
@@ -325,63 +325,53 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
         <span>@{profil.pseudo}</span>
       </div>
 
-      {/* En-tête */}
-      <div
-        className="flex flex-wrap items-start gap-5 mb-8 p-6 rounded-2xl"
-        style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
-      >
-        {/* Avatar */}
-        <div
-          className="flex-shrink-0 w-20 h-20 rounded-full overflow-hidden flex items-center justify-center text-2xl font-extrabold text-white"
-          style={{ background: "var(--red)" }}
-        >
-          {profil.avatar
-            // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={profil.avatar} alt={profil.pseudo ?? ""} className="w-full h-full object-cover" />
-            : initiales
-          }
-        </div>
+      {/* En-tête — même structure que Mon profil */}
+      <div className="mb-6 rounded-2xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)", overflow: "hidden" }}>
 
-        {/* Infos */}
-        <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-extrabold mb-0.5" style={{ color: "var(--text)" }}>
-            {profil.nom || profil.pseudo}
-          </h1>
-          <p className="text-sm font-semibold mb-2" style={{ color: "var(--red)" }}>@{profil.pseudo}</p>
+        {/* Ligne 1 : avatar + infos */}
+        <div className="flex items-start gap-4 p-4 sm:p-6">
+          <div
+            className="flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center font-extrabold text-white"
+            style={{ background: "var(--red)", width: 64, height: 64, fontSize: "1.2rem" }}
+          >
+            {profil.avatar
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={profil.avatar} alt={profil.pseudo ?? ""} className="w-full h-full object-cover" />
+              : initiales
+            }
+          </div>
 
-          {profil.bio && (
-            <p className="text-sm italic mb-2" style={{ color: "var(--text-2)" }}>{profil.bio}</p>
-          )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+              <h1 className="text-base sm:text-lg font-extrabold truncate" style={{ color: "var(--text)", letterSpacing: "-0.02em" }}>
+                {profil.nom || profil.pseudo}
+              </h1>
+            </div>
+            <p className="text-sm font-semibold mb-1" style={{ color: "var(--red)" }}>@{profil.pseudo}</p>
 
-          <div className="flex flex-wrap gap-4 text-xs" style={{ color: "var(--text-3)" }}>
-            {profil.ville && <span>📍 {profil.ville}</span>}
-            <span>🎬 {profil.stats.filmsVus} films vus</span>
-            <span>⭐ {profil.stats.avis} avis</span>
-            <span className="flex items-center gap-2">
-              <button
-                onClick={() => openFollowModal("followers")}
-                className="hover:underline"
-                style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}
-              >
+            {profil.bio && (
+              <p className="text-xs italic mb-1 truncate" style={{ color: "var(--text-2)" }}>{profil.bio}</p>
+            )}
+
+            {profil.ville && (
+              <p className="text-xs mb-1" style={{ color: "var(--text-3)" }}>📍 {profil.ville}</p>
+            )}
+
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs mt-1" style={{ color: "var(--text-3)" }}>
+              <span>🎬 {profil.stats.filmsVus} films vus</span>
+              <span>⭐ {profil.stats.avis} avis</span>
+              <button onClick={() => openFollowModal("followers")} className="hover:underline" style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}>
                 <span className="font-bold" style={{ color: "var(--text-2)" }}>{profil.followersCount}</span> abonnés
               </button>
-              {" · "}
-              <button
-                onClick={() => openFollowModal("following")}
-                className="hover:underline"
-                style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}
-              >
+              <button onClick={() => openFollowModal("following")} className="hover:underline" style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}>
                 <span className="font-bold" style={{ color: "var(--text-2)" }}>{profil.followingCount}</span> abonnements
               </button>
-            </span>
-            <span style={{ color: "var(--text-3)" }}>
-              Membre depuis {new Date(profil.createdAt).toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
-            </span>
+            </div>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex-shrink-0 flex flex-col gap-2 items-end">
+        {/* Ligne 2 : boutons d'action */}
+        <div className="flex flex-wrap gap-2 px-4 sm:px-6 py-3" style={{ borderTop: "1px solid var(--border)" }}>
           <FollowButton pseudo={profil.pseudo ?? ""} myPseudo={myPseudo} />
           {myPseudo && myPseudo !== profil.pseudo && (
             <Link
@@ -389,12 +379,15 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
               className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm no-underline"
               style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
               </svg>
               Message
             </Link>
           )}
+          <span className="text-xs self-center" style={{ color: "var(--text-3)", marginLeft: "auto" }}>
+            Membre depuis {new Date(profil.createdAt).toLocaleDateString("fr-FR", { month: "short", year: "numeric" })}
+          </span>
         </div>
       </div>
 

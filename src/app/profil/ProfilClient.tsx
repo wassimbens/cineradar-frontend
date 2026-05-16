@@ -1898,7 +1898,7 @@ export default function ProfilClient() {
     { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
     ...(!isPro ? [{ id: "simple-stats" as Tab, label: "Stats",      short: "Stats",    icon: "📊" }] : []),
     { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
-    { id: "pour-vous",    label: "Pour vous",     short: "Pour vous", icon: "✨" },
+    { id: "pour-vous",    label: "Pour vous",     short: "Reco.",     icon: "✨" },
     { id: "listes",        label: "Mes listes",    short: "Listes",   icon: "📋" },
     { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
     { id: "favoris",       label: "Favoris",       short: "Favoris",  icon: "❤️", count: profil.stats.favoris },
@@ -2066,8 +2066,9 @@ export default function ProfilClient() {
       </div>
 
       {/* ── Onglets ─────────────────────────────────────── */}
-      <div className="overflow-x-auto no-scrollbar mb-6" style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}>
-        <div className="flex gap-1.5 pb-0.5" style={{ minWidth: "max-content" }}>
+      <div className="relative mb-6">
+        <div className="overflow-x-auto no-scrollbar" style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}>
+        <div className="flex gap-1.5 pb-1" style={{ minWidth: "max-content" }}>
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -2104,6 +2105,12 @@ export default function ProfilClient() {
             </button>
           ))}
         </div>
+        </div>
+        {/* Gradient fade → indique qu'il y a d'autres onglets à droite */}
+        <div
+          className="pointer-events-none absolute right-0 top-0 h-full w-10"
+          style={{ background: "linear-gradient(to right, transparent, var(--bg))" }}
+        />
       </div>
 
       {/* ── Contenu des onglets ─────────────────────────── */}

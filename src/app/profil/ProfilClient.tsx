@@ -1145,6 +1145,8 @@ interface ListeResume {
 const API_URL_PROFIL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
 
 function MesListesSection() {
+  const [token, setToken] = useState<string | null>(null);
+  const [tokenReady, setTokenReady] = useState(false);
   const [listes, setListes] = useState<ListeResume[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -1153,20 +1155,26 @@ function MesListesSection() {
   const [newPublic, setNewPublic] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
+  // Lire le token après le montage (localStorage non disponible côté serveur)
+  useEffect(() => {
+    setToken(localStorage.getItem("cineradar_token"));
+    setTokenReady(true);
+  }, []);
 
-  const fetchListes = useCallback(async () => {
-    if (!token) { setLoading(false); return; }
+  const fetchListes = useCallback(async (tok: string) => {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL_PROFIL}/api/listes/mes-listes`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${tok}` },
       });
       if (res.ok) setListes(await res.json());
     } finally { setLoading(false); }
-  }, [token]);
+  }, []);
 
-  useEffect(() => { fetchListes(); }, [fetchListes]);
+  useEffect(() => {
+    if (tokenReady && token) fetchListes(token);
+    else if (tokenReady && !token) setLoading(false);
+  }, [tokenReady, token, fetchListes]);
 
   const handleCreate = async () => {
     if (!token || !newTitre.trim()) return;
@@ -1180,7 +1188,7 @@ function MesListesSection() {
       if (res.ok) {
         setNewTitre("");
         setCreating(false);
-        await fetchListes();
+        await fetchListes(token);
       } else {
         const data = await res.json().catch(() => ({}));
         setError(data.error ?? "Erreur création");
@@ -1194,11 +1202,34 @@ function MesListesSection() {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-    await fetchListes();
+    await fetchListes(token);
   };
 
+  if (!tokenReady) {
+    return <div className="text-sm py-8 text-center" style={{ color: "var(--text-3)" }}>Chargement…</div>;
+  }
+
   if (!token) {
-    return <EmptyState icon="📋" titre="Connectez-vous" texte="Vous devez être connecté pour gérer vos listes." />;
+    return (
+      <div className="text-center py-12 px-4">
+        <p className="text-3xl mb-3">🔐</p>
+        <p className="font-semibold mb-1" style={{ color: "var(--text)" }}>Session expirée</p>
+        <p className="text-sm mb-4" style={{ color: "var(--text-3)" }}>
+          Reconnectez-vous pour accéder à vos listes.
+        </p>
+        <button
+          onClick={() => {
+            localStorage.removeItem("cineradar_email");
+            localStorage.removeItem("cineradar_token");
+            window.location.reload();
+          }}
+          className="text-sm font-semibold px-4 py-2 rounded-lg text-white"
+          style={{ background: "var(--red)", border: "none", cursor: "pointer" }}
+        >
+          Se reconnecter
+        </button>
+      </div>
+    );
   }
 
   return (

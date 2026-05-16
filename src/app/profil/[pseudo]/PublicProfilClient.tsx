@@ -339,9 +339,21 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
           </div>
         </div>
 
-        {/* Bouton follow */}
-        <div className="flex-shrink-0">
+        {/* Actions */}
+        <div className="flex-shrink-0 flex flex-col gap-2 items-end">
           <FollowButton pseudo={profil.pseudo ?? ""} myPseudo={myPseudo} />
+          {myPseudo && myPseudo !== profil.pseudo && (
+            <Link
+              href={`/messages/${profil.pseudo}`}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm no-underline"
+              style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Message
+            </Link>
+          )}
         </div>
       </div>
 

@@ -34,9 +34,12 @@ export default function ThreadPage() {
     try {
       const data = await messagesApi.getThread(pseudo);
       setThread(data);
+      setError(null);
       setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
-    } catch {
-      setError("Connexion requise pour accéder à la messagerie.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erreur inconnue";
+      const isAuth = msg.toLowerCase().includes("authentifi") || msg.includes("401") || msg.includes("Non auth");
+      setError(isAuth ? "auth" : msg);
     }
   }, [pseudo]);
 
@@ -87,9 +90,14 @@ export default function ThreadPage() {
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2 min-h-0">
         {error && (
           <div className="text-center py-16">
-            <p className="text-3xl mb-3">🔒</p>
-            <p className="text-sm" style={{ color: "var(--text-3)" }}>{error}</p>
-            <Link href="/profil" className="text-sm mt-3 inline-block" style={{ color: "var(--red)" }}>Se connecter</Link>
+            <p className="text-3xl mb-3">{error === "auth" ? "🔒" : "⚠️"}</p>
+            <p className="text-sm" style={{ color: "var(--text-3)" }}>
+              {error === "auth" ? "Connexion requise pour accéder à la messagerie." : error}
+            </p>
+            {error === "auth"
+              ? <Link href="/profil" className="text-sm mt-3 inline-block" style={{ color: "var(--red)" }}>Se connecter</Link>
+              : <button onClick={load} className="text-sm mt-3 inline-block" style={{ color: "var(--red)", background: "none", border: "none", cursor: "pointer" }}>Réessayer</button>
+            }
           </div>
         )}
         {!error && thread?.messages.length === 0 && (

@@ -1144,9 +1144,7 @@ interface ListeResume {
 
 const API_URL_PROFIL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
 
-function MesListesSection() {
-  const [token, setToken] = useState<string | null>(null);
-  const [tokenReady, setTokenReady] = useState(false);
+function MesListesSection({ token, onReconnect }: { token: string | null; onReconnect: () => void }) {
   const [listes, setListes] = useState<ListeResume[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -1155,26 +1153,18 @@ function MesListesSection() {
   const [newPublic, setNewPublic] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Lire le token après le montage (localStorage non disponible côté serveur)
-  useEffect(() => {
-    setToken(localStorage.getItem("cineradar_token"));
-    setTokenReady(true);
-  }, []);
-
-  const fetchListes = useCallback(async (tok: string) => {
+  const fetchListes = useCallback(async () => {
+    if (!token) { setLoading(false); return; }
     setLoading(true);
     try {
       const res = await fetch(`${API_URL_PROFIL}/api/listes/mes-listes`, {
-        headers: { Authorization: `Bearer ${tok}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setListes(await res.json());
     } finally { setLoading(false); }
-  }, []);
+  }, [token]);
 
-  useEffect(() => {
-    if (tokenReady && token) fetchListes(token);
-    else if (tokenReady && !token) setLoading(false);
-  }, [tokenReady, token, fetchListes]);
+  useEffect(() => { fetchListes(); }, [fetchListes]);
 
   const handleCreate = async () => {
     if (!token || !newTitre.trim()) return;
@@ -1188,7 +1178,7 @@ function MesListesSection() {
       if (res.ok) {
         setNewTitre("");
         setCreating(false);
-        await fetchListes(token);
+        await fetchListes();
       } else {
         const data = await res.json().catch(() => ({}));
         setError(data.error ?? "Erreur création");
@@ -1202,28 +1192,20 @@ function MesListesSection() {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-    await fetchListes(token);
+    await fetchListes();
   };
-
-  if (!tokenReady) {
-    return <div className="text-sm py-8 text-center" style={{ color: "var(--text-3)" }}>Chargement…</div>;
-  }
 
   if (!token) {
     return (
       <div className="text-center py-12 px-4">
         <p className="text-3xl mb-3">🔐</p>
-        <p className="font-semibold mb-1" style={{ color: "var(--text)" }}>Session expirée</p>
-        <p className="text-sm mb-4" style={{ color: "var(--text-3)" }}>
-          Reconnectez-vous pour accéder à vos listes.
+        <p className="font-semibold mb-2" style={{ color: "var(--text)" }}>Reconnexion requise</p>
+        <p className="text-sm mb-5" style={{ color: "var(--text-3)", maxWidth: 300, margin: "0 auto 1.25rem" }}>
+          Pour accéder à vos listes, veuillez vous reconnecter avec votre compte.
         </p>
         <button
-          onClick={() => {
-            localStorage.removeItem("cineradar_email");
-            localStorage.removeItem("cineradar_token");
-            window.location.reload();
-          }}
-          className="text-sm font-semibold px-4 py-2 rounded-lg text-white"
+          onClick={onReconnect}
+          className="text-sm font-semibold px-5 py-2.5 rounded-xl text-white"
           style={{ background: "var(--red)", border: "none", cursor: "pointer" }}
         >
           Se reconnecter
@@ -1849,36 +1831,44 @@ export default function ProfilClient() {
       </div>
 
       {/* ── Onglets ─────────────────────────────────────── */}
-      <div className="flex overflow-x-auto rounded-xl mb-6 no-scrollbar" style={{ border: "1px solid var(--border)" }}>
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className="flex-shrink-0 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 px-2 sm:px-3 py-2 sm:py-3 transition-colors"
-            style={{
-              background: activeTab === tab.id ? "var(--red)" : "var(--bg-2)",
-              color: activeTab === tab.id ? "white" : "var(--text-2)",
-              border: "none", cursor: "pointer", minWidth: 56,
-              fontSize: "0.7rem", fontWeight: 500,
-            }}
-          >
-            <span style={{ fontSize: "1rem", lineHeight: 1 }}>{tab.icon}</span>
-            <span className="hidden sm:inline whitespace-nowrap" style={{ fontSize: "0.75rem" }}>{tab.label}</span>
-            <span className="sm:hidden whitespace-nowrap" style={{ fontSize: "0.6rem" }}>{tab.short}</span>
-            {tab.count !== undefined && tab.count > 0 && (
-              <span
-                className="rounded-full"
-                style={{
-                  background: activeTab === tab.id ? "rgba(255,255,255,0.25)" : "var(--bg-3)",
-                  color: activeTab === tab.id ? "white" : "var(--text-3)",
-                  fontSize: "0.55rem", padding: "1px 4px", lineHeight: 1.4,
-                }}
-              >
-                {tab.count}
-              </span>
-            )}
-          </button>
-        ))}
+      <div className="overflow-x-auto no-scrollbar mb-6" style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}>
+        <div className="flex gap-1.5 pb-0.5" style={{ minWidth: "max-content" }}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="flex-shrink-0 flex items-center gap-1.5 rounded-full transition-all"
+              style={{
+                background: activeTab === tab.id ? "var(--red)" : "var(--bg-2)",
+                color: activeTab === tab.id ? "white" : "var(--text-2)",
+                border: `1.5px solid ${activeTab === tab.id ? "var(--red)" : "var(--border)"}`,
+                cursor: "pointer",
+                fontWeight: activeTab === tab.id ? 700 : 500,
+                fontSize: "0.75rem",
+                padding: "6px 12px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span style={{ fontSize: "0.85rem", lineHeight: 1 }}>{tab.icon}</span>
+              <span>{tab.short}</span>
+              {tab.count !== undefined && tab.count > 0 && (
+                <span
+                  className="rounded-full"
+                  style={{
+                    background: activeTab === tab.id ? "rgba(255,255,255,0.3)" : "var(--bg-3)",
+                    color: activeTab === tab.id ? "white" : "var(--text-3)",
+                    fontSize: "0.6rem",
+                    padding: "1px 5px",
+                    fontWeight: 700,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Contenu des onglets ─────────────────────────── */}
@@ -1922,7 +1912,7 @@ export default function ProfilClient() {
       )}
 
       {activeTab === "listes" && (
-        <MesListesSection />
+        <MesListesSection token={token} onReconnect={handleLogout} />
       )}
 
       {activeTab === "vus" && (

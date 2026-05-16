@@ -67,7 +67,7 @@ function EtoilesNote({ note, onChange }: { note: number | null; onChange?: (n: n
 // ─────────────────────────────────────────────────────────
 
 function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: AuthUser) => void }) {
-  const [mode, setMode] = useState<"login" | "register" | "legacy">("login");
+  const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [password, setPassword] = useState("");
@@ -85,11 +85,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
     }
     setLoading(true);
     try {
-      if (mode === "legacy") {
-        // Connexion sans mot de passe (héritage)
-        await profilApi.getProfil(email.trim());
-        onAuth(email.trim(), "", { id: "", email: email.trim(), pseudo: null, nom: null });
-      } else if (mode === "register") {
+      if (mode === "register") {
         const res = await authApi.register({ email: email.trim(), pseudo: pseudo.trim(), password, nom: nom || undefined });
         onAuth(res.user.email, res.token, res.user);
       } else {
@@ -120,11 +116,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
           {mode === "register" ? "Créer un compte" : "Votre profil CinéRadar"}
         </h1>
         <p className="text-sm mb-6 text-center" style={{ color: "var(--text-3)" }}>
-          {mode === "register"
-            ? "Rejoignez la communauté CinéRadar"
-            : mode === "legacy"
-            ? "Connexion sans mot de passe (ancien mode)"
-            : "Connectez-vous à votre compte"}
+          {mode === "register" ? "Rejoignez la communauté CinéRadar" : "Connectez-vous à votre compte"}
         </p>
 
         {error && (
@@ -168,18 +160,16 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
             </>
           )}
 
-          {mode !== "legacy" && (
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mot de passe"
-              required
-              minLength={6}
-              className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
-              style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
-            />
-          )}
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Mot de passe"
+            required
+            minLength={6}
+            className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
+          />
 
           {mode === "register" && (
             <input
@@ -204,7 +194,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
             className="w-full py-2.5 rounded-xl font-semibold text-sm"
             style={{ background: "var(--red)", color: "white", opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
           >
-            {loading ? "…" : mode === "register" ? "Créer le compte →" : mode === "legacy" ? "Accéder sans MDP →" : "Se connecter →"}
+            {loading ? "…" : mode === "register" ? "Créer le compte →" : "Se connecter →"}
           </button>
         </form>
 
@@ -218,19 +208,11 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
               <a href="/auth/mot-de-passe-oublie" className="text-xs" style={{ color: "var(--text-3)" }}>
                 Mot de passe oublié ?
               </a>
-              <button onClick={() => { setMode("legacy"); setError(""); }} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>
-                Continuer sans mot de passe (ancien mode)
-              </button>
             </>
           )}
           {mode === "register" && (
             <button onClick={() => { setMode("login"); setError(""); setConfirmPassword(""); }} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>
               Déjà un compte ? Se connecter
-            </button>
-          )}
-          {mode === "legacy" && (
-            <button onClick={() => { setMode("login"); setError(""); }} className="text-xs" style={{ color: "var(--red)", cursor: "pointer" }}>
-              ← Connexion avec mot de passe
             </button>
           )}
         </div>

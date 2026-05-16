@@ -1734,7 +1734,7 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
 
             {/* Zone cliquable (toute la carte sauf les boutons d'action) */}
             {notif.lien ? (
-              <Link href={notif.lien} className="flex items-start gap-3 p-3 flex-1 min-w-0 no-underline"
+              <Link href={notif.lien.replace(/^\/profils\//, "/profil/")} className="flex items-start gap-3 p-3 flex-1 min-w-0 no-underline"
                 onClick={() => markRead(notif.id)}>
                 {cardContent}
               </Link>

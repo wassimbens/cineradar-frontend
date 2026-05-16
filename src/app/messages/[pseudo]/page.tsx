@@ -67,7 +67,7 @@ export default function ThreadPage() {
     <div className="flex flex-col" style={{ height: "100dvh", background: "var(--bg)" }}>
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0" style={{ borderBottom: "1px solid var(--border)", background: "var(--bg-2)" }}>
-        <Link href="/messages" className="text-lg no-underline leading-none" style={{ color: "var(--text-3)" }}>←</Link>
+        <Link href={thread ? `/profil/${thread.partner.pseudo}` : `/profil/${pseudo}`} className="text-lg no-underline leading-none" style={{ color: "var(--text-3)" }}>←</Link>
         {thread ? (
           <>
             <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white overflow-hidden flex-shrink-0" style={{ background: "var(--red)" }}>

@@ -74,13 +74,14 @@ function FollowButton({ pseudo, myPseudo }: { pseudo: string; myPseudo: string |
 
 type Tab = "vitrine" | "vus" | "avis";
 
-function VitrineTab({ profil }: { profil: PublicProfil }) {
+function VitrineTab({ profil, posterChoices }: { profil: PublicProfil; posterChoices: Record<string, string> }) {
   const avisMap = new Map(profil.avis.map((a) => [a.filmId, a.note]));
   const slots = [1, 2, 3, 4].map((pos) => ({
     pos,
     film: profil.filmsFavoris.find((f) => f.position === pos) ?? null,
   }));
   const recentFilms = profil.filmsVus.slice(0, 12);
+  const posterFor = (filmId: string, def: string | null) => posterChoices[filmId] ?? def;
 
   return (
     <div className="flex flex-col gap-8">
@@ -95,7 +96,7 @@ function VitrineTab({ profil }: { profil: PublicProfil }) {
               {film ? (
                 <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: "2/3", background: "var(--bg-3)" }}>
                   <Link href={`/films/${film.id}`} className="block w-full h-full">
-                    <FilmPoster src={film.affiche} alt={film.titre} fill sizes="(max-width: 640px) 25vw, 200px" />
+                    <FilmPoster src={posterFor(film.id, film.affiche)} alt={film.titre} fill sizes="(max-width: 640px) 25vw, 200px" />
                   </Link>
                   <div
                     className="absolute bottom-0 left-0 right-0 px-2 py-1"
@@ -131,7 +132,7 @@ function VitrineTab({ profil }: { profil: PublicProfil }) {
                 <div key={fv.id} className="rounded-xl overflow-hidden" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
                   <Link href={`/films/${fv.film.id}`} className="no-underline block">
                     <div className="relative w-full" style={{ aspectRatio: "2/3", background: "var(--bg-3)" }}>
-                      <FilmPoster src={fv.film.affiche} alt={fv.film.titre} fill sizes="110px" />
+                      <FilmPoster src={posterFor(fv.film.id, fv.film.affiche)} alt={fv.film.titre} fill sizes="110px" />
                       <div className="absolute bottom-1 left-1 text-xs px-1.5 py-0.5 rounded font-semibold" style={{ background: "rgba(0,0,0,0.72)", color: "#fff" }}>
                         ✓ {date}
                       </div>
@@ -151,7 +152,8 @@ function VitrineTab({ profil }: { profil: PublicProfil }) {
   );
 }
 
-function FilmsVusTab({ filmsVus }: { filmsVus: FilmVuItem[] }) {
+function FilmsVusTab({ filmsVus, posterChoices }: { filmsVus: FilmVuItem[]; posterChoices: Record<string, string> }) {
+  const posterFor = (filmId: string, def: string | null) => posterChoices[filmId] ?? def;
   if (filmsVus.length === 0) {
     return (
       <div className="text-center py-16">
@@ -168,7 +170,7 @@ function FilmsVusTab({ filmsVus }: { filmsVus: FilmVuItem[] }) {
           <div key={fv.id} className="rounded-xl overflow-hidden" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
             <Link href={`/films/${fv.film.id}`} className="no-underline block">
               <div className="relative w-full" style={{ aspectRatio: "2/3", background: "var(--bg-3)" }}>
-                <FilmPoster src={fv.film.affiche} alt={fv.film.titre} fill sizes="120px" />
+                <FilmPoster src={posterFor(fv.film.id, fv.film.affiche)} alt={fv.film.titre} fill sizes="120px" />
                 <div className="absolute bottom-1 left-1 text-xs px-1.5 py-0.5 rounded font-semibold" style={{ background: "rgba(0,0,0,0.72)", color: "#fff" }}>
                   ✓ {date}
                 </div>
@@ -236,6 +238,9 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
   const [followModal, setFollowModal] = useState<"followers" | "following" | null>(null);
   const [followList, setFollowList] = useState<UserSearch[]>([]);
   const [followListLoading, setFollowListLoading] = useState(false);
+  const [posterChoices, setPosterChoices] = useState<Record<string, string>>({});
+
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
 
   const loadProfil = useCallback(async () => {
     setLoading(true);
@@ -246,6 +251,13 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
       setNotFound(true);
     } finally { setLoading(false); }
   }, [pseudo]);
+
+  useEffect(() => {
+    fetch(`${API}/api/profils/${encodeURIComponent(pseudo)}/poster-choices`)
+      .then(r => r.ok ? r.json() : {})
+      .then((data: Record<string, string>) => setPosterChoices(data))
+      .catch(() => {});
+  }, [pseudo, API]);
 
   useEffect(() => {
     loadProfil();
@@ -410,8 +422,8 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
       </div>
 
       {/* Contenu */}
-      {activeTab === "vitrine" && <VitrineTab profil={profil} />}
-      {activeTab === "vus"     && <FilmsVusTab filmsVus={profil.filmsVus} />}
+      {activeTab === "vitrine" && <VitrineTab profil={profil} posterChoices={posterChoices} />}
+      {activeTab === "vus"     && <FilmsVusTab filmsVus={profil.filmsVus} posterChoices={posterChoices} />}
       {activeTab === "avis"    && <AvisTab avis={profil.avis} />}
 
       {/* Lien comparaison — visible uniquement si connecté et profil différent du sien */}

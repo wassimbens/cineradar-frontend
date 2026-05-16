@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 const FEATURES_FREE = [
@@ -58,6 +58,19 @@ export default function PremiumPage() {
       .then((u: AuthUser | null) => { if (u) setAuthUser(u); })
       .catch(() => {})
       .finally(() => setChecking(false));
+  }, [API]);
+
+  const openPortal = useCallback(async () => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
+    if (!token) return;
+    try {
+      const res = await fetch(`${API}/api/stripe/portal`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json() as { url?: string };
+      if (data.url) window.location.href = data.url;
+    } catch { /* ignore */ }
   }, [API]);
 
   const startCheckout = async () => {
@@ -164,13 +177,13 @@ export default function PremiumPage() {
           <p className="text-xs mb-4" style={{ color: "var(--text-3)" }}>
             Modifiez ou annulez votre abonnement via le portail Stripe.
           </p>
-          <a
-            href={`${API}/api/stripe/portal`}
-            className="inline-block px-5 py-2.5 rounded-xl text-sm font-semibold no-underline"
-            style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}
+          <button
+            onClick={openPortal}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold"
+            style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)", cursor: "pointer" }}
           >
             Gérer via Stripe →
-          </a>
+          </button>
         </div>
       </div>
     );

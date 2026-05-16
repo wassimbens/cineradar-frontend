@@ -1758,12 +1758,24 @@ export default function ProfilClient() {
     }
   };
 
-  const handleAvatarFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !email) return;
     if (!file.type.startsWith("image/")) return;
-    setCroppingFile(file);
     e.target.value = "";
+    // Sur mobile (écran tactile) : center-crop automatique sans modal
+    const isMobile = window.matchMedia("(pointer: coarse)").matches;
+    if (isMobile) {
+      setUploadingAvatar(true);
+      try {
+        const dataUrl = await resizeImage(file, 240);
+        await profilApi.updateProfil(email, { avatar: dataUrl });
+        await loadProfil(email);
+      } catch (err) { console.error("Erreur upload avatar", err); }
+      finally { setUploadingAvatar(false); }
+    } else {
+      setCroppingFile(file);
+    }
   };
 
   const handleAvatarCrop = async (dataUrl: string) => {

@@ -10,6 +10,7 @@ import {
 import FilmPoster from "@/components/FilmPoster";
 import PosterPicker from "@/components/PosterPicker";
 import ImageCropper from "@/components/ImageCropper";
+import ImageViewer from "@/components/ImageViewer";
 
 // ─────────────────────────────────────────────────────────
 //  Helpers
@@ -539,41 +540,52 @@ function UserCard({ user, myPseudo }: { user: UserSearch; myPseudo: string | nul
       className="flex items-center gap-3 p-3 rounded-xl"
       style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
     >
-      <Link href={`/profil/${user.pseudo}`} className="no-underline flex-shrink-0">
+      <Link href={`/profils/${user.pseudo}`} className="no-underline flex-shrink-0">
         <div
           className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white overflow-hidden"
           style={{ background: "var(--red)" }}
         >
           {user.avatar
-            ? <img src={user.avatar} alt={user.pseudo} className="w-full h-full object-cover" />
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={user.avatar} alt={user.pseudo ?? ""} className="w-full h-full object-cover" />
             : (user.nom ?? user.pseudo ?? "?").slice(0, 2).toUpperCase()
           }
         </div>
       </Link>
       <div className="flex-1 min-w-0">
-        <Link href={`/profil/${user.pseudo}`} className="no-underline">
+        <Link href={`/profils/${user.pseudo}`} className="no-underline">
           <p className="text-sm font-bold" style={{ color: "var(--text)" }}>@{user.pseudo}</p>
         </Link>
         {user.nom && <p className="text-xs" style={{ color: "var(--text-2)" }}>{user.nom}</p>}
         <p className="text-xs" style={{ color: "var(--text-3)" }}>
-          {user._count.filmsVus} films vus · {user._count.avis} avis
+          {user._count?.filmsVus ?? 0} films vus · {user._count?.avis ?? 0} avis
         </p>
       </div>
       {myPseudo && user.pseudo !== myPseudo && (
-        <button
-          onClick={toggle}
-          disabled={loading || following === null}
-          className="text-xs px-3 py-1.5 rounded-full font-semibold flex-shrink-0"
-          style={{
-            background: following ? "var(--bg-3)" : "var(--red)",
-            color: following ? "var(--text-2)" : "white",
-            border: following ? "1px solid var(--border)" : "none",
-            cursor: loading ? "not-allowed" : "pointer",
-            opacity: loading ? 0.6 : 1,
-          }}
-        >
-          {following ? "Suivi ✓" : "Suivre"}
-        </button>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <Link
+            href={`/messages/${user.pseudo}`}
+            className="flex items-center justify-center w-8 h-8 rounded-full no-underline"
+            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-2)", fontSize: "0.9rem" }}
+            title="Envoyer un message"
+          >
+            ✉️
+          </Link>
+          <button
+            onClick={toggle}
+            disabled={loading || following === null}
+            className="text-xs px-3 py-1.5 rounded-full font-semibold"
+            style={{
+              background: following ? "var(--bg-3)" : "var(--red)",
+              color: following ? "var(--text-2)" : "white",
+              border: following ? "1px solid var(--border)" : "none",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.6 : 1,
+            }}
+          >
+            {following ? "Suivi ✓" : "Suivre"}
+          </button>
+        </div>
       )}
     </div>
   );
@@ -1303,6 +1315,8 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
   const [newCoverImage, setNewCoverImage] = useState("");
   const [newPublic, setNewPublic] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewingListeImage, setViewingListeImage] = useState<string | null>(null);
+  const listeLongPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchListes = useCallback(async () => {
     if (!token) { setLoading(false); return; }
@@ -1522,9 +1536,16 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
             >
               <div
                 className="flex-shrink-0 flex items-center justify-center overflow-hidden"
-                style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--bg-3)", border: "1px solid var(--border)" }}
+                style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--bg-3)", border: "1px solid var(--border)", cursor: liste.thumbnail ? "zoom-in" : "default" }}
+                onContextMenu={(e) => { e.preventDefault(); if (liste.thumbnail) setViewingListeImage(liste.thumbnail); }}
+                onMouseDown={() => { if (liste.thumbnail) listeLongPressTimer.current = setTimeout(() => setViewingListeImage(liste.thumbnail!), 600); }}
+                onMouseUp={() => { if (listeLongPressTimer.current) { clearTimeout(listeLongPressTimer.current); listeLongPressTimer.current = null; } }}
+                onMouseLeave={() => { if (listeLongPressTimer.current) { clearTimeout(listeLongPressTimer.current); listeLongPressTimer.current = null; } }}
+                onTouchStart={() => { if (liste.thumbnail) listeLongPressTimer.current = setTimeout(() => setViewingListeImage(liste.thumbnail!), 600); }}
+                onTouchEnd={() => { if (listeLongPressTimer.current) { clearTimeout(listeLongPressTimer.current); listeLongPressTimer.current = null; } }}
               >
                 {liste.thumbnail ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={liste.thumbnail} alt={liste.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : (
                   <span className="text-2xl">{liste.emoji ?? "🎬"}</span>
@@ -1563,6 +1584,10 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
             </div>
           ))}
         </div>
+      )}
+
+      {viewingListeImage && (
+        <ImageViewer src={viewingListeImage} onClose={() => setViewingListeImage(null)} />
       )}
     </div>
   );
@@ -1812,6 +1837,14 @@ export default function ProfilClient() {
   const [pseudoError, setPseudoError] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [croppingFile, setCroppingFile] = useState<File | null>(null);
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
+  const avatarLongPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startAvatarLongPress = (src: string) => {
+    avatarLongPressTimer.current = setTimeout(() => setViewingImage(src), 600);
+  };
+  const cancelAvatarLongPress = () => {
+    if (avatarLongPressTimer.current) { clearTimeout(avatarLongPressTimer.current); avatarLongPressTimer.current = null; }
+  };
 
   // Persistance
   useEffect(() => {
@@ -1985,7 +2018,7 @@ export default function ProfilClient() {
   const TABS: { id: Tab; label: string; short: string; icon: string; count?: number }[] = [
     { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
     ...(!isPro ? [{ id: "simple-stats" as Tab, label: "Stats",      short: "Stats",    icon: "📊" }] : []),
-    { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
+    { id: "stats",         label: "CinéScope",     short: "CinéScope", icon: "🔭" },
     { id: "pour-vous",    label: "Pour vous",     short: "Pour vous", icon: "✨" },
     { id: "listes",        label: "Mes listes",    short: "Listes",   icon: "📋" },
     { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
@@ -1993,8 +2026,8 @@ export default function ProfilClient() {
     { id: "watchlist",     label: "À voir",        short: "À voir",   icon: "🔖", count: profil.stats.watchlist },
     { id: "avis",          label: "Avis",          short: "Avis",     icon: "⭐", count: profil.stats.avis },
     { id: "cinemas",       label: "Cinémas",       short: "Cinémas",  icon: "🏛️", count: profil.stats.cinemas },
-    { id: "communaute",    label: "Communauté",    short: "Commu.",   icon: "👥" },
-    { id: "notifications", label: "Notifications", short: "Notifs",   icon: "🔔", count: unreadNotifs > 0 ? unreadNotifs : undefined },
+    { id: "communaute",    label: "Communauté",    short: "Communauté",   icon: "👥" },
+    { id: "notifications", label: "Notifications", short: "Notifications", icon: "🔔", count: unreadNotifs > 0 ? unreadNotifs : undefined },
   ];
 
   return (
@@ -2015,6 +2048,12 @@ export default function ProfilClient() {
             className="group relative flex-shrink-0 rounded-full overflow-hidden cursor-pointer shadow-md"
             title="Changer la photo"
             style={{ background: "var(--red)", width: 64, height: 64 }}
+            onContextMenu={(e) => { e.preventDefault(); if (profil.avatar) setViewingImage(profil.avatar); }}
+            onMouseDown={() => { if (profil.avatar) startAvatarLongPress(profil.avatar); }}
+            onMouseUp={cancelAvatarLongPress}
+            onMouseLeave={cancelAvatarLongPress}
+            onTouchStart={() => { if (profil.avatar) startAvatarLongPress(profil.avatar); }}
+            onTouchEnd={cancelAvatarLongPress}
           >
             {profil.avatar
               // eslint-disable-next-line @next/next/no-img-element
@@ -2395,6 +2434,14 @@ export default function ProfilClient() {
           file={croppingFile}
           onCrop={handleAvatarCrop}
           onCancel={() => setCroppingFile(null)}
+        />
+      )}
+
+      {/* ── Image Viewer (long-press) ────────────────────── */}
+      {viewingImage && (
+        <ImageViewer
+          src={viewingImage}
+          onClose={() => setViewingImage(null)}
         />
       )}
     </div>

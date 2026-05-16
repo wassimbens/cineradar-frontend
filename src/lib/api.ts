@@ -479,6 +479,19 @@ export const authApi = {
     }),
 };
 
+// ── Types Messages ────────────────────────────────────────
+
+export interface MessageConversation {
+  partner: { id: string; pseudo: string; nom: string | null; avatar: string | null };
+  lastMessage: { content: string; createdAt: string; fromMe: boolean };
+  unreadCount: number;
+}
+
+export interface MessageThread {
+  partner: { id: string; pseudo: string; nom: string | null; avatar: string | null };
+  messages: { id: string; content: string; senderId: string; lu: boolean; createdAt: string }[];
+}
+
 // ── Users / Social API ────────────────────────────────────
 
 export const socialApi = {
@@ -508,6 +521,20 @@ export const socialApi = {
 
   getFollowing: (pseudo: string) =>
     authFetch<UserSearch[]>(`/api/profils/${encodeURIComponent(pseudo)}/following`),
+};
+
+// ── Messages API ──────────────────────────────────────────
+
+export const messagesApi = {
+  getConversations: () => authFetch<MessageConversation[]>("/api/messages"),
+  getThread: (pseudo: string) => authFetch<MessageThread>(`/api/messages/${encodeURIComponent(pseudo)}`),
+  send: (pseudo: string, content: string) =>
+    authFetch<{ id: string; content: string; senderId: string; createdAt: string }>(`/api/messages/${encodeURIComponent(pseudo)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    }),
+  unreadCount: () => authFetch<{ count: number }>("/api/messages/unread-count"),
 };
 
 // ── Helpers formatage ─────────────────────────────────────

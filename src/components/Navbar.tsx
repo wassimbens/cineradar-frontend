@@ -15,7 +15,7 @@ const NAV_LINKS = [
 
 // ── Liens avec état actif (nécessite useSearchParams) ────
 
-function NavLinks({ onClose, isLoggedIn, navAvatar, navInitiales }: { onClose?: () => void; isLoggedIn: boolean; navAvatar?: string | null; navInitiales?: string }) {
+function NavLinks({ onClose, isLoggedIn, navAvatar, navInitiales, unreadNotifs }: { onClose?: () => void; isLoggedIn: boolean; navAvatar?: string | null; navInitiales?: string; unreadNotifs?: number }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
@@ -82,6 +82,31 @@ function NavLinks({ onClose, isLoggedIn, navAvatar, navInitiales }: { onClose?: 
           Mes listes
         </Link>
       )}
+      {isLoggedIn && (
+        <Link
+          href="/profil"
+          onClick={onClose}
+          className="relative px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-colors flex items-center"
+          style={{
+            color:      "var(--text-3)",
+            background: "transparent",
+          }}
+          title="Notifications"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          {(unreadNotifs ?? 0) > 0 && (
+            <span
+              className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 rounded-full text-white flex items-center justify-center"
+              style={{ background: "var(--red)", fontSize: 9, fontWeight: 700 }}
+            >
+              {(unreadNotifs ?? 0) > 9 ? "9+" : unreadNotifs}
+            </span>
+          )}
+        </Link>
+      )}
     </>
   );
 }
@@ -100,12 +125,15 @@ function NavLinksFallback() {
 
 // ── Navbar principale ─────────────────────────────────────
 
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
 export default function Navbar() {
   const [modalOpen, setModalOpen]   = useState(false);
   const [menuOpen, setMenuOpen]     = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [navAvatar, setNavAvatar]   = useState<string | null>(null);
   const [navInitiales, setNavInitiales] = useState<string>("?");
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
   const pathname = usePathname();
 
   // Détecter la connexion, charger l'avatar et les initiales
@@ -115,13 +143,9 @@ export default function Navbar() {
     setIsLoggedIn(!!(token || email));
     if (token || email) {
       setNavAvatar(localStorage.getItem("cineradar_avatar"));
-      // Calcul initiales depuis email ou pseudo stocké
       const pseudo = localStorage.getItem("cineradar_pseudo");
-      if (pseudo) {
-        setNavInitiales(pseudo.slice(0, 2).toUpperCase());
-      } else if (email) {
-        setNavInitiales(email.slice(0, 2).toUpperCase());
-      }
+      if (pseudo) setNavInitiales(pseudo.slice(0, 2).toUpperCase());
+      else if (email) setNavInitiales(email.slice(0, 2).toUpperCase());
     }
   }, []);
 
@@ -134,6 +158,18 @@ export default function Navbar() {
     const pseudo = localStorage.getItem("cineradar_pseudo");
     if (pseudo) setNavInitiales(pseudo.slice(0, 2).toUpperCase());
     else if (email) setNavInitiales(email.slice(0, 2).toUpperCase());
+  }, [pathname]);
+
+  // Charger le nombre de notifications non lues
+  useEffect(() => {
+    const token = localStorage.getItem("cineradar_token");
+    if (!token) return;
+    fetch(`${API}/api/notifications/unread-count`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.ok ? r.json() : { count: 0 })
+      .then((d: { count: number }) => setUnreadNotifs(d.count))
+      .catch(() => {});
   }, [pathname]);
 
   // Fermer le menu mobile à chaque changement de page
@@ -178,7 +214,7 @@ export default function Navbar() {
           {/* Liens desktop */}
           <div className="hidden md:flex gap-1">
             <Suspense fallback={<NavLinksFallback />}>
-              <NavLinks isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} />
+              <NavLinks isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} unreadNotifs={unreadNotifs} />
             </Suspense>
           </div>
 
@@ -234,7 +270,7 @@ export default function Navbar() {
             style={{ borderTop: "1px solid var(--border)", background: "var(--bg)" }}
           >
             <Suspense fallback={<NavLinksFallback />}>
-              <NavLinks onClose={() => setMenuOpen(false)} isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} />
+              <NavLinks onClose={() => setMenuOpen(false)} isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} unreadNotifs={unreadNotifs} />
             </Suspense>
             <button
               onClick={() => { setMenuOpen(false); setModalOpen(true); }}

@@ -2212,6 +2212,23 @@ export default function ProfilClient() {
               👤 Profil public
             </Link>
           )}
+          <button
+            onClick={() => setActiveTab("notifications")}
+            className="relative text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5"
+            style={{
+              color: unreadNotifs > 0 ? "var(--red)" : "var(--text-2)",
+              border: `1px solid ${unreadNotifs > 0 ? "var(--red)" : "var(--border)"}`,
+              background: "var(--bg-3)",
+              cursor: "pointer",
+              fontWeight: unreadNotifs > 0 ? 700 : 400,
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            {unreadNotifs > 0 ? `${unreadNotifs} notification${unreadNotifs > 1 ? "s" : ""}` : "Notifications"}
+          </button>
           <Link
             href="/parametres"
             className="text-xs px-3 py-1.5 rounded-lg no-underline"

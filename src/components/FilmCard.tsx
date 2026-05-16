@@ -19,16 +19,16 @@ export default function FilmCard({ film }: { film: Film }) {
         </div>
 
         {/* Infos */}
-        <div className="p-3">
-          <p className="font-bold text-sm leading-snug mb-1" style={{ color: "var(--text)", textTransform: "uppercase", letterSpacing: "0.02em" }}>
+        <div className="p-3 film-card-info">
+          <p className="film-card-title font-bold text-sm leading-snug mb-1" style={{ color: "var(--text)", textTransform: "uppercase", letterSpacing: "0.02em" }}>
             {film.titre}
           </p>
-          <p className="text-xs" style={{ color: "var(--text-3)" }}>
+          <p className="film-card-meta text-xs" style={{ color: "var(--text-3)" }}>
             {[film.realisateur, film.annee, film.duree ? formatDuree(film.duree) : null]
               .filter(Boolean)
               .join(" · ")}
           </p>
-          <div className="flex flex-wrap items-center gap-1 mt-1">
+          <div className="film-card-tags flex flex-wrap items-center gap-1 mt-1">
             {film.genres?.length > 0 && (
               <span
                 className="px-1.5 py-0.5 rounded text-xs"

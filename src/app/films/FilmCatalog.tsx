@@ -231,9 +231,9 @@ export default function FilmCatalog() {
       </div>
 
       {/* ── Barre de filtres ──────────────────────────── */}
-      <div className="flex flex-wrap gap-3 mb-8">
-        {/* Recherche */}
-        <div className="relative flex-1" style={{ minWidth: 160 }}>
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 mb-8">
+        {/* Recherche : pleine largeur sur mobile, flex-1 sur desktop */}
+        <div className="relative w-full sm:flex-1">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none" style={{ color: "var(--text-3)" }}>
             🔍
           </span>
@@ -252,40 +252,43 @@ export default function FilmCatalog() {
           )}
         </div>
 
-        {/* Tri */}
-        <select value={sort} onChange={(e) => handleSort(e.target.value as CatalogSort)}
-          className="rounded-lg text-sm px-3 py-2 outline-none"
-          style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text)" }}>
-          {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
+        {/* Tri + Genre + Décennie + Reset sur une seule ligne sur mobile */}
+        <div className="flex gap-2 sm:contents">
+          {/* Tri */}
+          <select value={sort} onChange={(e) => handleSort(e.target.value as CatalogSort)}
+            className="flex-1 sm:flex-none rounded-lg text-sm px-2 sm:px-3 py-2 outline-none min-w-0"
+            style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text)" }}>
+            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
 
-        {/* Genre */}
-        <select value={genre} onChange={(e) => handleGenre(e.target.value)}
-          className="rounded-lg text-sm px-3 py-2 outline-none"
-          style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text)" }}>
-          <option value="">Tous les genres</option>
-          {GENRES.map((g) => <option key={g} value={g}>{g}</option>)}
-        </select>
+          {/* Genre */}
+          <select value={genre} onChange={(e) => handleGenre(e.target.value)}
+            className="flex-1 sm:flex-none rounded-lg text-sm px-2 sm:px-3 py-2 outline-none min-w-0"
+            style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text)" }}>
+            <option value="">Tous les genres</option>
+            {GENRES.map((g) => <option key={g} value={g}>{g}</option>)}
+          </select>
 
-        {/* Décennie */}
-        <select value={decennie} onChange={(e) => handleDecennie(e.target.value)}
-          className="rounded-lg text-sm px-3 py-2 outline-none"
-          style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text)" }}>
-          {DECENNIES.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
-        </select>
+          {/* Décennie */}
+          <select value={decennie} onChange={(e) => handleDecennie(e.target.value)}
+            className="flex-1 sm:flex-none rounded-lg text-sm px-2 sm:px-3 py-2 outline-none min-w-0"
+            style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text)" }}>
+            {DECENNIES.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
+          </select>
 
-        {/* Reset */}
-        {isFiltered && (
-          <button onClick={resetFilters} className="rounded-lg text-sm px-3 py-2"
-            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-2)" }}>
-            Réinitialiser
-          </button>
-        )}
+          {/* Reset */}
+          {isFiltered && (
+            <button onClick={resetFilters} className="flex-none rounded-lg text-sm px-2 sm:px-3 py-2"
+              style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-2)" }}>
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── Résultats ─────────────────────────────────── */}
       {loading ? (
-        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))" }}>
+        <div className="grid film-grid-catalog">
           {Array.from({ length: PAGE_SIZE }).map((_, i) => (
             <div key={i} className="rounded-xl animate-pulse" style={{ aspectRatio: "2/3", background: "var(--bg-2)" }} />
           ))}
@@ -316,7 +319,7 @@ export default function FilmCatalog() {
                   <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--red)" }}>
                     À l&apos;affiche en ce moment — {enSalle.length} film{enSalle.length > 1 ? "s" : ""}
                   </p>
-                  <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))" }}
+                  <div className="grid film-grid-catalog"
                     onClick={saveState}>
                     {enSalle.map((film) => <FilmCard key={film.id} film={film} />)}
                   </div>
@@ -328,7 +331,7 @@ export default function FilmCatalog() {
                   <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--text-3)" }}>
                     Catalogue — {(total - enSalle.length).toLocaleString("fr-FR")} films
                   </p>
-                  <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))" }}
+                  <div className="grid film-grid-catalog"
                     onClick={saveState}>
                     {catalogue.map((film) => <FilmCard key={film.id} film={film} />)}
                   </div>
@@ -342,7 +345,7 @@ export default function FilmCatalog() {
                 {total.toLocaleString("fr-FR")} film{total > 1 ? "s" : ""} {isFiltered ? "trouvé" + (total > 1 ? "s" : "") : ""}
                 {films.length < total ? ` — ${films.length} affichés` : ""}
               </p>
-              <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))" }}
+              <div className="grid film-grid-catalog"
                 onClick={saveState}>
                 {films.map((film) => <FilmCard key={film.id} film={film} />)}
               </div>

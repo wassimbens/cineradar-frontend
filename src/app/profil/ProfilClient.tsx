@@ -71,6 +71,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
   const [email, setEmail] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [nom, setNom] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -78,6 +79,10 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (mode === "register" && password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "legacy") {
@@ -176,6 +181,23 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
             />
           )}
 
+          {mode === "register" && (
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirmer le mot de passe"
+              required
+              minLength={6}
+              className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+              style={{
+                background: "var(--bg-3)",
+                border: `1px solid ${confirmPassword && password !== confirmPassword ? "#dc2626" : "var(--border)"}`,
+                color: "var(--text)",
+              }}
+            />
+          )}
+
           <button
             type="submit"
             disabled={loading}
@@ -202,7 +224,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
             </>
           )}
           {mode === "register" && (
-            <button onClick={() => { setMode("login"); setError(""); }} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>
+            <button onClick={() => { setMode("login"); setError(""); setConfirmPassword(""); }} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>
               Déjà un compte ? Se connecter
             </button>
           )}
@@ -451,7 +473,7 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
                       </div>
                     </div>
                     <div className="p-1.5">
-                      <p className="text-xs font-semibold leading-snug truncate" style={{ color: "var(--text)", textTransform: "uppercase" }}>
+                      <p className="font-semibold leading-snug" style={{ color: "var(--text)", textTransform: "uppercase", fontSize: "clamp(8px, 1.8vw, 11px)", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
                         {fv.film.titre}
                       </p>
                       {note !== null && (

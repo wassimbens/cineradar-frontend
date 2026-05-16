@@ -56,19 +56,21 @@ export default function SearchBar({ defaultValue = "", large = false }: Props) {
         />
         <button
           type="submit"
-          className="m-1.5 px-4 font-semibold text-white text-sm rounded-lg"
+          className="m-1.5 font-semibold text-white text-sm rounded-lg"
           style={{
             background: "var(--red)",
-            padding: large ? "10px 20px" : "7px 16px",
+            padding: large ? "10px 20px" : "7px 14px",
             border: "none",
             cursor: "pointer",
             transition: "background 0.15s",
             whiteSpace: "nowrap",
+            flexShrink: 0,
           }}
           onMouseEnter={(e) => (e.currentTarget.style.background = "var(--red-dk)")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "var(--red)")}
         >
-          Rechercher
+          <span className="hidden sm:inline">Rechercher</span>
+          <span className="sm:hidden">→</span>
         </button>
       </div>
     </form>

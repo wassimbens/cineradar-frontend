@@ -50,10 +50,19 @@ async function getHomeData() {
       api.getStats().catch(() => ({ films: 0, cinemas: 0, seances: 0 })),
     ]);
 
-    const filmDuJour = pickFilmDuJour(trending);
+    // Garder uniquement les films avec des séances, triés par séances desc puis popularité
+    const validTrending = trending
+      .filter(f => (f.seancesCount ?? 0) > 0)
+      .sort((a, b) => {
+        const seanceDiff = (b.seancesCount ?? 0) - (a.seancesCount ?? 0);
+        if (seanceDiff !== 0) return seanceDiff;
+        return popularityScore(b) - popularityScore(a);
+      });
+
+    const filmDuJour = pickFilmDuJour(validTrending);
 
     return {
-      trending: trending.slice(0, 6),
+      trending: validTrending.slice(0, 6),
       classics: pickTopClassics(allClassics, 6),
       cinemas: cinemas.slice(0, 4),
       totalFilms: stats.films,
@@ -281,8 +290,10 @@ export default async function HomePage() {
               className="grid gap-4"
               style={{ gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))" }}
             >
-              {trending.map((film) => (
-                <FilmCard key={film.id} film={film} />
+              {trending.map((film, index) => (
+                <div key={film.id} className={index >= 4 ? "hidden sm:block" : ""}>
+                  <FilmCard film={film} />
+                </div>
               ))}
             </div>
           </section>

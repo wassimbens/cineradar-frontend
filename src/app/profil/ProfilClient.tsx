@@ -852,7 +852,9 @@ function GenreBar({ genre, count, max }: { genre: string; count: number; max: nu
   );
 }
 
-function StatsSection({ profil }: { profil: Profil }) {
+// ── Stats simples (onglet free) ───────────────────────────
+
+function SimpleStatsSection({ profil }: { profil: Profil }) {
   const maxGenre = profil.genresStats[0]?.count ?? 1;
   if (profil.stats.filmsVus === 0) {
     return (
@@ -865,26 +867,6 @@ function StatsSection({ profil }: { profil: Profil }) {
   }
   return (
     <div className="flex flex-col gap-6">
-      {profil.genresStats.length > 0 && (
-        <div>
-          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Genres favoris</h3>
-          <div className="flex flex-col gap-2">
-            {profil.genresStats.map(({ genre, count }) => <GenreBar key={genre} genre={genre} count={count} max={maxGenre} />)}
-          </div>
-        </div>
-      )}
-      {profil.realisateursStats.length > 0 && (
-        <div>
-          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Réalisateurs vus</h3>
-          <div className="flex flex-wrap gap-2">
-            {profil.realisateursStats.map(({ realisateur, count }) => (
-              <span key={realisateur} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}>
-                {realisateur} <span className="ml-1.5 font-bold" style={{ color: "var(--text-3)" }}>{count}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           { label: "Films vus", val: profil.stats.filmsVus, icon: "🎬" },
@@ -899,6 +881,156 @@ function StatsSection({ profil }: { profil: Profil }) {
           </div>
         ))}
       </div>
+      {profil.genresStats.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Genres favoris</h3>
+          <div className="flex flex-col gap-2">
+            {profil.genresStats.slice(0, 5).map(({ genre, count }) => <GenreBar key={genre} genre={genre} count={count} max={maxGenre} />)}
+          </div>
+        </div>
+      )}
+      {profil.realisateursStats.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Réalisateurs vus</h3>
+          <div className="flex flex-wrap gap-2">
+            {profil.realisateursStats.slice(0, 8).map(({ realisateur, count }) => (
+              <span key={realisateur} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}>
+                {realisateur} <span className="ml-1.5 font-bold" style={{ color: "var(--text-3)" }}>{count}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── CinéScope Pro (onglet enrichi) ────────────────────────
+
+function CineScopeSection({ profil }: { profil: Profil }) {
+  const maxGenre = profil.genresStats[0]?.count ?? 1;
+
+  // Note moyenne
+  const notesValides = profil.avis.map(a => (a as { note?: number | null }).note).filter((n): n is number => n != null && n > 0);
+  const noteMoyenne = notesValides.length > 0 ? (notesValides.reduce((s, n) => s + n, 0) / notesValides.length) : null;
+
+  // Distribution des notes (par étoile entière)
+  const distrib: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  notesValides.forEach(n => { const k = Math.round(n); if (k >= 1 && k <= 5) distrib[k]++; });
+  const maxDistrib = Math.max(...Object.values(distrib), 1);
+
+  // Films vus par mois (6 derniers mois)
+  const filmsByMonth: Record<string, number> = {};
+  const now = new Date();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    filmsByMonth[key] = 0;
+  }
+  profil.filmsVus.forEach(fv => {
+    const d = new Date(fv.dateVu);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    if (key in filmsByMonth) filmsByMonth[key]++;
+  });
+  const maxMonth = Math.max(...Object.values(filmsByMonth), 1);
+  const moisLabels: Record<string, string> = { "01": "Jan", "02": "Fév", "03": "Mar", "04": "Avr", "05": "Mai", "06": "Juin", "07": "Juil", "08": "Août", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Déc" };
+
+  if (profil.stats.filmsVus === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-3xl mb-2">🔭</p>
+        <p className="text-sm font-medium" style={{ color: "var(--text)" }}>CinéScope vide pour l&apos;instant</p>
+        <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>Marquez des films comme vus pour voir votre tableau de bord.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-8">
+      {/* Compteurs */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          { label: "Films vus", val: profil.stats.filmsVus, icon: "🎬" },
+          { label: "Favoris", val: profil.stats.favoris, icon: "❤️" },
+          { label: "Watchlist", val: profil.stats.watchlist, icon: "🔖" },
+          { label: "Avis rédigés", val: profil.stats.avis, icon: "⭐" },
+        ].map(({ label, val, icon }) => (
+          <div key={label} className="flex flex-col items-center p-4 rounded-xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
+            <span className="text-2xl mb-1">{icon}</span>
+            <span className="text-2xl font-extrabold" style={{ color: "var(--text)" }}>{val}</span>
+            <span className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Note moyenne + distribution */}
+      {notesValides.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="p-4 rounded-xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
+            <h3 className="text-sm font-bold mb-2" style={{ color: "var(--text)" }}>Note moyenne donnée</h3>
+            <p className="text-3xl font-extrabold" style={{ color: "var(--red)" }}>
+              {noteMoyenne!.toFixed(1)}<span className="text-base font-normal" style={{ color: "var(--text-3)" }}>/5</span>
+            </p>
+            <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>Sur {notesValides.length} film{notesValides.length > 1 ? "s" : ""} noté{notesValides.length > 1 ? "s" : ""}</p>
+          </div>
+          <div className="p-4 rounded-xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
+            <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Distribution des notes</h3>
+            <div className="flex flex-col gap-1.5">
+              {[5, 4, 3, 2, 1].map(star => (
+                <div key={star} className="flex items-center gap-2">
+                  <span className="text-xs w-6 text-right flex-shrink-0" style={{ color: "var(--text-3)" }}>{star}★</span>
+                  <div className="flex-1 rounded-full overflow-hidden" style={{ height: 6, background: "var(--bg-3)" }}>
+                    <div className="h-full rounded-full" style={{ width: `${Math.round((distrib[star] / maxDistrib) * 100)}%`, background: "var(--red)" }} />
+                  </div>
+                  <span className="text-xs w-5 flex-shrink-0" style={{ color: "var(--text-3)" }}>{distrib[star]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Films vus par mois */}
+      <div>
+        <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Films vus — 6 derniers mois</h3>
+        <div className="flex items-end gap-2" style={{ height: 80 }}>
+          {Object.entries(filmsByMonth).map(([key, count]) => {
+            const month = key.split("-")[1];
+            const pct = Math.round((count / maxMonth) * 100);
+            return (
+              <div key={key} className="flex-1 flex flex-col items-center gap-1">
+                <span className="text-xs font-bold" style={{ color: count > 0 ? "var(--red)" : "var(--text-3)" }}>{count || ""}</span>
+                <div className="w-full rounded-t" style={{ height: `${Math.max(pct, 4)}%`, background: count > 0 ? "var(--red)" : "var(--bg-3)", minHeight: 4 }} />
+                <span className="text-xs" style={{ color: "var(--text-3)", fontSize: "0.6rem" }}>{moisLabels[month]}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Genres */}
+      {profil.genresStats.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Genres favoris</h3>
+          <div className="flex flex-col gap-2">
+            {profil.genresStats.map(({ genre, count }) => <GenreBar key={genre} genre={genre} count={count} max={maxGenre} />)}
+          </div>
+        </div>
+      )}
+
+      {/* Réalisateurs */}
+      {profil.realisateursStats.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Réalisateurs vus</h3>
+          <div className="flex flex-wrap gap-2">
+            {profil.realisateursStats.map(({ realisateur, count }) => (
+              <span key={realisateur} className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: "var(--bg-3)", color: "var(--text-2)", border: "1px solid var(--border)" }}>
+                {realisateur} <span className="ml-1.5 font-bold" style={{ color: "var(--text-3)" }}>{count}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -993,7 +1125,7 @@ function EmailVerifBanner({ email }: { email: string }) {
   );
 }
 
-type Tab = "vitrine" | "stats" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
+type Tab = "vitrine" | "simple-stats" | "stats" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
 
 // ─────────────────────────────────────────────────────────
 //  Composant Notifications
@@ -1344,6 +1476,7 @@ export default function ProfilClient() {
 
   const TABS: { id: Tab; label: string; short: string; icon: string; count?: number }[] = [
     { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
+    ...(!isPro ? [{ id: "simple-stats" as Tab, label: "Stats",      short: "Stats",    icon: "📊" }] : []),
     { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
     { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
     { id: "favoris",       label: "Favoris",       short: "Favoris",  icon: "❤️", count: profil.stats.favoris },
@@ -1546,9 +1679,13 @@ export default function ProfilClient() {
         />
       )}
 
+      {activeTab === "simple-stats" && (
+        <SimpleStatsSection profil={profil} />
+      )}
+
       {activeTab === "stats" && (
         isPro ? (
-          <StatsSection profil={profil} />
+          <CineScopeSection profil={profil} />
         ) : (
           <div className="text-center py-16 px-4">
             <p className="text-4xl mb-3">🔭</p>

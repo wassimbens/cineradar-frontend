@@ -74,11 +74,7 @@ function AjouterListeButton({ filmId }: { filmId: string }) {
   }, []);
 
   const handleToggle = () => {
-    if (!token) {
-      window.location.href = "/profil";
-      return;
-    }
-    if (!open) fetchListes(token);
+    if (!open && token) fetchListes(token);
     setOpen((v) => !v);
     setFeedback(null);
   };
@@ -136,7 +132,20 @@ function AjouterListeButton({ filmId }: { filmId: string }) {
             maxWidth: 280,
           }}
         >
-          {loadingListes ? (
+          {!token ? (
+            <div className="px-4 py-3">
+              <p className="text-xs mb-2" style={{ color: "var(--text-3)" }}>
+                Connectez-vous pour accéder à vos listes.
+              </p>
+              <a
+                href="/profil"
+                className="text-xs font-semibold no-underline"
+                style={{ color: "var(--red)" }}
+              >
+                Se connecter →
+              </a>
+            </div>
+          ) : loadingListes ? (
             <div className="px-4 py-3 text-sm" style={{ color: "var(--text-3)" }}>
               Chargement…
             </div>

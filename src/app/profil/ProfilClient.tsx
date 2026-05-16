@@ -1565,6 +1565,40 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
   );
 }
 
+// ── Bouton "Gérer mon abonnement" (Pro uniquement) ────────
+
+const API_URL_STRIPE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
+function ManageSubscriptionButton() {
+  const [loading, setLoading] = useState(false);
+
+  const handlePortal = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("cineradar_token");
+      const res = await fetch(`${API_URL_STRIPE}/api/stripe/portal`, {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handlePortal}
+      disabled={loading}
+      className="text-xs px-3 py-1.5 rounded-lg font-semibold"
+      style={{ color: "var(--red)", border: "1px solid var(--red)", background: "transparent", cursor: "pointer" }}
+    >
+      {loading ? "…" : "✦ Gérer Pro"}
+    </button>
+  );
+}
+
 export default function ProfilClient() {
   const [email, setEmail] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
@@ -1898,6 +1932,18 @@ export default function ProfilClient() {
           >
             ⚙️ Paramètres
           </Link>
+          {/* Bouton Pro selon le statut */}
+          {isPro ? (
+            <ManageSubscriptionButton />
+          ) : (
+            <Link
+              href="/abonnement"
+              className="text-xs px-3 py-1.5 rounded-lg no-underline font-bold"
+              style={{ background: "var(--red)", color: "white", border: "1px solid var(--red)" }}
+            >
+              ✦ Passer Pro
+            </Link>
+          )}
           <button
             onClick={handleLogout}
             className="text-xs px-3 py-1.5 rounded-lg"
@@ -1978,13 +2024,13 @@ export default function ProfilClient() {
             <p className="text-sm mb-6" style={{ color: "var(--text-3)", maxWidth: 360, margin: "0 auto 1.5rem" }}>
               Accédez à votre tableau de bord complet : genres préférés, réalisateurs, évolution mensuelle et bien plus.
             </p>
-            <a
-              href="/premium"
+            <Link
+              href="/abonnement"
               className="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white no-underline"
               style={{ background: "var(--red)" }}
             >
               Passer à Pro →
-            </a>
+            </Link>
           </div>
         )
       )}

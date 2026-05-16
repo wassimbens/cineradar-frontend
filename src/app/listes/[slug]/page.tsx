@@ -229,6 +229,7 @@ export default function ListePubliquePage() {
   const [inviteRole, setInviteRole] = useState<"VIEWER" | "EDITOR">("VIEWER");
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [coverUploading, setCoverUploading] = useState(false);
 
   const token = typeof window !== "undefined" ? getToken() : null;
   const currentUserId = getUserIdFromToken(token);
@@ -390,6 +391,44 @@ export default function ListePubliquePage() {
     await fetchListe();
   };
 
+  const handleCoverUpload = async (file: File) => {
+    setCoverUploading(true);
+    try {
+      // Compression côté client via Canvas
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new window.Image();
+          img.onload = () => {
+            const MAX = 1200;
+            const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+            const w = Math.round(img.width * scale);
+            const h = Math.round(img.height * scale);
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL("image/jpeg", 0.8));
+          };
+          img.src = ev.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const t = getToken();
+      await fetch(`${API_URL}/api/listes/${slug}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(t ? { Authorization: `Bearer ${t}` } : {}),
+        },
+        body: JSON.stringify({ coverImage: dataUrl }),
+      });
+      setListe((prev) => prev ? { ...prev, coverImage: dataUrl } : prev);
+    } catch { /* ignore */ }
+    finally { setCoverUploading(false); }
+  };
+
   const handleFilmAdded = (film: FilmResume) => {
     setListe((prev) => {
       if (!prev) return prev;
@@ -415,7 +454,7 @@ export default function ListePubliquePage() {
       </Link>
 
       {/* Cover image banner */}
-      {liste.coverImage && (
+      {liste.coverImage ? (
         <div
           className="relative rounded-2xl overflow-hidden mb-4"
           style={{ height: 200 }}
@@ -431,8 +470,35 @@ export default function ListePubliquePage() {
             className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55))" }}
           />
+          {isOwner && (
+            <label
+              className="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
+              style={{ background: "rgba(0,0,0,0.55)", color: "white", backdropFilter: "blur(4px)" }}
+            >
+              {coverUploading ? "…" : "📷 Changer"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCoverUpload(f); e.target.value = ""; }}
+              />
+            </label>
+          )}
         </div>
-      )}
+      ) : isOwner ? (
+        <label
+          className="flex items-center justify-center gap-2 rounded-2xl mb-4 cursor-pointer"
+          style={{ height: 80, background: "var(--bg-2)", border: "2px dashed var(--border)", color: "var(--text-3)" }}
+        >
+          {coverUploading ? "Traitement…" : "📷 Ajouter une photo de couverture"}
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCoverUpload(f); e.target.value = ""; }}
+          />
+        </label>
+      ) : null}
 
       {/* Header */}
       <div

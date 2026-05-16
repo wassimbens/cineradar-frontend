@@ -1273,17 +1273,52 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
               autoFocus
             />
           </div>
-          <input
-            value={newCoverImage}
-            onChange={(e) => setNewCoverImage(e.target.value)}
-            placeholder="URL d'une image de couverture (optionnel)…"
-            className="rounded-lg px-3 py-2 text-sm outline-none"
-            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
-          />
-          {newCoverImage.trim() && (
-            <div className="rounded-lg overflow-hidden" style={{ height: 80, background: "var(--bg-3)" }}>
-              <img src={newCoverImage.trim()} alt="Aperçu" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          {/* Photo de couverture */}
+          {newCoverImage ? (
+            <div className="relative rounded-lg overflow-hidden" style={{ height: 90 }}>
+              <img src={newCoverImage} alt="Couverture" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <button
+                onClick={() => setNewCoverImage("")}
+                className="absolute top-1.5 right-1.5 rounded-full px-2 py-0.5 text-xs font-bold"
+                style={{ background: "rgba(0,0,0,0.55)", color: "white", border: "none", cursor: "pointer" }}
+              >
+                ✕
+              </button>
             </div>
+          ) : (
+            <label
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer"
+              style={{ background: "var(--bg-3)", border: "1px dashed var(--border)", color: "var(--text-3)" }}
+            >
+              📷 Choisir une photo de couverture
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = (ev) => {
+                    const img = new window.Image();
+                    img.onload = () => {
+                      const MAX = 900;
+                      const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+                      const w = Math.round(img.width * scale);
+                      const h = Math.round(img.height * scale);
+                      const canvas = document.createElement("canvas");
+                      canvas.width = w;
+                      canvas.height = h;
+                      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+                      setNewCoverImage(canvas.toDataURL("image/jpeg", 0.78));
+                    };
+                    img.src = ev.target?.result as string;
+                  };
+                  reader.readAsDataURL(file);
+                  e.target.value = "";
+                }}
+              />
+            </label>
           )}
           <label className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: "var(--text-2)" }}>
             <input

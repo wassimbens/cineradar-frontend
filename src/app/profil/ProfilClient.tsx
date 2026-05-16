@@ -890,22 +890,25 @@ function SimpleStatsSection({ profil }: { profil: Profil }) {
 
 // ── CinéScope Pro (onglet enrichi) ────────────────────────
 
-function CineScopeSection({ profil }: { profil: Profil }) {
+const CINESCOPE_API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
+function CineScopeSection({ profil, email }: { profil: Profil; email: string }) {
+  const [downloading, setDownloading] = useState(false);
   const maxGenre = profil.genresStats[0]?.count ?? 1;
 
   // Note moyenne
   const notesValides = profil.avis.map(a => (a as { note?: number | null }).note).filter((n): n is number => n != null && n > 0);
   const noteMoyenne = notesValides.length > 0 ? (notesValides.reduce((s, n) => s + n, 0) / notesValides.length) : null;
 
-  // Distribution des notes (par étoile entière)
+  // Distribution des notes
   const distrib: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   notesValides.forEach(n => { const k = Math.round(n); if (k >= 1 && k <= 5) distrib[k]++; });
   const maxDistrib = Math.max(...Object.values(distrib), 1);
 
-  // Films vus par mois (6 derniers mois)
+  // Films vus par mois (12 derniers mois)
   const filmsByMonth: Record<string, number> = {};
   const now = new Date();
-  for (let i = 5; i >= 0; i--) {
+  for (let i = 11; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     filmsByMonth[key] = 0;
@@ -916,7 +919,45 @@ function CineScopeSection({ profil }: { profil: Profil }) {
     if (key in filmsByMonth) filmsByMonth[key]++;
   });
   const maxMonth = Math.max(...Object.values(filmsByMonth), 1);
-  const moisLabels: Record<string, string> = { "01": "Jan", "02": "Fév", "03": "Mar", "04": "Avr", "05": "Mai", "06": "Juin", "07": "Juil", "08": "Août", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Déc" };
+  const moisLabels: Record<string, string> = { "01": "Jan", "02": "Fév", "03": "Mar", "04": "Avr", "05": "Mai", "06": "Jun", "07": "Jul", "08": "Aoû", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Déc" };
+
+  // Décennies
+  const decadeCount = new Map<string, number>();
+  profil.filmsVus.forEach(fv => {
+    if (!fv.film.annee) return;
+    const decade = `${Math.floor(fv.film.annee / 10) * 10}s`;
+    decadeCount.set(decade, (decadeCount.get(decade) ?? 0) + 1);
+  });
+  const decades = [...decadeCount.entries()].sort((a, b) => b[1] - a[1]);
+  const maxDecade = decades[0]?.[1] ?? 1;
+
+  // Temps total estimé (1h45 moyenne par film)
+  const totalMinutes = profil.stats.filmsVus * 105;
+  const totalHeures = Math.floor(totalMinutes / 60);
+  const joursEquivalent = (totalMinutes / 60 / 24).toFixed(1);
+
+  // Export .ics
+  const handleCalendarDownload = async () => {
+    setDownloading(true);
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
+      const res = await fetch(`${CINESCOPE_API}/api/profil/${encodeURIComponent(email)}/calendar`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) throw new Error("Erreur");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "cineradar.ics";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // silencieux
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   if (profil.stats.filmsVus === 0) {
     return (
@@ -930,17 +971,32 @@ function CineScopeSection({ profil }: { profil: Profil }) {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Compteurs */}
+
+      {/* Bouton export calendrier */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleCalendarDownload}
+          disabled={downloading}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
+          style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text-2)", cursor: downloading ? "not-allowed" : "pointer", opacity: downloading ? 0.7 : 1 }}
+        >
+          <span>📅</span>
+          <span>{downloading ? "Génération…" : "Exporter en calendrier (.ics)"}</span>
+        </button>
+      </div>
+
+      {/* Compteurs + temps total */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           { label: "Films vus", val: profil.stats.filmsVus, icon: "🎬" },
+          { label: "Temps estimé", val: `${totalHeures}h`, sub: `≈ ${joursEquivalent} jours`, icon: "⏱️" },
           { label: "Favoris", val: profil.stats.favoris, icon: "❤️" },
-          { label: "Watchlist", val: profil.stats.watchlist, icon: "🔖" },
           { label: "Avis rédigés", val: profil.stats.avis, icon: "⭐" },
-        ].map(({ label, val, icon }) => (
+        ].map(({ label, val, icon, sub }) => (
           <div key={label} className="flex flex-col items-center p-4 rounded-xl" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
             <span className="text-2xl mb-1">{icon}</span>
             <span className="text-2xl font-extrabold" style={{ color: "var(--text)" }}>{val}</span>
+            {sub && <span className="text-xs mt-0.5" style={{ color: "var(--red)" }}>{sub}</span>}
             <span className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>{label}</span>
           </div>
         ))}
@@ -973,23 +1029,41 @@ function CineScopeSection({ profil }: { profil: Profil }) {
         </div>
       )}
 
-      {/* Films vus par mois */}
+      {/* Films vus par mois (12 mois) */}
       <div>
-        <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Films vus — 6 derniers mois</h3>
-        <div className="flex items-end gap-2" style={{ height: 80 }}>
+        <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Films vus — 12 derniers mois</h3>
+        <div className="flex items-end gap-1" style={{ height: 80 }}>
           {Object.entries(filmsByMonth).map(([key, count]) => {
             const month = key.split("-")[1];
             const pct = Math.round((count / maxMonth) * 100);
             return (
               <div key={key} className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-xs font-bold" style={{ color: count > 0 ? "var(--red)" : "var(--text-3)" }}>{count || ""}</span>
+                <span className="text-xs font-bold" style={{ color: count > 0 ? "var(--red)" : "transparent", fontSize: "0.6rem" }}>{count || "·"}</span>
                 <div className="w-full rounded-t" style={{ height: `${Math.max(pct, 4)}%`, background: count > 0 ? "var(--red)" : "var(--bg-3)", minHeight: 4 }} />
-                <span className="text-xs" style={{ color: "var(--text-3)", fontSize: "0.6rem" }}>{moisLabels[month]}</span>
+                <span style={{ color: "var(--text-3)", fontSize: "0.55rem" }}>{moisLabels[month]}</span>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Décennies */}
+      {decades.length > 0 && (
+        <div>
+          <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text)" }}>Époques préférées</h3>
+          <div className="flex flex-col gap-2">
+            {decades.map(([decade, count]) => (
+              <div key={decade} className="flex items-center gap-3">
+                <span className="text-xs font-bold w-12 flex-shrink-0" style={{ color: "var(--text-2)" }}>{decade}</span>
+                <div className="flex-1 rounded-full overflow-hidden" style={{ height: 8, background: "var(--bg-3)" }}>
+                  <div className="h-full rounded-full" style={{ width: `${Math.round((count / maxDecade) * 100)}%`, background: "var(--red)", opacity: 0.85 }} />
+                </div>
+                <span className="text-xs w-5 text-right flex-shrink-0" style={{ color: "var(--text-3)" }}>{count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Genres */}
       {profil.genresStats.length > 0 && (
@@ -2134,7 +2208,7 @@ export default function ProfilClient() {
 
       {activeTab === "stats" && (
         isPro ? (
-          <CineScopeSection profil={profil} />
+          <CineScopeSection profil={profil} email={email} />
         ) : (
           <div className="text-center py-16 px-4">
             <p className="text-4xl mb-3">🔭</p>

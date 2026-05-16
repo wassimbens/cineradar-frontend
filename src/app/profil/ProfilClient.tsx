@@ -1777,6 +1777,20 @@ export default function ProfilClient() {
   const [posterChoices, setPosterChoices] = useState<Record<string, string>>({});
   const [pickerFilm, setPickerFilm] = useState<{ id: string; titre: string; affiche: string | null } | null>(null);
 
+  // Scroll des onglets (desktop)
+  const tabsScrollRef = useRef<HTMLDivElement>(null);
+  const [tabsCanScrollLeft, setTabsCanScrollLeft] = useState(false);
+  const [tabsCanScrollRight, setTabsCanScrollRight] = useState(true);
+  const onTabsScroll = () => {
+    const el = tabsScrollRef.current;
+    if (!el) return;
+    setTabsCanScrollLeft(el.scrollLeft > 4);
+    setTabsCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
+  const scrollTabs = (dir: "left" | "right") => {
+    tabsScrollRef.current?.scrollBy({ left: dir === "right" ? 220 : -220, behavior: "smooth" });
+  };
+
   // Long-press mobile (partagé entre tous les onglets)
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startLongPress = (film: { id: string; titre: string; affiche: string | null }) => {
@@ -2141,7 +2155,22 @@ export default function ProfilClient() {
 
       {/* ── Onglets ─────────────────────────────────────── */}
       <div className="relative mb-6">
-        <div className="overflow-x-auto no-scrollbar" style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}>
+        {/* Flèche gauche — desktop uniquement */}
+        {tabsCanScrollLeft && (
+          <button
+            onClick={() => scrollTabs("left")}
+            className="hidden sm:flex absolute left-0 top-0 h-full items-center justify-center z-10 w-8"
+            style={{ background: "linear-gradient(to right, var(--bg) 60%, transparent)", border: "none", cursor: "pointer", color: "var(--text-2)" }}
+          >
+            ‹
+          </button>
+        )}
+        <div
+          ref={tabsScrollRef}
+          className="overflow-x-auto no-scrollbar"
+          style={{ WebkitOverflowScrolling: "touch", paddingLeft: tabsCanScrollLeft ? 28 : 0, paddingRight: tabsCanScrollRight ? 28 : 0 } as React.CSSProperties}
+          onScroll={onTabsScroll}
+        >
         <div className="flex gap-1.5 pb-1" style={{ minWidth: "max-content" }}>
           {TABS.map((tab) => (
             <button
@@ -2180,11 +2209,16 @@ export default function ProfilClient() {
           ))}
         </div>
         </div>
-        {/* Gradient fade → indique qu'il y a d'autres onglets à droite */}
-        <div
-          className="pointer-events-none absolute right-0 top-0 h-full w-10"
-          style={{ background: "linear-gradient(to right, transparent, var(--bg))" }}
-        />
+        {/* Flèche droite — desktop uniquement */}
+        {tabsCanScrollRight && (
+          <button
+            onClick={() => scrollTabs("right")}
+            className="hidden sm:flex absolute right-0 top-0 h-full items-center justify-center z-10 w-8"
+            style={{ background: "linear-gradient(to left, var(--bg) 60%, transparent)", border: "none", cursor: "pointer", color: "var(--text-2)" }}
+          >
+            ›
+          </button>
+        )}
       </div>
 
       {/* ── Contenu des onglets ─────────────────────────── */}

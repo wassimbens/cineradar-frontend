@@ -1665,6 +1665,7 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
 
   const typeIcon: Record<string, string> = {
     follow: "👤",
+    message: "💬",
     film_en_salle: "🎬",
     nouveaute_hebdo: "🌟",
   };
@@ -1701,60 +1702,64 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
         )}
       </div>
 
-      {notifs.map(notif => (
-        <div
-          key={notif.id}
-          className="flex items-start gap-3 p-3 rounded-xl"
-          style={{
-            background: notif.lu ? "var(--bg-2)" : "var(--bg-3)",
-            border: `1px solid ${notif.lu ? "var(--border)" : "var(--red)"}`,
-            opacity: notif.lu ? 0.8 : 1,
-          }}
-        >
-          {/* Image / icône */}
-          <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center overflow-hidden"
-            style={{ background: "var(--bg-3)", fontSize: "1.3rem" }}>
-            {notif.imageUrl
-              // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={notif.imageUrl} alt="" className="w-full h-full object-cover" />
-              : <span>{typeIcon[notif.type] ?? "🔔"}</span>
-            }
-          </div>
+      {notifs.map(notif => {
+        const cardContent = (
+          <>
+            {/* Image / icône */}
+            <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center overflow-hidden"
+              style={{ background: "var(--bg-3)", fontSize: "1.3rem" }}>
+              {notif.imageUrl
+                // eslint-disable-next-line @next/next/no-img-element
+                ? <img src={notif.imageUrl} alt="" className="w-full h-full object-cover" />
+                : <span>{typeIcon[notif.type] ?? "🔔"}</span>
+              }
+            </div>
 
-          {/* Contenu */}
-          <div className="flex-1 min-w-0">
+            {/* Contenu */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>{notif.titre}</p>
+              {notif.corps && (
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>{notif.corps}</p>
+              )}
+              <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>
+                {new Date(notif.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+              </p>
+            </div>
+          </>
+        );
+
+        return (
+          <div key={notif.id} className="flex items-start gap-3 rounded-xl overflow-hidden"
+            style={{ background: notif.lu ? "var(--bg-2)" : "var(--bg-3)", border: `1px solid ${notif.lu ? "var(--border)" : "var(--red)"}`, opacity: notif.lu ? 0.8 : 1 }}>
+
+            {/* Zone cliquable (toute la carte sauf les boutons d'action) */}
             {notif.lien ? (
-              <Link href={notif.lien} className="no-underline" onClick={() => markRead(notif.id)}>
-                <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>{notif.titre}</p>
+              <Link href={notif.lien} className="flex items-start gap-3 p-3 flex-1 min-w-0 no-underline"
+                onClick={() => markRead(notif.id)}>
+                {cardContent}
               </Link>
             ) : (
-              <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>{notif.titre}</p>
+              <div className="flex items-start gap-3 p-3 flex-1 min-w-0">{cardContent}</div>
             )}
-            {notif.corps && (
-              <p className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>{notif.corps}</p>
-            )}
-            <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>
-              {new Date(notif.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-            </p>
-          </div>
 
-          {/* Actions */}
-          <div className="flex gap-1 flex-shrink-0">
-            {!notif.lu && (
-              <button onClick={() => markRead(notif.id)} title="Marquer comme lu"
+            {/* Actions */}
+            <div className="flex flex-col gap-1 flex-shrink-0 p-2 pt-3">
+              {!notif.lu && (
+                <button onClick={() => markRead(notif.id)} title="Marquer comme lu"
+                  className="w-6 h-6 rounded flex items-center justify-center text-xs"
+                  style={{ background: "var(--bg-3)", color: "var(--text-3)", cursor: "pointer", border: "none" }}>
+                  ✓
+                </button>
+              )}
+              <button onClick={() => deleteNotif(notif.id)} title="Supprimer"
                 className="w-6 h-6 rounded flex items-center justify-center text-xs"
                 style={{ background: "var(--bg-3)", color: "var(--text-3)", cursor: "pointer", border: "none" }}>
-                ✓
+                ✕
               </button>
-            )}
-            <button onClick={() => deleteNotif(notif.id)} title="Supprimer"
-              className="w-6 h-6 rounded flex items-center justify-center text-xs"
-              style={{ background: "var(--bg-3)", color: "var(--text-3)", cursor: "pointer", border: "none" }}>
-              ✕
-            </button>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

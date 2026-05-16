@@ -17,7 +17,7 @@ export default function ImageCropper({ file, onCrop, onCancel }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
-  const SIZE = 280;
+  const SIZE = 240;
 
   useEffect(() => {
     const reader = new FileReader();
@@ -69,21 +69,40 @@ export default function ImageCropper({ file, onCrop, onCancel }: Props) {
 
   useEffect(() => { draw(); }, [zoom, offsetX, offsetY]);
 
+  const applyDrag = (clientX: number, clientY: number) => {
+    if (!imgRef.current) return;
+    const img = imgRef.current;
+    const dx = clientX - dragStart.x;
+    const dy = clientY - dragStart.y;
+    const maxX = (img.naturalWidth * zoom - SIZE) / 2;
+    const maxY = (img.naturalHeight * zoom - SIZE) / 2;
+    setOffsetX(v => Math.max(-maxX, Math.min(maxX, v + dx)));
+    setOffsetY(v => Math.max(-maxY, Math.min(maxY, v + dy)));
+    setDragStart({ x: clientX, y: clientY });
+  };
+
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDragging(true);
     setDragStart({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging || !imgRef.current) return;
-    const img = imgRef.current;
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
-    const maxX = (img.naturalWidth * zoom - SIZE) / 2;
-    const maxY = (img.naturalHeight * zoom - SIZE) / 2;
-    setOffsetX(v => Math.max(-maxX, Math.min(maxX, v + dx)));
-    setOffsetY(v => Math.max(-maxY, Math.min(maxY, v + dy)));
-    setDragStart({ x: e.clientX, y: e.clientY });
+    if (!isDragging) return;
+    applyDrag(e.clientX, e.clientY);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    setIsDragging(true);
+    setDragStart({ x: t.clientX, y: t.clientY });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (!isDragging) return;
+    const t = e.touches[0];
+    applyDrag(t.clientX, t.clientY);
   };
 
   const handleCrop = () => {
@@ -131,6 +150,9 @@ export default function ImageCropper({ file, onCrop, onCancel }: Props) {
             onMouseMove={handleMouseMove}
             onMouseUp={() => setIsDragging(false)}
             onMouseLeave={() => setIsDragging(false)}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={() => setIsDragging(false)}
           />
         </div>
 

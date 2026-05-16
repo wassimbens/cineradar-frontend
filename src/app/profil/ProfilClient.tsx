@@ -1108,7 +1108,97 @@ function EmailVerifBanner({ email }: { email: string }) {
   );
 }
 
-type Tab = "vitrine" | "simple-stats" | "stats" | "listes" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
+// ─────────────────────────────────────────────────────────
+//  Recommandations personnalisées (Pro)
+// ─────────────────────────────────────────────────────────
+
+interface FilmReco {
+  id: string;
+  titre: string;
+  titreOriginal: string | null;
+  affiche: string | null;
+  annee: number | null;
+  realisateur: string | null;
+  genres: string[];
+  imdbNote: number | null;
+  synopsis: string | null;
+}
+
+const RECO_API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
+function RecommandationsSection({ email }: { email: string }) {
+  const [films, setFilms] = useState<FilmReco[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("cineradar_token") : null;
+    fetch(`${RECO_API}/api/profil/${encodeURIComponent(email)}/recommandations`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setFilms(data);
+        else setError(data.error ?? "Erreur");
+      })
+      .catch(() => setError("Erreur réseau"))
+      .finally(() => setLoading(false));
+  }, [email]);
+
+  if (loading) return <div className="flex justify-center py-20"><p style={{ color: "var(--text-3)" }}>Chargement…</p></div>;
+
+  if (error) return (
+    <div className="text-center py-16">
+      <p className="text-4xl mb-3">😕</p>
+      <p style={{ color: "var(--text-3)" }}>{error}</p>
+    </div>
+  );
+
+  if (films.length === 0) return (
+    <div className="text-center py-16">
+      <p className="text-4xl mb-3">🎬</p>
+      <p className="font-bold mb-1" style={{ color: "var(--text)" }}>Pas encore de recommandations</p>
+      <p className="text-sm" style={{ color: "var(--text-3)" }}>Marquez plus de films comme vus pour affiner vos goûts.</p>
+    </div>
+  );
+
+  return (
+    <div>
+      <p className="text-sm mb-4" style={{ color: "var(--text-3)" }}>
+        Sélectionnés selon vos genres et réalisateurs préférés · {films.length} films
+      </p>
+      <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))" }}>
+        {films.map((film) => (
+          <Link key={film.id} href={`/films/${film.id}`} className="group block no-underline">
+            <div className="rounded-xl overflow-hidden" style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}>
+              <div style={{ aspectRatio: "2/3", background: "var(--bg-3)", position: "relative", overflow: "hidden" }}>
+                {film.affiche
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img src={film.affiche} alt={film.titre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <div className="flex items-center justify-center w-full h-full text-3xl">🎬</div>
+                }
+                {film.imdbNote && film.imdbNote >= 7 && (
+                  <span className="absolute top-1 right-1 text-xs font-bold px-1.5 py-0.5 rounded" style={{ background: "#f5c518", color: "#000" }}>
+                    ★ {film.imdbNote.toFixed(1)}
+                  </span>
+                )}
+              </div>
+              <div className="p-2">
+                <p className="text-xs font-semibold truncate" style={{ color: "var(--text)" }}>{film.titre}</p>
+                <p className="text-xs" style={{ color: "var(--text-3)" }}>{film.annee ?? "—"}</p>
+                {film.genres.slice(0, 2).map((g) => (
+                  <span key={g} className="inline-block text-xs mr-1 mt-0.5 px-1 rounded" style={{ background: "var(--bg-3)", color: "var(--text-3)", fontSize: "0.65rem" }}>{g}</span>
+                ))}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+type Tab = "vitrine" | "simple-stats" | "stats" | "pour-vous" | "listes" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
 
 // ─────────────────────────────────────────────────────────
 //  Onglet Mes listes
@@ -1808,6 +1898,7 @@ export default function ProfilClient() {
     { id: "vitrine",       label: "Vitrine",       short: "Vitrine",  icon: "🎬" },
     ...(!isPro ? [{ id: "simple-stats" as Tab, label: "Stats",      short: "Stats",    icon: "📊" }] : []),
     { id: "stats",         label: "CinéScope",     short: "Scope",    icon: "🔭" },
+    { id: "pour-vous",    label: "Pour vous",     short: "Pour vous", icon: "✨" },
     { id: "listes",        label: "Mes listes",    short: "Listes",   icon: "📋" },
     { id: "vus",           label: "Films vus",     short: "Vus",      icon: "✓",  count: profil.stats.filmsVus },
     { id: "favoris",       label: "Favoris",       short: "Favoris",  icon: "❤️", count: profil.stats.favoris },
@@ -2049,6 +2140,23 @@ export default function ProfilClient() {
               className="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white no-underline"
               style={{ background: "var(--red)" }}
             >
+              Passer à Pro →
+            </Link>
+          </div>
+        )
+      )}
+
+      {activeTab === "pour-vous" && (
+        isPro ? (
+          <RecommandationsSection email={email} />
+        ) : (
+          <div className="text-center py-16 px-4">
+            <p className="text-4xl mb-3">✨</p>
+            <p className="text-lg font-extrabold mb-2" style={{ color: "var(--text)" }}>Recommandations — réservé aux membres Pro</p>
+            <p className="text-sm mb-6" style={{ color: "var(--text-3)", maxWidth: 360, margin: "0 auto 1.5rem" }}>
+              Découvrez des films sélectionnés pour vous selon vos goûts : genres, réalisateurs et notes IMDB.
+            </p>
+            <Link href="/premium" className="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white no-underline" style={{ background: "var(--red)" }}>
               Passer à Pro →
             </Link>
           </div>

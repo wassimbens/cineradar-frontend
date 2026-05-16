@@ -11,6 +11,7 @@ import FilmPoster from "@/components/FilmPoster";
 import PosterPicker from "@/components/PosterPicker";
 import ImageCropper from "@/components/ImageCropper";
 import ImageViewer from "@/components/ImageViewer";
+import FollowListModal from "@/components/FollowListModal";
 
 // ─────────────────────────────────────────────────────────
 //  Helpers
@@ -1840,6 +1841,10 @@ export default function ProfilClient() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [croppingFile, setCroppingFile] = useState<File | null>(null);
   const [viewingImage, setViewingImage] = useState<string | null>(null);
+  const [followModal, setFollowModal] = useState<"followers" | "following" | null>(null);
+  const [myFollowers, setMyFollowers] = useState<UserSearch[]>([]);
+  const [myFollowing, setMyFollowing] = useState<UserSearch[]>([]);
+  const [followListLoading, setFollowListLoading] = useState(false);
   const avatarLongPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startAvatarLongPress = (src: string) => {
     avatarLongPressTimer.current = setTimeout(() => setViewingImage(src), 600);
@@ -1885,6 +1890,14 @@ export default function ProfilClient() {
     if (email) loadProfil(email);
   }, [email, loadProfil]);
 
+  // Charger abonnés / abonnements dès que le pseudo est disponible
+  useEffect(() => {
+    const p = authUser?.pseudo ?? profil?.pseudo ?? null;
+    if (!p) return;
+    socialApi.getFollowers(p).then(setMyFollowers).catch(() => {});
+    socialApi.getFollowing(p).then(setMyFollowing).catch(() => {});
+  }, [authUser?.pseudo, profil?.pseudo]);
+
   // Charger les choix d'affiches personnalisées (Pro seulement)
   const isPro = authUser?.isPremium ?? profil?.isPremium ?? false;
   useEffect(() => {
@@ -1898,6 +1911,19 @@ export default function ProfilClient() {
 
   const posterFor = (filmId: string, defaultAffiche: string | null): string | null =>
     posterChoices[filmId] ?? defaultAffiche;
+
+  const openFollowModal = async (type: "followers" | "following", p: string) => {
+    setFollowModal(type);
+    setFollowListLoading(true);
+    try {
+      const list = type === "followers"
+        ? await socialApi.getFollowers(p)
+        : await socialApi.getFollowing(p);
+      if (type === "followers") setMyFollowers(list);
+      else setMyFollowing(list);
+    } catch { /* ignore */ }
+    finally { setFollowListLoading(false); }
+  };
 
   const handleAuth = (mail: string, tkn: string, user: AuthUser) => {
     localStorage.setItem("cineradar_email", mail);
@@ -2146,6 +2172,27 @@ export default function ProfilClient() {
                   {profil.ville ? `📍 ${profil.ville}` : <span style={{ opacity: 0.5 }}>📍 Ville…</span>}
                 </span>
                 <button onClick={() => setEditingVille(true)} className="text-xs" style={{ color: "var(--text-3)", cursor: "pointer" }}>✏️</button>
+              </div>
+            )}
+
+            {/* Abonnés / Abonnements */}
+            {pseudo && (
+              <div className="flex items-center gap-3 mt-1.5">
+                <button
+                  onClick={() => openFollowModal("followers", pseudo)}
+                  className="text-xs hover:underline"
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "var(--text-3)" }}
+                >
+                  <span className="font-bold" style={{ color: "var(--text-2)" }}>{myFollowers.length}</span> abonnés
+                </button>
+                <span style={{ color: "var(--text-3)" }}>·</span>
+                <button
+                  onClick={() => openFollowModal("following", pseudo)}
+                  className="text-xs hover:underline"
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "var(--text-3)" }}
+                >
+                  <span className="font-bold" style={{ color: "var(--text-2)" }}>{myFollowing.length}</span> abonnements
+                </button>
               </div>
             )}
           </div>
@@ -2444,6 +2491,18 @@ export default function ProfilClient() {
         <ImageViewer
           src={viewingImage}
           onClose={() => setViewingImage(null)}
+        />
+      )}
+
+      {/* ── Modal abonnés / abonnements ─────────────────── */}
+      {followModal && pseudo && (
+        <FollowListModal
+          title={followModal === "followers"
+            ? `Abonnés · ${myFollowers.length}`
+            : `Abonnements · ${myFollowing.length}`}
+          users={followModal === "followers" ? myFollowers : myFollowing}
+          loading={followListLoading}
+          onClose={() => setFollowModal(null)}
         />
       )}
     </div>

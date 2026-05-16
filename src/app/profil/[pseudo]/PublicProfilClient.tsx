@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { socialApi, type PublicProfil, type AvisUtilisateur, type FilmVuItem } from "@/lib/api";
+import { socialApi, type PublicProfil, type AvisUtilisateur, type FilmVuItem, type UserSearch } from "@/lib/api";
 import FilmPoster from "@/components/FilmPoster";
+import FollowListModal from "@/components/FollowListModal";
 
 // ─────────────────────────────────────────────────────────
 //  Helpers
@@ -232,6 +233,9 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
   const [notFound, setNotFound] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("vitrine");
   const [myPseudo, setMyPseudo] = useState<string | null>(null);
+  const [followModal, setFollowModal] = useState<"followers" | "following" | null>(null);
+  const [followList, setFollowList] = useState<UserSearch[]>([]);
+  const [followListLoading, setFollowListLoading] = useState(false);
 
   const loadProfil = useCallback(async () => {
     setLoading(true);
@@ -255,6 +259,19 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
       } catch {}
     }
   }, [loadProfil]);
+
+  const openFollowModal = async (type: "followers" | "following") => {
+    setFollowModal(type);
+    setFollowList([]);
+    setFollowListLoading(true);
+    try {
+      const list = type === "followers"
+        ? await socialApi.getFollowers(pseudo)
+        : await socialApi.getFollowing(pseudo);
+      setFollowList(list);
+    } catch { setFollowList([]); }
+    finally { setFollowListLoading(false); }
+  };
 
   if (loading) {
     return (
@@ -328,10 +345,22 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
             {profil.ville && <span>📍 {profil.ville}</span>}
             <span>🎬 {profil.stats.filmsVus} films vus</span>
             <span>⭐ {profil.stats.avis} avis</span>
-            <span>
-              <span className="font-bold" style={{ color: "var(--text-2)" }}>{profil.followersCount}</span> abonnés
+            <span className="flex items-center gap-2">
+              <button
+                onClick={() => openFollowModal("followers")}
+                className="hover:underline"
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}
+              >
+                <span className="font-bold" style={{ color: "var(--text-2)" }}>{profil.followersCount}</span> abonnés
+              </button>
               {" · "}
-              <span className="font-bold" style={{ color: "var(--text-2)" }}>{profil.followingCount}</span> abonnements
+              <button
+                onClick={() => openFollowModal("following")}
+                className="hover:underline"
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: "inherit" }}
+              >
+                <span className="font-bold" style={{ color: "var(--text-2)" }}>{profil.followingCount}</span> abonnements
+              </button>
             </span>
             <span style={{ color: "var(--text-3)" }}>
               Membre depuis {new Date(profil.createdAt).toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
@@ -400,6 +429,15 @@ export default function PublicProfilClient({ pseudo }: { pseudo: string }) {
             🎬 Comparer nos profils
           </Link>
         </div>
+      )}
+
+      {followModal && (
+        <FollowListModal
+          title={followModal === "followers" ? `Abonnés · ${profil.followersCount}` : `Abonnements · ${profil.followingCount}`}
+          users={followList}
+          loading={followListLoading}
+          onClose={() => setFollowModal(null)}
+        />
       )}
     </div>
   );

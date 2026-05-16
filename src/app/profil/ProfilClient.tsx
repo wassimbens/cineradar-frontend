@@ -1147,6 +1147,7 @@ const API_URL_PROFIL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003
 function MesListesSection({ token, onReconnect }: { token: string | null; onReconnect: () => void }) {
   const [listes, setListes] = useState<ListeResume[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [newTitre, setNewTitre] = useState("");
   const [newEmoji, setNewEmoji] = useState("🎬");
@@ -1156,11 +1157,20 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
   const fetchListes = useCallback(async () => {
     if (!token) { setLoading(false); return; }
     setLoading(true);
+    setFetchError(null);
     try {
       const res = await fetch(`${API_URL_PROFIL}/api/listes/mes-listes`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) setListes(await res.json());
+      if (res.ok) {
+        setListes(await res.json());
+      } else if (res.status === 401) {
+        setFetchError("session");
+      } else {
+        setFetchError("api");
+      }
+    } catch {
+      setFetchError("network");
     } finally { setLoading(false); }
   }, [token]);
 
@@ -1209,6 +1219,32 @@ function MesListesSection({ token, onReconnect }: { token: string | null; onReco
           style={{ background: "var(--red)", border: "none", cursor: "pointer" }}
         >
           Se reconnecter
+        </button>
+      </div>
+    );
+  }
+
+  if (fetchError === "session") {
+    return (
+      <div className="text-center py-12 px-4">
+        <p className="text-3xl mb-3">🔑</p>
+        <p className="font-semibold mb-2" style={{ color: "var(--text)" }}>Session expirée</p>
+        <p className="text-sm mb-5" style={{ color: "var(--text-3)" }}>Reconnectez-vous pour accéder à vos listes.</p>
+        <button onClick={onReconnect} className="text-sm font-semibold px-5 py-2.5 rounded-xl text-white" style={{ background: "var(--red)", border: "none", cursor: "pointer" }}>
+          Se reconnecter
+        </button>
+      </div>
+    );
+  }
+
+  if (fetchError === "network" || fetchError === "api") {
+    return (
+      <div className="text-center py-12 px-4">
+        <p className="text-3xl mb-3">⚡</p>
+        <p className="font-semibold mb-2" style={{ color: "var(--text)" }}>Serveur temporairement indisponible</p>
+        <p className="text-sm mb-5" style={{ color: "var(--text-3)" }}>Réessayez dans quelques instants.</p>
+        <button onClick={() => fetchListes()} className="text-sm font-semibold px-5 py-2.5 rounded-xl" style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-2)", cursor: "pointer" }}>
+          Réessayer
         </button>
       </div>
     );

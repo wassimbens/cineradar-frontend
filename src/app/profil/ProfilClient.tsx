@@ -9,6 +9,7 @@ import {
 } from "@/lib/api";
 import FilmPoster from "@/components/FilmPoster";
 import PosterPicker from "@/components/PosterPicker";
+import ImageCropper from "@/components/ImageCropper";
 
 // ─────────────────────────────────────────────────────────
 //  Helpers
@@ -1632,6 +1633,7 @@ export default function ProfilClient() {
   const [pseudoInput, setPseudoInput] = useState("");
   const [pseudoError, setPseudoError] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [croppingFile, setCroppingFile] = useState<File | null>(null);
 
   // Persistance
   useEffect(() => {
@@ -1756,17 +1758,23 @@ export default function ProfilClient() {
     }
   };
 
-  const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !email) return;
     if (!file.type.startsWith("image/")) return;
+    setCroppingFile(file);
+    e.target.value = "";
+  };
+
+  const handleAvatarCrop = async (dataUrl: string) => {
+    if (!email) return;
     setUploadingAvatar(true);
+    setCroppingFile(null);
     try {
-      const dataUrl = await resizeImage(file, 300);
       await profilApi.updateProfil(email, { avatar: dataUrl });
       await loadProfil(email);
     } catch (err) { console.error("Erreur upload avatar", err); }
-    finally { setUploadingAvatar(false); e.target.value = ""; }
+    finally { setUploadingAvatar(false); }
   };
 
   const removeFavori = async (filmId: string) => { if (!email) return; await profilApi.removeFavori(email, filmId); await loadProfil(email); };
@@ -2143,6 +2151,15 @@ export default function ProfilClient() {
             setPosterChoices((prev) => ({ ...prev, [pickerFilm.id]: url }));
             setPickerFilm(null);
           }}
+        />
+      )}
+
+      {/* ── Image Cropper modal ──────────────────────────── */}
+      {croppingFile && (
+        <ImageCropper
+          file={croppingFile}
+          onCrop={handleAvatarCrop}
+          onCancel={() => setCroppingFile(null)}
         />
       )}
     </div>

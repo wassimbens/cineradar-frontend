@@ -10,6 +10,7 @@ import SeancesFiltres from "@/components/SeancesFiltres";
 import TrailerSection from "@/components/TrailerSection";
 import ProfilActions from "@/components/ProfilActions";
 import CommunityRating from "@/components/CommunityRating";
+import FilmDetailHeader from "../FilmDetailHeader";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -190,13 +191,7 @@ export default async function FilmPage({ params, searchParams }: Props) {
       />
 
       {/* Bouton retour */}
-      <Link
-        href="/films"
-        className="inline-flex items-center gap-1 text-sm mb-8 no-underline"
-        style={{ color: "var(--text-3)" }}
-      >
-        ← Tous les films
-      </Link>
+      <FilmDetailHeader />
 
       {/* En-tête film — s'affiche immédiatement */}
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-8 sm:mb-10 items-start">
@@ -360,7 +355,7 @@ export default async function FilmPage({ params, searchParams }: Props) {
 
       {/* Bande annonce — streamée indépendamment */}
       <Suspense fallback={null}>
-        <TrailerSection filmId={id} filmTitre={film.titre} />
+        <TrailerSection filmId={id} filmTitre={film.titre} filmAffiche={film.affiche} />
       </Suspense>
 
       {/* Séances — chargées en streaming, n'bloquent pas le rendu du film */}

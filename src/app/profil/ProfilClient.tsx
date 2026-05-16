@@ -1945,7 +1945,7 @@ export default function ProfilClient() {
             <ManageSubscriptionButton />
           ) : (
             <Link
-              href="/abonnement"
+              href="/premium"
               className="text-xs px-3 py-1.5 rounded-lg no-underline font-bold"
               style={{ background: "var(--red)", color: "white", border: "1px solid var(--red)" }}
             >
@@ -2033,7 +2033,7 @@ export default function ProfilClient() {
               Accédez à votre tableau de bord complet : genres préférés, réalisateurs, évolution mensuelle et bien plus.
             </p>
             <Link
-              href="/abonnement"
+              href="/premium"
               className="inline-block px-6 py-3 rounded-xl text-sm font-bold text-white no-underline"
               style={{ background: "var(--red)" }}
             >

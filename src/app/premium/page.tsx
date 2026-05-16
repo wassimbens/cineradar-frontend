@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const FEATURES_FREE = [
-  "Catalogue complet (6 000+ films)",
+  "Catalogue complet (24 000+ films)",
   "Séances de tous les cinémas",
   "Recherche films & cinémas",
   "Profil public & watchlist illimitée",

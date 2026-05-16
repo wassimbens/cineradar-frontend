@@ -642,7 +642,7 @@ export default function ListePubliquePage() {
           )}
         </div>
       ) : (
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+        <div className="grid gap-2 grid-cols-4 md:gap-4">
           {liste.films.map(({ film }) => (
             <Link
               key={film.id}
@@ -650,7 +650,7 @@ export default function ListePubliquePage() {
               className="no-underline group"
             >
               <div
-                className="rounded-xl overflow-hidden"
+                className="rounded-lg md:rounded-xl overflow-hidden"
                 style={{ background: "var(--bg-2)", border: "1px solid var(--border)", transition: "transform 0.15s" }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
@@ -665,12 +665,12 @@ export default function ListePubliquePage() {
                       src={film.affiche}
                       alt={film.titre}
                       fill
-                      sizes="(max-width: 640px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 25vw, 25vw"
                       className="object-cover"
                     />
                   ) : (
                     <div
-                      className="absolute inset-0 flex items-center justify-center text-3xl"
+                      className="absolute inset-0 flex items-center justify-center text-xl"
                       style={{ color: "var(--text-3)" }}
                     >
                       🎬
@@ -679,15 +679,15 @@ export default function ListePubliquePage() {
                 </div>
 
                 {/* Infos */}
-                <div className="p-2.5">
+                <div className="p-1.5 md:p-2.5">
                   <p
-                    className="font-semibold text-xs leading-snug mb-0.5"
-                    style={{ color: "var(--text)", textTransform: "uppercase", letterSpacing: "0.02em" }}
+                    className="font-semibold leading-snug mb-0.5"
+                    style={{ fontSize: 10, color: "var(--text)", textTransform: "uppercase", letterSpacing: "0.02em" }}
                   >
                     {film.titre}
                   </p>
                   {film.annee && (
-                    <p className="text-xs" style={{ color: "var(--text-3)" }}>
+                    <p style={{ fontSize: 9, color: "var(--text-3)" }}>
                       {film.annee}
                     </p>
                   )}

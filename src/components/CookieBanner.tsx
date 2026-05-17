@@ -44,10 +44,11 @@ export default function CookieBanner() {
             🍪 Ce site utilise des cookies
           </p>
           <p className="text-xs leading-relaxed" style={{ color: "var(--text-3)" }}>
-            Uniquement les cookies <strong>strictement nécessaires</strong> au fonctionnement (session, thème).
-            Aucun cookie publicitaire sans votre accord.{" "}
+            CinéRadar n&apos;utilise que des cookies <strong>strictement nécessaires</strong> au
+            fonctionnement du service (session d&apos;authentification, préférence de thème).
+            Aucun cookie publicitaire ou de tracking n&apos;est utilisé.{" "}
             <Link href="/legal/confidentialite" className="underline" style={{ color: "var(--red)" }}>
-              Politique de confidentialité
+              En savoir plus
             </Link>
           </p>
         </div>
@@ -63,14 +64,14 @@ export default function CookieBanner() {
               cursor: "pointer",
             }}
           >
-            Refuser
+            Fermer
           </button>
           <button
             onClick={accept}
             className="px-4 py-2 rounded-lg text-sm font-semibold text-white"
             style={{ background: "var(--red)", cursor: "pointer" }}
           >
-            Accepter
+            J&apos;ai compris
           </button>
         </div>
       </div>

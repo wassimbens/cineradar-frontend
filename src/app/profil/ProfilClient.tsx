@@ -78,6 +78,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nom, setNom] = useState("");
+  const [accepteCgu, setAccepteCgu] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -86,6 +87,10 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
     setError("");
     if (mode === "register" && password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+    if (mode === "register" && !accepteCgu) {
+      setError("Vous devez accepter les CGU et la politique de confidentialité.");
       return;
     }
     setLoading(true);
@@ -177,20 +182,42 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
           />
 
           {mode === "register" && (
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirmer le mot de passe"
-              required
-              minLength={6}
-              className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
-              style={{
-                background: "var(--bg-3)",
-                border: `1px solid ${confirmPassword && password !== confirmPassword ? "#dc2626" : "var(--border)"}`,
-                color: "var(--text)",
-              }}
-            />
+            <>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirmer le mot de passe"
+                required
+                minLength={6}
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+                style={{
+                  background: "var(--bg-3)",
+                  border: `1px solid ${confirmPassword && password !== confirmPassword ? "#dc2626" : "var(--border)"}`,
+                  color: "var(--text)",
+                }}
+              />
+              <label className="flex items-start gap-2.5 cursor-pointer mt-1">
+                <input
+                  type="checkbox"
+                  checked={accepteCgu}
+                  onChange={(e) => setAccepteCgu(e.target.checked)}
+                  className="mt-0.5 flex-shrink-0"
+                  style={{ accentColor: "var(--red)", width: 15, height: 15 }}
+                />
+                <span className="text-xs leading-relaxed" style={{ color: "var(--text-3)" }}>
+                  J&apos;accepte les{" "}
+                  <a href="/legal/cgu" target="_blank" rel="noopener noreferrer" style={{ color: "var(--red)" }}>
+                    conditions générales d&apos;utilisation
+                  </a>{" "}
+                  et la{" "}
+                  <a href="/legal/confidentialite" target="_blank" rel="noopener noreferrer" style={{ color: "var(--red)" }}>
+                    politique de confidentialité
+                  </a>
+                  .
+                </span>
+              </label>
+            </>
           )}
 
           <button
@@ -207,7 +234,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
         <div className="mt-4 flex flex-col gap-1 text-center">
           {mode === "login" && (
             <>
-              <button onClick={() => { setMode("register"); setError(""); }} className="text-xs" style={{ color: "var(--red)", cursor: "pointer" }}>
+              <button onClick={() => { setMode("register"); setError(""); setAccepteCgu(false); }} className="text-xs" style={{ color: "var(--red)", cursor: "pointer" }}>
                 Pas encore de compte ? Créer un compte
               </button>
               <a href="/auth/mot-de-passe-oublie" className="text-xs" style={{ color: "var(--text-3)" }}>

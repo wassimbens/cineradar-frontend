@@ -499,19 +499,35 @@ export interface MessageReplyPreview {
   senderId: string;
 }
 
+export interface MessageFilmPreview {
+  id: string;
+  titre: string;
+  affiche: string | null;
+  annee: number | null;
+  imdbNote: number | null;
+  tmdbNote: number | null;
+  genres: string[];
+}
+
 export interface MessageItem {
   id: string;
   content: string;
   senderId: string;
   lu: boolean;
+  edited: boolean;
+  editedAt: string | null;
+  deleted: boolean;
+  pinned: boolean;
   createdAt: string;
   replyTo: MessageReplyPreview | null;
+  film: MessageFilmPreview | null;
   reactions: MessageReaction[];
 }
 
 export interface MessageThread {
   partner: { id: string; pseudo: string; nom: string | null; avatar: string | null };
   messages: MessageItem[];
+  pinned: MessageItem | null;
 }
 
 // ── Users / Social API ────────────────────────────────────
@@ -550,15 +566,26 @@ export const socialApi = {
 export const messagesApi = {
   getConversations: () => authFetch<MessageConversation[]>("/api/messages"),
   getThread: (pseudo: string) => authFetch<MessageThread>(`/api/messages/${encodeURIComponent(pseudo)}`),
-  send: (pseudo: string, content: string, replyToId?: string) =>
+  send: (pseudo: string, content: string, replyToId?: string, filmId?: string) =>
     authFetch<{ id: string; content: string; senderId: string; createdAt: string }>(`/api/messages/${encodeURIComponent(pseudo)}`, {
       method: "POST",
-      body: JSON.stringify({ content, ...(replyToId ? { replyToId } : {}) }),
+      body: JSON.stringify({ content, ...(replyToId ? { replyToId } : {}), ...(filmId ? { filmId } : {}) }),
     }),
   react: (messageId: string, emoji: string) =>
     authFetch<{ ok: boolean; action: "added" | "removed" }>(`/api/messages/react/${messageId}`, {
       method: "POST",
       body: JSON.stringify({ emoji }),
+    }),
+  deleteMessage: (messageId: string) =>
+    authFetch<{ ok: boolean }>(`/api/messages/${messageId}`, { method: "DELETE" }),
+  editMessage: (messageId: string, content: string) =>
+    authFetch<{ id: string; content: string; edited: boolean }>(`/api/messages/${messageId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ content }),
+    }),
+  pinMessage: (pseudo: string, messageId: string) =>
+    authFetch<{ ok: boolean; pinned: boolean }>(`/api/messages/${encodeURIComponent(pseudo)}/pin/${messageId}`, {
+      method: "POST",
     }),
   unreadCount: () => authFetch<{ count: number }>("/api/messages/unread-count"),
 };

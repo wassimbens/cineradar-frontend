@@ -655,10 +655,14 @@ export default function ThreadPage() {
   const handleEditSave = useCallback(async (msgId: string, newContent: string) => {
     if (!newContent) return;
     setEditingId(null);
-    setThread(prev => prev ? {
-      ...prev,
-      messages: prev.messages.map(m => m.id === msgId ? { ...m, content: newContent, edited: true } : m),
-    } : prev);
+    setThread(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        messages: prev.messages.map(m => m.id === msgId ? { ...m, content: newContent, edited: true } : m),
+        pinned: prev.pinned?.id === msgId ? { ...prev.pinned, content: newContent, edited: true } : prev.pinned,
+      };
+    });
     await messagesApi.editMessage(msgId, newContent).catch(() => load(false));
   }, [load]);
 

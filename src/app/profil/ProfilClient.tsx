@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -1689,6 +1689,22 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
     </div>
   );
 
+  // Pour chaque lien (= profil utilisateur), garder l'avatar le plus récent
+  // afin que toutes les notifs d'une même personne affichent la même photo à jour.
+  const latestAvatarByLien = useMemo(() => {
+    const map: Record<string, string | null> = {};
+    const dateMap: Record<string, string> = {};
+    for (const n of notifs) {
+      if ((n.type === "follow" || n.type === "message") && n.lien) {
+        if (!dateMap[n.lien] || n.createdAt > dateMap[n.lien]) {
+          map[n.lien] = n.imageUrl;
+          dateMap[n.lien] = n.createdAt;
+        }
+      }
+    }
+    return map;
+  }, [notifs]);
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between mb-2">
@@ -1706,14 +1722,19 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
       </div>
 
       {notifs.map(notif => {
+        // Utiliser l'avatar le plus récent pour les notifs sociales (follow/message)
+        const displayImage = (notif.type === "follow" || notif.type === "message") && notif.lien
+          ? (latestAvatarByLien[notif.lien] ?? notif.imageUrl)
+          : notif.imageUrl;
+
         const cardContent = (
           <>
             {/* Image / icône */}
             <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center overflow-hidden"
               style={{ background: "var(--bg-3)", fontSize: "1.3rem" }}>
-              {notif.imageUrl
+              {displayImage
                 // eslint-disable-next-line @next/next/no-img-element
-                ? <img src={notif.imageUrl} alt="" className="w-full h-full object-cover" />
+                ? <img src={displayImage} alt="" className="w-full h-full object-cover" />
                 : <span>{typeIcon[notif.type] ?? "🔔"}</span>
               }
             </div>

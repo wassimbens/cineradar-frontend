@@ -1673,6 +1673,22 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
     nouveaute_hebdo: "🌟",
   };
 
+  // Hooks toujours appelés avant tout return conditionnel
+  // Pour chaque lien (= profil utilisateur), garder l'avatar le plus récent
+  const latestAvatarByLien = useMemo(() => {
+    const map: Record<string, string | null> = {};
+    const dateMap: Record<string, string> = {};
+    for (const n of notifs) {
+      if ((n.type === "follow" || n.type === "message") && n.lien) {
+        if (!dateMap[n.lien] || n.createdAt > dateMap[n.lien]) {
+          map[n.lien] = n.imageUrl;
+          dateMap[n.lien] = n.createdAt;
+        }
+      }
+    }
+    return map;
+  }, [notifs]);
+
   if (loading) return (
     <div className="flex flex-col gap-3">
       {[1,2,3].map(i => <div key={i} className="h-16 rounded-xl animate-pulse" style={{ background: "var(--bg-2)" }} />)}
@@ -1688,22 +1704,6 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
       </p>
     </div>
   );
-
-  // Pour chaque lien (= profil utilisateur), garder l'avatar le plus récent
-  // afin que toutes les notifs d'une même personne affichent la même photo à jour.
-  const latestAvatarByLien = useMemo(() => {
-    const map: Record<string, string | null> = {};
-    const dateMap: Record<string, string> = {};
-    for (const n of notifs) {
-      if ((n.type === "follow" || n.type === "message") && n.lien) {
-        if (!dateMap[n.lien] || n.createdAt > dateMap[n.lien]) {
-          map[n.lien] = n.imageUrl;
-          dateMap[n.lien] = n.createdAt;
-        }
-      }
-    }
-    return map;
-  }, [notifs]);
 
   return (
     <div className="flex flex-col gap-2">

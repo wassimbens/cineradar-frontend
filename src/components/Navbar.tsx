@@ -291,7 +291,7 @@ export default function Navbar() {
             style={{ borderTop: "1px solid var(--border)", background: "var(--bg)" }}
           >
             <Suspense fallback={<NavLinksFallback />}>
-              <NavLinks onClose={() => setMenuOpen(false)} isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} unreadNotifs={unreadNotifs} />
+              <NavLinks onClose={() => setMenuOpen(false)} isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} unreadNotifs={unreadNotifs} unreadMessages={unreadMessages} />
             </Suspense>
             <button
               onClick={() => { setMenuOpen(false); setModalOpen(true); }}

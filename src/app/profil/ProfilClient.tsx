@@ -1647,13 +1647,15 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
     onUnreadChange(0);
   };
 
-  const markRead = async (id: string) => {
+  const markRead = (id: string) => {
     if (!token) return;
-    await fetch(`${PAPI}/api/notifications/${id}/read`, {
-      method: "PATCH", headers: { Authorization: `Bearer ${token}` }, credentials: "include",
-    });
+    // Mise à jour optimiste immédiate (avant navigation)
     setNotifs(prev => prev.map(n => n.id === id ? { ...n, lu: true } : n));
     onUnreadChange(notifs.filter(n => !n.lu && n.id !== id).length);
+    // API en arrière-plan
+    fetch(`${PAPI}/api/notifications/${id}/read`, {
+      method: "PATCH", headers: { Authorization: `Bearer ${token}` }, credentials: "include",
+    }).catch(() => {});
   };
 
   const deleteNotif = async (id: string) => {

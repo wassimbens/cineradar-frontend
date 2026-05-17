@@ -15,7 +15,7 @@ const NAV_LINKS = [
 
 // ── Liens avec état actif (nécessite useSearchParams) ────
 
-function NavLinks({ onClose, isLoggedIn, navAvatar, navInitiales, unreadNotifs }: { onClose?: () => void; isLoggedIn: boolean; navAvatar?: string | null; navInitiales?: string; unreadNotifs?: number }) {
+function NavLinks({ onClose, isLoggedIn, navAvatar, navInitiales, unreadNotifs, unreadMessages }: { onClose?: () => void; isLoggedIn: boolean; navAvatar?: string | null; navInitiales?: string; unreadNotifs?: number; unreadMessages?: number }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
@@ -84,13 +84,31 @@ function NavLinks({ onClose, isLoggedIn, navAvatar, navInitiales, unreadNotifs }
       )}
       {isLoggedIn && (
         <Link
+          href="/messages"
+          onClick={onClose}
+          className="relative px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-colors flex items-center"
+          style={{ color: "var(--text-3)", background: "transparent" }}
+          title="Messages"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          {(unreadMessages ?? 0) > 0 && (
+            <span
+              className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 rounded-full text-white flex items-center justify-center"
+              style={{ background: "var(--red)", fontSize: 9, fontWeight: 700 }}
+            >
+              {(unreadMessages ?? 0) > 9 ? "9+" : unreadMessages}
+            </span>
+          )}
+        </Link>
+      )}
+      {isLoggedIn && (
+        <Link
           href="/profil?tab=notifications"
           onClick={onClose}
           className="relative px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-colors flex items-center"
-          style={{
-            color:      "var(--text-3)",
-            background: "transparent",
-          }}
+          style={{ color: "var(--text-3)", background: "transparent" }}
           title="Notifications"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -134,6 +152,7 @@ export default function Navbar() {
   const [navAvatar, setNavAvatar]   = useState<string | null>(null);
   const [navInitiales, setNavInitiales] = useState<string>("?");
   const [unreadNotifs, setUnreadNotifs] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const pathname = usePathname();
 
   // Détecter la connexion, charger l'avatar et les initiales
@@ -160,15 +179,17 @@ export default function Navbar() {
     else if (email) setNavInitiales(email.slice(0, 2).toUpperCase());
   }, [pathname]);
 
-  // Charger le nombre de notifications non lues
+  // Charger les compteurs non lus (notifications + messages)
   useEffect(() => {
     const token = localStorage.getItem("cineradar_token");
     if (!token) return;
-    fetch(`${API}/api/notifications/unread-count`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    fetch(`${API}/api/notifications/unread-count`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.ok ? r.json() : { count: 0 })
       .then((d: { count: number }) => setUnreadNotifs(d.count))
+      .catch(() => {});
+    fetch(`${API}/api/messages/unread-count`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.ok ? r.json() : { count: 0 })
+      .then((d: { count: number }) => setUnreadMessages(d.count))
       .catch(() => {});
   }, [pathname]);
 
@@ -214,7 +235,7 @@ export default function Navbar() {
           {/* Liens desktop */}
           <div className="hidden md:flex gap-1">
             <Suspense fallback={<NavLinksFallback />}>
-              <NavLinks isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} unreadNotifs={unreadNotifs} />
+              <NavLinks isLoggedIn={isLoggedIn} navAvatar={navAvatar} navInitiales={navInitiales} unreadNotifs={unreadNotifs} unreadMessages={unreadMessages} />
             </Suspense>
           </div>
 

@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
-  profilApi, authApi, socialApi,
+  profilApi, authApi, socialApi, messagesApi,
   type Profil, type FilmResume, type FilmFavoriItem,
   type AvisUtilisateur, type FilmVuItem, type AuthUser, type UserSearch,
+  type MessageConversation,
 } from "@/lib/api";
 import FilmPoster from "@/components/FilmPoster";
 import PosterPicker from "@/components/PosterPicker";
@@ -1288,7 +1289,7 @@ function RecommandationsSection({ email }: { email: string }) {
   );
 }
 
-type Tab = "vitrine" | "simple-stats" | "stats" | "pour-vous" | "listes" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications";
+type Tab = "vitrine" | "simple-stats" | "stats" | "pour-vous" | "listes" | "favoris" | "watchlist" | "vus" | "avis" | "cinemas" | "communaute" | "notifications" | "messages";
 
 // ─────────────────────────────────────────────────────────
 //  Onglet Mes listes
@@ -1798,6 +1799,118 @@ function ManageSubscriptionButton() {
   );
 }
 
+// ─────────────────────────────────────────────────────────
+//  Onglet Messages (liste des conversations)
+// ─────────────────────────────────────────────────────────
+
+function MessagesTab({ onUnreadChange }: { onUnreadChange: (n: number) => void }) {
+  const [conversations, setConversations] = useState<MessageConversation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    messagesApi.getConversations()
+      .then(data => {
+        setConversations(data);
+        const totalUnread = data.reduce((s, c) => s + c.unreadCount, 0);
+        onUnreadChange(totalUnread);
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [onUnreadChange]);
+
+  function fmtTime(iso: string) {
+    const d = new Date(iso);
+    const now = new Date();
+    if (d.toDateString() === now.toDateString()) {
+      return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    }
+    const yest = new Date(now); yest.setDate(yest.getDate() - 1);
+    if (d.toDateString() === yest.toDateString()) return "Hier";
+    return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  }
+
+  if (loading) return (
+    <div className="flex flex-col gap-2 pt-2">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="flex items-center gap-3 p-3 rounded-xl animate-pulse" style={{ background: "var(--bg-2)" }}>
+          <div className="w-12 h-12 rounded-full flex-shrink-0" style={{ background: "var(--bg-3)" }} />
+          <div className="flex-1 space-y-2">
+            <div className="h-3 rounded" style={{ background: "var(--bg-3)", width: "40%" }} />
+            <div className="h-3 rounded" style={{ background: "var(--bg-3)", width: "65%" }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  if (error) return (
+    <div className="text-center py-12">
+      <p className="text-sm" style={{ color: "var(--text-3)" }}>Impossible de charger les messages.</p>
+    </div>
+  );
+
+  if (conversations.length === 0) return (
+    <div className="flex flex-col items-center py-14 gap-3">
+      <span style={{ fontSize: "2.5rem" }}>💬</span>
+      <p className="font-semibold" style={{ color: "var(--text)" }}>Aucune conversation</p>
+      <p className="text-sm" style={{ color: "var(--text-3)" }}>Visitez le profil d&apos;un utilisateur pour lui envoyer un message.</p>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-1">
+      {conversations.map(conv => {
+        const name = conv.partner.pseudo ?? conv.partner.nom ?? "?";
+        const hasUnread = conv.unreadCount > 0;
+        return (
+          <Link
+            key={conv.partner.id}
+            href={`/messages/${encodeURIComponent(name)}`}
+            className="flex items-center gap-3 px-3 py-3 rounded-xl no-underline transition-colors"
+            style={{ background: "var(--bg-2)", border: "1px solid var(--border)" }}
+          >
+            <div
+              className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-base text-white overflow-hidden"
+              style={{ background: "var(--red)" }}
+            >
+              {conv.partner.avatar
+                // eslint-disable-next-line @next/next/no-img-element
+                ? <img src={conv.partner.avatar} alt={name} className="w-full h-full object-cover" />
+                : name.slice(0, 2).toUpperCase()
+              }
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-semibold truncate" style={{ color: "var(--text)", fontWeight: hasUnread ? 700 : 600 }}>
+                  @{name}
+                </p>
+                <span className="text-xs flex-shrink-0" style={{ color: hasUnread ? "var(--red)" : "var(--text-3)", fontWeight: hasUnread ? 600 : 400 }}>
+                  {fmtTime(conv.lastMessage.createdAt)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2 mt-0.5">
+                <p className="text-xs truncate" style={{ color: hasUnread ? "var(--text-2)" : "var(--text-3)", fontWeight: hasUnread ? 500 : 400 }}>
+                  {conv.lastMessage.fromMe && <span style={{ color: "var(--text-3)" }}>Vous : </span>}
+                  {conv.lastMessage.content}
+                </p>
+                {hasUnread && (
+                  <span
+                    className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                    style={{ background: "var(--red)", fontSize: "0.65rem" }}
+                  >
+                    {conv.unreadCount > 9 ? "9+" : conv.unreadCount}
+                  </span>
+                )}
+              </div>
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function ProfilClient() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState<string | null>(null);
@@ -1807,10 +1920,11 @@ export default function ProfilClient() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const t = searchParams?.get("tab");
-    if (t === "notifications" || t === "vitrine" || t === "stats" || t === "simple-stats" || t === "pour-vous" || t === "classiques") return t as Tab;
+    if (t === "notifications" || t === "messages" || t === "vitrine" || t === "stats" || t === "simple-stats" || t === "pour-vous" || t === "classiques") return t as Tab;
     return "vitrine";
   });
   const [unreadNotifs, setUnreadNotifs] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
 
   // ── Affiches personnalisées (Pro) ─────────────────────
   const [posterChoices, setPosterChoices] = useState<Record<string, string>>({});
@@ -2067,6 +2181,7 @@ export default function ProfilClient() {
     { id: "cinemas",       label: "Cinémas",       short: "Cinémas",  icon: "🏛️", count: profil.stats.cinemas },
     { id: "communaute",    label: "Communauté",    short: "Communauté",   icon: "👥" },
     { id: "notifications", label: "Notifications", short: "Notifications", icon: "🔔", count: unreadNotifs > 0 ? unreadNotifs : undefined },
+    { id: "messages",      label: "Messages",       short: "Messages",      icon: "💬", count: unreadMessages > 0 ? unreadMessages : undefined },
   ];
 
   return (
@@ -2494,6 +2609,10 @@ export default function ProfilClient() {
           token={token}
           onUnreadChange={setUnreadNotifs}
         />
+      )}
+
+      {activeTab === "messages" && (
+        <MessagesTab onUnreadChange={setUnreadMessages} />
       )}
 
       {/* ── PosterPicker modal global (Pro) ─────────────── */}

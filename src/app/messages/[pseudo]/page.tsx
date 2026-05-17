@@ -98,9 +98,9 @@ function MessageBubble({
       {/* Contenu bulle + réactions + picker */}
       <div className={`group relative flex flex-col max-w-[72%] sm:max-w-[58%] ${isMe ? "items-end" : "items-start"}`}>
 
-        {/* Boutons action au survol (desktop) */}
+        {/* Boutons action au survol (desktop uniquement) */}
         <div
-          className={`absolute top-1 flex items-center gap-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto ${isMe ? "right-full pr-2" : "left-full pl-2"}`}
+          className={`absolute top-1 hidden sm:flex items-center gap-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto ${isMe ? "right-full pr-2" : "left-full pl-2"}`}
         >
           <button
             onClick={e => { e.stopPropagation(); onPickerToggle(msg.id); }}
@@ -266,11 +266,33 @@ export default function ThreadPage() {
   const [replyTo, setReplyTo] = useState<MessageItem | null>(null);
   const [pickerFor, setPickerFor] = useState<string | null>(null);
 
+  // Hauteur dynamique pour compenser le clavier mobile (visualViewport)
+  const [containerH, setContainerH] = useState<string>("100dvh");
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const msgRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const messagesAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setMyId(getMyId()); }, []);
+
+  // ── Gestion du clavier mobile via visualViewport ──────
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const onResize = () => {
+      // La hauteur visible réelle (excluant le clavier)
+      setContainerH(`${vv.height}px`);
+      // Scroll to bottom quand le clavier apparaît
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "instant" });
+      });
+    };
+
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
+  }, []);
 
   const load = useCallback(async (scrollToBottom = false) => {
     if (!pseudo) return;
@@ -318,7 +340,6 @@ export default function ThreadPage() {
 
   const handleReact = useCallback(async (messageId: string, emoji: string) => {
     setPickerFor(null);
-    // Mise à jour optimiste
     setThread(prev => {
       if (!prev) return prev;
       return {
@@ -377,7 +398,7 @@ export default function ThreadPage() {
   const partnerAvatar = thread?.partner.avatar ?? null;
 
   if (error === "auth") return (
-    <div className="flex flex-col items-center justify-center gap-3" style={{ height: "100dvh", background: "var(--bg)" }}>
+    <div className="flex flex-col items-center justify-center gap-3" style={{ height: containerH, background: "var(--bg)" }}>
       <span className="text-4xl">🔒</span>
       <p className="text-sm" style={{ color: "var(--text-3)" }}>Connexion requise pour accéder à la messagerie.</p>
       <Link href="/profil" className="text-sm font-semibold" style={{ color: "var(--red)" }}>Se connecter</Link>
@@ -385,72 +406,35 @@ export default function ThreadPage() {
   );
 
   return (
-    <div className="flex flex-col" style={{ height: "100dvh", background: "var(--bg)" }}>
-
-      {/* ── Header ─────────────────────────────────────── */}
+    // Wrapper centré pour le web — sur mobile il prend toute la largeur
+    <div style={{ background: "var(--bg)", minHeight: containerH, display: "flex", justifyContent: "center" }}>
       <div
-        className="flex items-center gap-3 px-3 sm:px-4 h-14 flex-shrink-0"
-        style={{ borderBottom: "1px solid var(--border)", background: "var(--bg-2)" }}
+        className="flex flex-col w-full"
+        style={{
+          height: containerH,
+          maxWidth: 760,
+          background: "var(--bg)",
+        }}
       >
-        <Link
-          href={`/profil/${partnerName}`}
-          className="p-1.5 rounded-lg flex-shrink-0 no-underline"
-          style={{ color: "var(--text-3)" }}
+
+        {/* ── Header ─────────────────────────────────────── */}
+        <div
+          className="flex items-center gap-3 px-3 sm:px-4 h-14 flex-shrink-0"
+          style={{ borderBottom: "1px solid var(--border)", background: "var(--bg-2)" }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-        </Link>
-
-        <Link href={`/profil/${partnerName}`} className="flex items-center gap-2.5 flex-1 min-w-0 no-underline">
-          <div
-            className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-sm text-white overflow-hidden"
-            style={{ background: "var(--red)" }}
+          <Link
+            href={`/profil/${partnerName}`}
+            className="p-1.5 rounded-lg flex-shrink-0 no-underline"
+            style={{ color: "var(--text-3)" }}
           >
-            {partnerAvatar
-              // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={partnerAvatar} alt={partnerName} className="w-full h-full object-cover" />
-              : partnerName.slice(0, 2).toUpperCase()
-            }
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold truncate" style={{ color: "var(--text)" }}>@{partnerName}</p>
-            {thread?.partner.nom && (
-              <p className="text-xs truncate" style={{ color: "var(--text-3)" }}>{thread.partner.nom}</p>
-            )}
-          </div>
-        </Link>
-      </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </Link>
 
-      {/* ── Zone messages ───────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-4 pt-4 pb-2 min-h-0">
-
-        {/* Erreur non-auth */}
-        {error && error !== "auth" && (
-          <div className="text-center py-10">
-            <p className="text-sm mb-3" style={{ color: "var(--text-3)" }}>{error}</p>
-            <button onClick={() => load(true)} style={{ color: "var(--red)", background: "none", border: "none", cursor: "pointer", fontSize: "0.875rem" }}>
-              Réessayer
-            </button>
-          </div>
-        )}
-
-        {/* Skeleton chargement */}
-        {!error && !thread && (
-          <div className="flex flex-col gap-3 pt-2">
-            {[60, 40, 75, 50].map((w, i) => (
-              <div key={i} className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}>
-                <div className="h-9 rounded-2xl animate-pulse" style={{ width: `${w}%`, background: "var(--bg-2)" }} />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* État vide */}
-        {!error && thread?.messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full pb-10">
+          <Link href={`/profil/${partnerName}`} className="flex items-center gap-2.5 flex-1 min-w-0 no-underline">
             <div
-              className="w-20 h-20 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-2xl text-white overflow-hidden mb-4"
+              className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-sm text-white overflow-hidden"
               style={{ background: "var(--red)" }}
             >
               {partnerAvatar
@@ -459,111 +443,171 @@ export default function ThreadPage() {
                 : partnerName.slice(0, 2).toUpperCase()
               }
             </div>
-            <p className="font-bold mb-1" style={{ color: "var(--text)" }}>@{partnerName}</p>
-            <p className="text-sm" style={{ color: "var(--text-3)" }}>Commencez la conversation 👋</p>
+            <div className="min-w-0">
+              <p className="text-sm font-bold truncate" style={{ color: "var(--text)" }}>@{partnerName}</p>
+              {thread?.partner.nom && (
+                <p className="text-xs truncate" style={{ color: "var(--text-3)" }}>{thread.partner.nom}</p>
+              )}
+            </div>
+          </Link>
+        </div>
+
+        {/* ── Zone messages ───────────────────────────────── */}
+        <div
+          ref={messagesAreaRef}
+          className="flex-1 overflow-y-auto px-3 sm:px-4 pt-4 pb-2 min-h-0"
+        >
+
+          {/* Erreur non-auth */}
+          {error && error !== "auth" && (
+            <div className="text-center py-10">
+              <p className="text-sm mb-3" style={{ color: "var(--text-3)" }}>{error}</p>
+              <button onClick={() => load(true)} style={{ color: "var(--red)", background: "none", border: "none", cursor: "pointer", fontSize: "0.875rem" }}>
+                Réessayer
+              </button>
+            </div>
+          )}
+
+          {/* Skeleton chargement */}
+          {!error && !thread && (
+            <div className="flex flex-col gap-3 pt-2">
+              {[60, 40, 75, 50].map((w, i) => (
+                <div key={i} className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}>
+                  <div className="h-9 rounded-2xl animate-pulse" style={{ width: `${w}%`, background: "var(--bg-2)" }} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* État vide */}
+          {!error && thread?.messages.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-full pb-10">
+              <div
+                className="w-20 h-20 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-2xl text-white overflow-hidden mb-4"
+                style={{ background: "var(--red)" }}
+              >
+                {partnerAvatar
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img src={partnerAvatar} alt={partnerName} className="w-full h-full object-cover" />
+                  : partnerName.slice(0, 2).toUpperCase()
+                }
+              </div>
+              <p className="font-bold mb-1" style={{ color: "var(--text)" }}>@{partnerName}</p>
+              <p className="text-sm" style={{ color: "var(--text-3)" }}>Commencez la conversation 👋</p>
+            </div>
+          )}
+
+          {/* Messages groupés par jour */}
+          {grouped.map(({ dateStr, label, msgs }) => (
+            <div key={dateStr}>
+              {/* Séparateur de date */}
+              <div className="flex items-center gap-3 my-5">
+                <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+                <span className="text-xs px-3 py-1 rounded-full flex-shrink-0" style={{ color: "var(--text-3)", background: "var(--bg-2)", border: "1px solid var(--border)" }}>
+                  {label}
+                </span>
+                <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+              </div>
+
+              {msgs.map((msg, idx) => {
+                const isMe = msg.senderId === myId;
+                const sameAsPrev = msgs[idx - 1]?.senderId === msg.senderId;
+                const sameAsNext = msgs[idx + 1]?.senderId === msg.senderId;
+                return (
+                  <MessageBubble
+                    key={msg.id}
+                    msg={msg}
+                    isMe={isMe}
+                    sameAsPrev={sameAsPrev}
+                    sameAsNext={sameAsNext}
+                    myId={myId}
+                    partnerName={partnerName}
+                    partnerAvatar={partnerAvatar}
+                    pickerFor={pickerFor}
+                    onPickerToggle={id => setPickerFor(p => p === id ? null : id)}
+                    onReact={handleReact}
+                    onReply={handleReply}
+                    onScrollTo={scrollToMessage}
+                    msgRef={el => { msgRefs.current[msg.id] = el; }}
+                  />
+                );
+              })}
+            </div>
+          ))}
+
+          <div ref={bottomRef} />
+        </div>
+
+        {/* ── Barre de réponse ────────────────────────────── */}
+        {replyTo && (
+          <div
+            className="flex items-center gap-3 px-4 py-2 flex-shrink-0"
+            style={{ borderTop: "1px solid var(--border)", background: "var(--bg-2)" }}
+          >
+            <div className="flex-1 min-w-0 pl-3" style={{ borderLeft: "3px solid var(--red)" }}>
+              <p className="text-xs font-semibold" style={{ color: "var(--red)" }}>
+                ↩ {replyTo.senderId === myId ? "Vous" : `@${partnerName}`}
+              </p>
+              <p className="text-xs truncate" style={{ color: "var(--text-3)" }}>{replyTo.content}</p>
+            </div>
+            <button
+              onClick={() => setReplyTo(null)}
+              className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs"
+              style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-3)", cursor: "pointer" }}
+            >✕</button>
           </div>
         )}
 
-        {/* Messages groupés par jour */}
-        {grouped.map(({ dateStr, label, msgs }) => (
-          <div key={dateStr}>
-            {/* Séparateur de date */}
-            <div className="flex items-center gap-3 my-5">
-              <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
-              <span className="text-xs px-3 py-1 rounded-full flex-shrink-0" style={{ color: "var(--text-3)", background: "var(--bg-2)", border: "1px solid var(--border)" }}>
-                {label}
-              </span>
-              <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
-            </div>
-
-            {msgs.map((msg, idx) => {
-              const isMe = msg.senderId === myId;
-              const sameAsPrev = msgs[idx - 1]?.senderId === msg.senderId;
-              const sameAsNext = msgs[idx + 1]?.senderId === msg.senderId;
-              return (
-                <MessageBubble
-                  key={msg.id}
-                  msg={msg}
-                  isMe={isMe}
-                  sameAsPrev={sameAsPrev}
-                  sameAsNext={sameAsNext}
-                  myId={myId}
-                  partnerName={partnerName}
-                  partnerAvatar={partnerAvatar}
-                  pickerFor={pickerFor}
-                  onPickerToggle={id => setPickerFor(p => p === id ? null : id)}
-                  onReact={handleReact}
-                  onReply={handleReply}
-                  onScrollTo={scrollToMessage}
-                  msgRef={el => { msgRefs.current[msg.id] = el; }}
-                />
-              );
-            })}
-          </div>
-        ))}
-
-        <div ref={bottomRef} />
-      </div>
-
-      {/* ── Barre de réponse ────────────────────────────── */}
-      {replyTo && (
-        <div
-          className="flex items-center gap-3 px-4 py-2 flex-shrink-0"
-          style={{ borderTop: "1px solid var(--border)", background: "var(--bg-2)" }}
+        {/* ── Composer ────────────────────────────────────── */}
+        <form
+          onSubmit={handleSend}
+          className="flex items-center gap-2 px-3 sm:px-4 py-3 flex-shrink-0"
+          style={{ borderTop: replyTo ? "none" : "1px solid var(--border)", background: "var(--bg-2)" }}
         >
-          <div className="flex-1 min-w-0 pl-3" style={{ borderLeft: "3px solid var(--red)" }}>
-            <p className="text-xs font-semibold" style={{ color: "var(--red)" }}>
-              ↩ {replyTo.senderId === myId ? "Vous" : `@${partnerName}`}
-            </p>
-            <p className="text-xs truncate" style={{ color: "var(--text-3)" }}>{replyTo.content}</p>
-          </div>
+          <input
+            ref={inputRef}
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(e); } }}
+            onFocus={() => {
+              // Scroll to bottom quand le clavier s'ouvre (délai pour attendre l'animation)
+              setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 320);
+            }}
+            placeholder="Message…"
+            className="flex-1 px-4 py-2.5 rounded-full outline-none"
+            style={{
+              background: "var(--bg-3)",
+              border: "1px solid var(--border)",
+              color: "var(--text)",
+              minWidth: 0,
+              fontSize: "1rem", // 16px — évite le zoom iOS sur les inputs < 16px
+            }}
+            disabled={sending}
+          />
           <button
-            onClick={() => setReplyTo(null)}
-            className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs"
-            style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text-3)", cursor: "pointer" }}
-          >✕</button>
-        </div>
-      )}
-
-      {/* ── Composer ────────────────────────────────────── */}
-      <form
-        onSubmit={handleSend}
-        className="flex items-center gap-2 px-3 sm:px-4 py-3 flex-shrink-0"
-        style={{ borderTop: replyTo ? "none" : "1px solid var(--border)", background: "var(--bg-2)" }}
-      >
-        <input
-          ref={inputRef}
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(e); } }}
-          placeholder="Message…"
-          className="flex-1 px-4 py-2.5 rounded-full text-sm outline-none"
-          style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)", minWidth: 0 }}
-          disabled={sending}
-        />
-        <button
-          type="submit"
-          disabled={!content.trim() || sending}
-          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
-          style={{
-            background: content.trim() && !sending ? "var(--red)" : "var(--bg-3)",
-            border: "none",
-            cursor: !content.trim() || sending ? "not-allowed" : "pointer",
-          }}
-        >
-          {sending
-            ? <span style={{ color: "var(--text-3)", fontSize: "0.75rem" }}>…</span>
-            : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke={content.trim() ? "white" : "var(--text-3)"}
-                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-              </svg>
-            )
-          }
-        </button>
-      </form>
+            type="submit"
+            disabled={!content.trim() || sending}
+            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+            style={{
+              background: content.trim() && !sending ? "var(--red)" : "var(--bg-3)",
+              border: "none",
+              cursor: !content.trim() || sending ? "not-allowed" : "pointer",
+            }}
+          >
+            {sending
+              ? <span style={{ color: "var(--text-3)", fontSize: "0.75rem" }}>…</span>
+              : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke={content.trim() ? "white" : "var(--text-3)"}
+                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              )
+            }
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

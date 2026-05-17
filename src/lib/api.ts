@@ -487,9 +487,31 @@ export interface MessageConversation {
   unreadCount: number;
 }
 
+export interface MessageReaction {
+  emoji: string;
+  count: number;
+  mine: boolean;
+}
+
+export interface MessageReplyPreview {
+  id: string;
+  content: string;
+  senderId: string;
+}
+
+export interface MessageItem {
+  id: string;
+  content: string;
+  senderId: string;
+  lu: boolean;
+  createdAt: string;
+  replyTo: MessageReplyPreview | null;
+  reactions: MessageReaction[];
+}
+
 export interface MessageThread {
   partner: { id: string; pseudo: string; nom: string | null; avatar: string | null };
-  messages: { id: string; content: string; senderId: string; lu: boolean; createdAt: string }[];
+  messages: MessageItem[];
 }
 
 // ── Users / Social API ────────────────────────────────────
@@ -528,11 +550,15 @@ export const socialApi = {
 export const messagesApi = {
   getConversations: () => authFetch<MessageConversation[]>("/api/messages"),
   getThread: (pseudo: string) => authFetch<MessageThread>(`/api/messages/${encodeURIComponent(pseudo)}`),
-  send: (pseudo: string, content: string) =>
+  send: (pseudo: string, content: string, replyToId?: string) =>
     authFetch<{ id: string; content: string; senderId: string; createdAt: string }>(`/api/messages/${encodeURIComponent(pseudo)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content, ...(replyToId ? { replyToId } : {}) }),
+    }),
+  react: (messageId: string, emoji: string) =>
+    authFetch<{ ok: boolean; action: "added" | "removed" }>(`/api/messages/react/${messageId}`, {
+      method: "POST",
+      body: JSON.stringify({ emoji }),
     }),
   unreadCount: () => authFetch<{ count: number }>("/api/messages/unread-count"),
 };

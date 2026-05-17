@@ -601,17 +601,6 @@ export default function ThreadPage() {
     return () => clearInterval(id);
   }, [load]);
 
-  // Fermer les menus en cliquant en dehors
-  useEffect(() => {
-    if (!dropMenu && !emojiPicker) return;
-    const close = () => { setDropMenu(null); setEmojiPicker(null); };
-    document.addEventListener("mousedown", close);
-    document.addEventListener("touchstart", close);
-    return () => {
-      document.removeEventListener("mousedown", close);
-      document.removeEventListener("touchstart", close);
-    };
-  }, [dropMenu, emojiPicker]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -925,7 +914,15 @@ export default function ThreadPage() {
         </form>
       </div>
 
-      {/* ── Menus fixed (hors overflow-y-auto) ── */}
+      {/* ── Overlay + Menus fixed (hors overflow-y-auto) ── */}
+      {(dropMenu || emojiPicker) && (
+        <div
+          className="fixed inset-0 z-[9990]"
+          onClick={() => { setDropMenu(null); setEmojiPicker(null); }}
+          onTouchStart={() => { setDropMenu(null); setEmojiPicker(null); }}
+        />
+      )}
+
       {dropMenu && (
         <DropdownMenu
           menu={dropMenu}

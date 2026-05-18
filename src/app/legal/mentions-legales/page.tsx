@@ -18,10 +18,9 @@ export default function MentionsLegalesPage() {
         </h2>
         <p style={{ color: "var(--text-2)", lineHeight: 1.8, fontSize: "0.9rem" }}>
           Le site <strong>CinéRadar</strong> (cineradar.fr) est édité par :<br /><br />
-          <strong>Wassim BEN SLIMENE</strong><br />
+          <strong>L&apos;équipe CinéRadar</strong><br />
           Auto-entrepreneur<br />
           SIRET : <em>en cours d&apos;enregistrement</em><br />
-          Adresse : 34 rue Madame Renoux Prieux, 77510 Doué<br />
           Contact : <a href="mailto:contact@cineradar.fr" style={{ color: "var(--red)" }}>contact@cineradar.fr</a>
         </p>
       </section>

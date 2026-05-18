@@ -18,7 +18,7 @@ export default function ConfidentialitePage() {
       {[
         {
           titre: "1. Responsable du traitement",
-          contenu: `Wassim BEN SLIMENE, éditeur de CinéRadar (cineradar.fr).
+          contenu: `L'équipe CinéRadar, éditeur de CinéRadar (cineradar.fr).
 Contact DPO : contact@cineradar.fr`,
         },
         {

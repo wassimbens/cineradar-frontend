@@ -71,16 +71,36 @@ function EtoilesNote({ note, onChange }: { note: number | null; onChange?: (n: n
 //  Formulaire de connexion / inscription
 // ─────────────────────────────────────────────────────────
 
+const PSEUDO_REGEX = /^[a-zA-Z0-9_-]{3,20}$/;
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+
 function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: AuthUser) => void }) {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [pseudo, setPseudo] = useState("");
+  const [pseudoStatus, setPseudoStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nom, setNom] = useState("");
   const [accepteCgu, setAccepteCgu] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (mode !== "register" || !pseudo) { setPseudoStatus("idle"); return; }
+    if (!PSEUDO_REGEX.test(pseudo)) { setPseudoStatus("invalid"); return; }
+    setPseudoStatus("checking");
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/auth/check-pseudo?pseudo=${encodeURIComponent(pseudo)}`);
+        const data = await res.json();
+        setPseudoStatus(data.available ? "available" : "taken");
+      } catch {
+        setPseudoStatus("idle");
+      }
+    }, 500);
+    return () => clearTimeout(t);
+  }, [pseudo, mode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +111,10 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
     }
     if (mode === "register" && !accepteCgu) {
       setError("Vous devez accepter les CGU et la politique de confidentialité.");
+      return;
+    }
+    if (mode === "register" && (pseudoStatus === "taken" || pseudoStatus === "invalid")) {
+      setError("Veuillez choisir un pseudo valide et disponible.");
       return;
     }
     setLoading(true);
@@ -148,17 +172,34 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
 
           {mode === "register" && (
             <>
-              <input
-                type="text"
-                value={pseudo}
-                onChange={(e) => setPseudo(e.target.value)}
-                placeholder="@pseudo (3–20 caractères)"
-                required
-                pattern="[a-zA-Z0-9_-]{3,20}"
-                title="3–20 caractères, lettres, chiffres, _ et -"
-                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
-                style={{ background: "var(--bg-3)", border: "1px solid var(--border)", color: "var(--text)" }}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={pseudo}
+                  onChange={(e) => setPseudo(e.target.value)}
+                  placeholder="@pseudo (3–20 caractères)"
+                  required
+                  pattern="[a-zA-Z0-9_-]{3,20}"
+                  title="3–20 caractères, lettres, chiffres, _ et -"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm outline-none pr-10"
+                  style={{
+                    background: "var(--bg-3)",
+                    border: `1px solid ${pseudoStatus === "available" ? "#16a34a" : pseudoStatus === "taken" || pseudoStatus === "invalid" ? "#dc2626" : "var(--border)"}`,
+                    color: "var(--text)",
+                  }}
+                />
+                {pseudoStatus !== "idle" && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base select-none">
+                    {pseudoStatus === "checking"  && <span style={{ color: "var(--text-3)" }}>…</span>}
+                    {pseudoStatus === "available" && <span style={{ color: "#16a34a" }}>✓</span>}
+                    {pseudoStatus === "taken"     && <span style={{ color: "#dc2626" }}>✗</span>}
+                    {pseudoStatus === "invalid"   && <span style={{ color: "#dc2626" }}>✗</span>}
+                  </span>
+                )}
+              </div>
+              {pseudoStatus === "taken"   && <p className="text-xs -mt-1" style={{ color: "#dc2626" }}>Ce pseudo est déjà pris.</p>}
+              {pseudoStatus === "invalid" && <p className="text-xs -mt-1" style={{ color: "#dc2626" }}>3–20 caractères, lettres, chiffres, _ et -</p>}
+              {pseudoStatus === "available" && <p className="text-xs -mt-1" style={{ color: "#16a34a" }}>Pseudo disponible !</p>}
               <input
                 type="text"
                 value={nom}

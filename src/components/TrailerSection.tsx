@@ -15,8 +15,24 @@ interface Props {
 }
 
 /**
+ * Vérifie via l'API oEmbed de YouTube si l'embedding est autorisé.
+ * Retourne false si la vidéo retourne 401 (embedding désactivé) ou 404 (supprimée).
+ */
+async function isEmbeddable(youtubeId: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`,
+      { next: { revalidate: 3600 } }
+    );
+    return res.ok;
+  } catch {
+    return true; // en cas d'erreur réseau, on tente quand même l'iframe
+  }
+}
+
+/**
  * Composant serveur async : récupère le trailer depuis l'API
- * puis intègre l'iframe YouTube. Si aucun trailer trouvé, rien n'est affiché.
+ * puis vérifie si l'embedding est autorisé avant de rendre l'iframe.
  */
 export default async function TrailerSection({ filmId, filmTitre, filmAffiche }: Props) {
   let youtubeId: string | null = null;
@@ -26,6 +42,11 @@ export default async function TrailerSection({ filmId, filmTitre, filmAffiche }:
   } catch {
     // Backend down ou pas de clé TMDB → fallback recherche YouTube
     youtubeId = null;
+  }
+
+  // Si on a un ID, vérifier que l'embedding est bien autorisé
+  if (youtubeId && !(await isEmbeddable(youtubeId))) {
+    youtubeId = null; // traiter comme "pas de bande annonce" → fallback affiche
   }
 
   if (!youtubeId) {
@@ -92,7 +113,7 @@ export default async function TrailerSection({ filmId, filmTitre, filmAffiche }:
 
   const embedUrl =
     `https://www.youtube-nocookie.com/embed/${youtubeId}` +
-    `?rel=0&modestbranding=1&cc_load_policy=0&hl=fr&enablejsapi=1`;
+    `?rel=0&modestbranding=1&cc_load_policy=0&hl=fr`;
 
   const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
     filmTitre + " bande annonce officielle"

@@ -136,8 +136,34 @@ export default async function CinemaPage({ params, searchParams }: Props) {
       })
     : "aujourd'hui";
 
+  // JSON-LD pour le SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MovieTheater",
+    name: cinema.nom,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: cinema.adresse ?? undefined,
+      addressLocality: cinema.ville,
+      postalCode: cinema.codePostal ?? undefined,
+      addressCountry: "FR",
+    },
+    ...(cinema.latitude && cinema.longitude ? {
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: cinema.latitude,
+        longitude: cinema.longitude,
+      },
+    } : {}),
+    url: bookingUrl ?? undefined,
+  };
+
   return (
     <div className="px-6 py-10 mx-auto" style={{ maxWidth: 900 }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Retour */}
       <Link
         href="/recherche?type=cinemas"

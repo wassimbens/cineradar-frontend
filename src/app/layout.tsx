@@ -162,6 +162,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <p>© {new Date().getFullYear()} CinéRadar · Données issues des sites officiels · Mise à jour chaque mercredi</p>
             <div className="flex gap-4 flex-wrap">
               {[
+                { label: "À propos",            href: "/a-propos" },
                 { label: "Mentions légales",    href: "/legal/mentions-legales" },
                 { label: "Confidentialité",     href: "/legal/confidentialite" },
                 { label: "CGU",                 href: "/legal/cgu" },

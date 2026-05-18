@@ -10,11 +10,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // ── Pages statiques ───────────────────────────────────────
   const staticPages: MetadataRoute.Sitemap = [
-    { url: SITE_URL,                     lastModified: now, changeFrequency: "daily",   priority: 1.0 },
-    { url: `${SITE_URL}/films`,          lastModified: now, changeFrequency: "daily",   priority: 0.9 },
-    { url: `${SITE_URL}/films/classiques`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${SITE_URL}/recherche`,      lastModified: now, changeFrequency: "daily",   priority: 0.7 },
-    { url: `${SITE_URL}/alertes`,        lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: SITE_URL,                       lastModified: now, changeFrequency: "daily",   priority: 1.0 },
+    { url: `${SITE_URL}/films`,            lastModified: now, changeFrequency: "daily",   priority: 0.9 },
+    { url: `${SITE_URL}/films/classiques`, lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
+    { url: `${SITE_URL}/recherche`,        lastModified: now, changeFrequency: "daily",   priority: 0.7 },
+    { url: `${SITE_URL}/alertes`,          lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${SITE_URL}/a-propos`,         lastModified: now, changeFrequency: "monthly", priority: 0.4 },
   ];
 
   // ── Pages films dynamiques (tous les films) ───────────────

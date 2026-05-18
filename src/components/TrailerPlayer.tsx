@@ -69,7 +69,7 @@ export default function TrailerPlayer({
                 alt={filmTitre}
                 fill
                 sizes="(max-width: 640px) 90vw, 850px"
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "contain", filter: "blur(3px)", transform: "scale(0.85)" }}
                 unoptimized
               />
               <div

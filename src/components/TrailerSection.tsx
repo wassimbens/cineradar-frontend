@@ -80,15 +80,16 @@ export default async function TrailerSection({ filmId, filmTitre, filmAffiche }:
                   alt={filmTitre}
                   fill
                   sizes="(max-width: 640px) 90vw, 850px"
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "contain", filter: "blur(3px)", transform: "scale(0.85)" }}
                   unoptimized
                 />
                 <div
-                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-3"
                   style={{ background: "rgba(0,0,0,0.5)" }}
                 >
-                  <span className="text-white text-lg font-semibold flex items-center gap-2">
-                    🎬 Voir sur YouTube ↗
+                  <span className="text-white text-4xl">▶</span>
+                  <span className="text-white text-base font-semibold">
+                    Voir la bande annonce sur YouTube ↗
                   </span>
                 </div>
               </>

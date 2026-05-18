@@ -85,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
+      <meta name="google-site-verification" content="UEKaKO80ragbzls_fdSgFrGi_m9T5nagGznJfz0xRhQ" />
       <body className={inter.className} style={{ minHeight: "100vh" }}>
         <Navbar />
         <main>{children}</main>

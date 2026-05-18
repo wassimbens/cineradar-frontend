@@ -6,6 +6,7 @@
 
 import Image from "next/image";
 import { api } from "@/lib/api";
+import TrailerPlayer from "./TrailerPlayer";
 
 interface Props {
   filmId: string;
@@ -91,7 +92,11 @@ export default async function TrailerSection({ filmId, filmTitre, filmAffiche }:
 
   const embedUrl =
     `https://www.youtube-nocookie.com/embed/${youtubeId}` +
-    `?rel=0&modestbranding=1&cc_load_policy=0&hl=fr`;
+    `?rel=0&modestbranding=1&cc_load_policy=0&hl=fr&enablejsapi=1`;
+
+  const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
+    filmTitre + " bande annonce officielle"
+  )}`;
 
   return (
     <section className="mt-8">
@@ -101,25 +106,13 @@ export default async function TrailerSection({ filmId, filmTitre, filmAffiche }:
       >
         Bande annonce
       </h2>
-      <div
-        className="relative w-full rounded-xl overflow-hidden shadow-lg"
-        style={{ paddingBottom: "56.25%", background: "#000" }} // ratio 16:9
-      >
-        <iframe
-          src={embedUrl}
-          title={`Bande annonce — ${filmTitre}`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          loading="lazy"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            border: 0,
-          }}
-        />
-      </div>
+      <TrailerPlayer
+        youtubeId={youtubeId}
+        filmTitre={filmTitre}
+        filmAffiche={filmAffiche}
+        embedUrl={embedUrl}
+        searchUrl={searchUrl}
+      />
     </section>
   );
 }

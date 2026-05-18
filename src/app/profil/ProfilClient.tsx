@@ -72,7 +72,7 @@ function EtoilesNote({ note, onChange }: { note: number | null; onChange?: (n: n
 // ─────────────────────────────────────────────────────────
 
 const PSEUDO_REGEX = /^[a-zA-Z0-9_-]{3,20}$/;
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
+const API_URL_AUTH = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
 
 function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: AuthUser) => void }) {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -92,7 +92,7 @@ function AuthForm({ onAuth }: { onAuth: (email: string, token: string, user: Aut
     setPseudoStatus("checking");
     const t = setTimeout(async () => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/check-pseudo?pseudo=${encodeURIComponent(pseudo)}`);
+        const res = await fetch(`${API_URL_AUTH}/api/auth/check-pseudo?pseudo=${encodeURIComponent(pseudo)}`);
         const data = await res.json();
         setPseudoStatus(data.available ? "available" : "taken");
       } catch {

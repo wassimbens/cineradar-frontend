@@ -158,11 +158,57 @@ export default async function CinemaPage({ params, searchParams }: Props) {
     url: bookingUrl ?? undefined,
   };
 
+  // FAQ schema pour l'AI Search
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `Quels films sont à l'affiche au ${cinema.nom} ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Retrouvez le programme complet du ${cinema.nom} à ${cinema.ville} sur CinéRadar : tous les films à l'affiche, horaires et versions disponibles sur https://cineradar.fr/cinemas/${id}`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `Où se trouve le ${cinema.nom} ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `${cinema.nom} est situé ${cinema.adresse ? `au ${cinema.adresse}, ` : ""}à ${cinema.ville}${cinema.codePostal ? ` (${cinema.codePostal})` : ""}.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `Le ${cinema.nom} propose-t-il des séances en VOST ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Consultez les séances en version originale sous-titrée (VOST) disponibles au ${cinema.nom} sur CinéRadar. Les disponibilités varient selon les films programmés.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `Comment réserver une place au ${cinema.nom} ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `${bookingUrl ? `Réservez vos places au ${cinema.nom} directement sur ${bookingUrl}. ` : ""}Consultez les horaires et disponibilités sur CinéRadar : https://cineradar.fr/cinemas/${id}`,
+        },
+      },
+    ],
+  };
+
   return (
     <div className="px-6 py-10 mx-auto" style={{ maxWidth: 900 }}>
+      {/* JSON-LD MovieTheater */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {/* JSON-LD FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
       {/* Retour */}
       <Link

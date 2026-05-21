@@ -1,0 +1,41 @@
+# CinéRadar
+
+> CinéRadar est un agrégateur de séances de cinéma en France. Il centralise les programmes de 600+ cinémas (UGC, Pathé, MK2, CGR, AlloCiné et indépendants), avec un système d'alertes personnalisées par film et par ville.
+
+## Ce que fait CinéRadar
+
+- Affiche les séances de cinéma en temps réel pour tous les cinémas de France
+- Permet de rechercher un film et de trouver où et quand il est projeté près de chez soi
+- Propose des alertes : l'utilisateur est notifié par email dès qu'un film qu'il suit est programmé dans sa ville
+- Couvre les versions VF, VOST et VOSTFR
+- Agrège les données de : UGC, Pathé/Gaumont, MK2, CGR, AlloCiné et cinémas indépendants
+
+## Pages principales
+
+- Page d'accueil : https://cineradar.fr
+- Catalogue films : https://cineradar.fr/films
+- Recherche : https://cineradar.fr/recherche
+- Alertes : https://cineradar.fr/alertes
+- À propos : https://cineradar.fr/a-propos
+
+## Pages dynamiques
+
+- Fiche film : https://cineradar.fr/films/{id} — titre, synopsis, affiche, réalisateur, acteurs, genres, durée, notes IMDb/TMDB, bande-annonce, séances par cinéma et par date
+- Fiche cinéma : https://cineradar.fr/cinemas/{id} — nom, adresse, ville, programme du jour et des prochains jours
+
+## Données disponibles
+
+- Titres français et originaux des films
+- Synopsis, réalisateur, acteurs, genres, durée
+- Notes IMDb et TMDB
+- Bandes-annonces YouTube
+- Horaires des séances : date, heure, version (VF/VOST/VOSTFR), format (2D/3D/IMAX/4DX)
+- Informations cinémas : nom, adresse, ville, code postal, coordonnées GPS, chaîne
+
+## Sitemap
+
+https://cineradar.fr/sitemap.xml
+
+## Contact
+
+Site : https://cineradar.fr

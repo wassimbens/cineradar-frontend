@@ -182,12 +182,57 @@ export default async function FilmPage({ params, searchParams }: Props) {
     genre: film.genres,
   };
 
+  // FAQ schema pour l'AI Search
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `Où voir ${film.titre} en ce moment ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Retrouvez toutes les séances de ${film.titre} dans les cinémas près de chez vous sur CinéRadar : horaires, versions (VF/VOST) et formats disponibles sur https://cineradar.fr/films/${id}`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `${film.titre} est-il disponible en VOST ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Consultez les séances en VOST de ${film.titre} cinéma par cinéma sur CinéRadar. La disponibilité en version originale sous-titrée varie selon les salles et les villes.`,
+        },
+      },
+      ...(film.duree ? [{
+        "@type": "Question",
+        name: `Quelle est la durée de ${film.titre} ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `${film.titre} dure ${Math.floor(film.duree / 60)}h${film.duree % 60 > 0 ? `${film.duree % 60}min` : ""}.`,
+        },
+      }] : []),
+      ...(film.realisateur ? [{
+        "@type": "Question",
+        name: `Qui a réalisé ${film.titre} ?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `${film.titre} est réalisé par ${film.realisateur}.${film.annee ? ` Le film est sorti en ${film.annee}.` : ""}`,
+        },
+      }] : []),
+    ],
+  };
+
   return (
     <div className="px-6 py-10 mx-auto" style={{ maxWidth: 900 }}>
-      {/* JSON-LD */}
+      {/* JSON-LD Movie */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {/* JSON-LD FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
 
       {/* Bouton retour */}

@@ -103,6 +103,10 @@ export default function FilmPoster({
     );
   }
 
+  // Images externes (TMDB, CDN cinémas) → pas d'optimisation Vercel
+  // Évite de consommer le quota Image Optimization du plan gratuit
+  const isExternal = src.startsWith("http://") || src.startsWith("https://");
+
   if (fill) {
     return (
       <Image
@@ -112,6 +116,7 @@ export default function FilmPoster({
         className={className ?? "object-cover"}
         sizes={sizes}
         priority={priority}
+        unoptimized={isExternal}
         onError={() => setErrored(true)}
       />
     );
@@ -126,6 +131,7 @@ export default function FilmPoster({
       className={className ?? "object-cover w-full h-full"}
       sizes={sizes}
       priority={priority}
+      unoptimized={isExternal}
       onError={() => setErrored(true)}
     />
   );

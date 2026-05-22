@@ -1,6 +1,7 @@
 "use client";
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import AlerteModal from "./AlerteModal";
@@ -214,21 +215,14 @@ export default function Navbar() {
             className="flex items-center gap-2.5 font-extrabold text-lg no-underline whitespace-nowrap"
             style={{ color: "var(--text)", letterSpacing: "-0.02em" }}
           >
-            <div
-              className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-              style={{ background: "var(--red)" }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="6" width="18" height="12" rx="2" />
-                <circle cx="8" cy="12" r="2" />
-                <circle cx="16" cy="12" r="2" />
-                <line x1="10" y1="12" x2="14" y2="12" />
-                <line x1="8" y1="6" x2="8" y2="4" />
-                <line x1="16" y1="6" x2="16" y2="4" />
-                <line x1="8" y1="18" x2="8" y2="20" />
-                <line x1="16" y1="18" x2="16" y2="20" />
-              </svg>
-            </div>
+            <Image
+              src="/logo-cineradar.png"
+              alt="CinéRadar"
+              width={36}
+              height={36}
+              className="flex-shrink-0 rounded-lg"
+              priority
+            />
             <span>{"Ciné"}<span style={{ color: "var(--red)" }}>{"Radar"}</span></span>
           </Link>
 

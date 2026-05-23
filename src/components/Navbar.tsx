@@ -218,10 +218,11 @@ export default function Navbar() {
             <Image
               src="/logo-cineradar.png"
               alt="CinéRadar"
-              width={36}
-              height={36}
-              className="flex-shrink-0 rounded-lg"
+              width={44}
+              height={44}
+              className="flex-shrink-0 rounded-xl"
               priority
+              unoptimized
             />
             <span>{"Ciné"}<span style={{ color: "var(--red)" }}>{"Radar"}</span></span>
           </Link>

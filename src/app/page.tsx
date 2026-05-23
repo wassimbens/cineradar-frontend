@@ -111,10 +111,11 @@ export default async function HomePage() {
             <Image
               src="/logo-cineradar.png"
               alt="CinéRadar"
-              width={80}
-              height={80}
+              width={96}
+              height={96}
               className="rounded-2xl"
               priority
+              unoptimized
             />
           </div>
           <p

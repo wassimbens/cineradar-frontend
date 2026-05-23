@@ -114,7 +114,7 @@ export default function CommentCaMarche() {
           {/* CTA */}
           <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
             <p className="text-xs text-center" style={{ color: "var(--text-3)" }}>
-              Les alertes sont gratuites.{" "}
+              3 alertes gratuites, illimitées avec Pro.{" "}
               <a
                 href="/alertes"
                 className="no-underline font-semibold"

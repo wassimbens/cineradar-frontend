@@ -107,17 +107,7 @@ export default async function HomePage() {
         }}
       >
         <div className="mx-auto" style={{ maxWidth: 640 }}>
-          <div className="flex justify-center mb-6">
-            <Image
-              src="/logo-cineradar.png"
-              alt="CinéRadar"
-              width={96}
-              height={96}
-              className="rounded-2xl"
-              priority
-              unoptimized
-            />
-          </div>
+
           <p
             className="text-xs font-semibold uppercase tracking-widest mb-4"
             style={{ color: "var(--red)" }}

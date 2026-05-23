@@ -74,13 +74,18 @@ function FollowButton({ pseudo, myPseudo }: { pseudo: string; myPseudo: string |
 
 type Tab = "vitrine" | "vus" | "avis";
 
+const PUBLIC_RECENT_INITIAL = 10;
+const PUBLIC_RECENT_STEP    = 10;
+
 function VitrineTab({ profil, posterChoices }: { profil: PublicProfil; posterChoices: Record<string, string> }) {
+  const [recentVisible, setRecentVisible] = useState(PUBLIC_RECENT_INITIAL);
   const avisMap = new Map(profil.avis.map((a) => [a.filmId, a.note]));
   const slots = [1, 2, 3, 4].map((pos) => ({
     pos,
     film: profil.filmsFavoris.find((f) => f.position === pos) ?? null,
   }));
-  const recentFilms = profil.filmsVus.slice(0, 12);
+  const allRecentFilms = profil.filmsVus;
+  const recentFilms = allRecentFilms.slice(0, recentVisible);
   const posterFor = (filmId: string, def: string | null) => posterChoices[filmId] ?? def;
 
   return (
@@ -119,10 +124,13 @@ function VitrineTab({ profil, posterChoices }: { profil: PublicProfil; posterCho
       </div>
 
       {/* Films vus récents */}
-      {recentFilms.length > 0 && (
+      {allRecentFilms.length > 0 && (
         <div>
           <h2 className="text-sm font-bold mb-4" style={{ color: "var(--text)" }}>
             ✓ Films récemment vus
+            <span className="ml-2 text-xs font-normal" style={{ color: "var(--text-3)" }}>
+              ({allRecentFilms.length})
+            </span>
           </h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {recentFilms.map((fv) => {
@@ -146,6 +154,28 @@ function VitrineTab({ profil, posterChoices }: { profil: PublicProfil; posterCho
               );
             })}
           </div>
+          {/* Voir plus / Voir moins */}
+          {allRecentFilms.length > PUBLIC_RECENT_INITIAL && (
+            <div className="mt-5 text-center">
+              {recentVisible < allRecentFilms.length ? (
+                <button
+                  onClick={() => setRecentVisible((v) => Math.min(v + PUBLIC_RECENT_STEP, allRecentFilms.length))}
+                  className="px-5 py-2 rounded-xl text-sm font-semibold"
+                  style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text-2)", cursor: "pointer" }}
+                >
+                  Voir plus ({allRecentFilms.length - recentVisible} restant{allRecentFilms.length - recentVisible > 1 ? "s" : ""})
+                </button>
+              ) : (
+                <button
+                  onClick={() => setRecentVisible(PUBLIC_RECENT_INITIAL)}
+                  className="px-5 py-2 rounded-xl text-sm font-semibold"
+                  style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text-3)", cursor: "pointer" }}
+                >
+                  Réduire ↑
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

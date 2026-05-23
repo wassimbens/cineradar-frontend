@@ -379,6 +379,11 @@ function FilmSearchModal({
   );
 }
 
+// Nombre de films affichés par "ligne" selon la grille (3 cols mobile, 4 sm, 5 md)
+// On affiche 2 lignes par défaut → 10 films (5 cols md) ; step de chargement = 10
+const RECENT_INITIAL = 10;
+const RECENT_STEP    = 10;
+
 function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOpen, startLongPress, cancelLongPress }: {
   profil: Profil; email: string; isPro: boolean; onRefresh: () => void;
   posterChoices: Record<string, string>;
@@ -387,6 +392,7 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
   cancelLongPress: () => void;
 }) {
   const [addingSlot, setAddingSlot] = useState<number | null>(null);
+  const [recentVisible, setRecentVisible] = useState(RECENT_INITIAL);
 
   const posterFor = (film: { id: string; affiche: string | null }) =>
     posterChoices[film.id] ?? film.affiche;
@@ -410,7 +416,8 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
 
   // Films vus récents (avec leur note si dispo)
   const avisMap = new Map(profil.avis.map((a) => [a.filmId, a.note]));
-  const recentFilms = profil.filmsVus.slice(0, 12);
+  const allRecentFilms = profil.filmsVus;
+  const recentFilms = allRecentFilms.slice(0, recentVisible);
 
   return (
     <div className="flex flex-col gap-8">
@@ -502,11 +509,16 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
       </div>
 
       {/* Films vus récents */}
-      {recentFilms.length > 0 && (
+      {allRecentFilms.length > 0 && (
         <div>
-          <h2 className="text-sm font-bold mb-4" style={{ color: "var(--text)" }}>
-            ✓ Films récemment vus
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold" style={{ color: "var(--text)" }}>
+              ✓ Films récemment vus
+              <span className="ml-2 text-xs font-normal" style={{ color: "var(--text-3)" }}>
+                ({allRecentFilms.length})
+              </span>
+            </h2>
+          </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {recentFilms.map((fv) => {
               const note = avisMap.get(fv.film.id) ?? null;
@@ -566,6 +578,28 @@ function VitrineTab({ profil, email, isPro, onRefresh, posterChoices, onPickerOp
               );
             })}
           </div>
+          {/* Voir plus / Voir moins */}
+          {allRecentFilms.length > RECENT_INITIAL && (
+            <div className="mt-5 text-center">
+              {recentVisible < allRecentFilms.length ? (
+                <button
+                  onClick={() => setRecentVisible((v) => Math.min(v + RECENT_STEP, allRecentFilms.length))}
+                  className="px-5 py-2 rounded-xl text-sm font-semibold"
+                  style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text-2)", cursor: "pointer" }}
+                >
+                  Voir plus ({allRecentFilms.length - recentVisible} restant{allRecentFilms.length - recentVisible > 1 ? "s" : ""})
+                </button>
+              ) : (
+                <button
+                  onClick={() => setRecentVisible(RECENT_INITIAL)}
+                  className="px-5 py-2 rounded-xl text-sm font-semibold"
+                  style={{ background: "var(--bg-2)", border: "1px solid var(--border)", color: "var(--text-3)", cursor: "pointer" }}
+                >
+                  Réduire ↑
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
 

@@ -175,10 +175,10 @@ export default function ClassiquesCatalog({ films }: { films: Film[] }) {
   const expandAll  = () => setOpenGroups(new Set(grouped.keys()));
   const collapseAll = () => setOpenGroups(new Set());
 
-  // Années extrêmes
+  // Années extrêmes (guard contre tableau vide)
   const years = films.map((f) => f.annee).filter(Boolean) as number[];
-  const minYear = Math.min(...years);
-  const maxYear = Math.max(...years);
+  const minYear = years.length ? Math.min(...years) : null;
+  const maxYear = years.length ? Math.max(...years) : null;
 
   const VIEW_TABS: { value: ViewMode; label: string; icon: string }[] = [
     { value: "decennie",    label: "Par époque",       icon: "📅" },
@@ -197,7 +197,9 @@ export default function ClassiquesCatalog({ films }: { films: Film[] }) {
           Vos classiques
         </h1>
         <p className="text-sm" style={{ color: "var(--text-3)" }}>
-          {films.length} films · {minYear}–{maxYear}
+          {films.length > 0
+            ? `${films.length} films · ${minYear}–${maxYear}`
+            : "Catalogue en cours de chargement…"}
         </p>
       </div>
 

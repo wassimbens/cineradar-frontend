@@ -1742,15 +1742,22 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
   };
 
   // Hooks toujours appelés avant tout return conditionnel
-  // Pour chaque lien (= profil utilisateur), garder l'avatar le plus récent
+  // Extrait le pseudo depuis /profil/X ou /messages/X → clé normalisée
+  const normalizeLienKey = (lien: string) => {
+    const m = lien.match(/^\/(?:profil|messages)\/(.+)$/);
+    return m ? m[1] : lien;
+  };
+
+  // Pour chaque utilisateur, garder l'avatar le plus récent (normalisé par pseudo, pas par lien)
   const latestAvatarByLien = useMemo(() => {
     const map: Record<string, string | null> = {};
     const dateMap: Record<string, string> = {};
     for (const n of notifs) {
       if ((n.type === "follow" || n.type === "message") && n.lien) {
-        if (!dateMap[n.lien] || n.createdAt > dateMap[n.lien]) {
-          map[n.lien] = n.imageUrl;
-          dateMap[n.lien] = n.createdAt;
+        const key = normalizeLienKey(n.lien);
+        if (!dateMap[key] || n.createdAt > dateMap[key]) {
+          map[key] = n.imageUrl;
+          dateMap[key] = n.createdAt;
         }
       }
     }
@@ -1791,8 +1798,9 @@ function NotificationsTab({ token, onUnreadChange }: { token: string | null; onU
 
       {notifs.map(notif => {
         // Utiliser l'avatar le plus récent pour les notifs sociales (follow/message)
+        // On normalise la clé (/profil/X et /messages/X → même utilisateur X)
         const displayImage = (notif.type === "follow" || notif.type === "message") && notif.lien
-          ? (latestAvatarByLien[notif.lien] ?? notif.imageUrl)
+          ? (latestAvatarByLien[normalizeLienKey(notif.lien)] ?? notif.imageUrl)
           : notif.imageUrl;
 
         const cardContent = (
@@ -2014,6 +2022,14 @@ export default function ProfilClient() {
     if (t === "notifications" || t === "messages" || t === "vitrine" || t === "stats" || t === "simple-stats" || t === "pour-vous" || t === "classiques") return t as Tab;
     return "vitrine";
   });
+
+  // Sync l'onglet actif quand les searchParams changent (ex: clic sur l'icône 🔔 → ?tab=notifications)
+  useEffect(() => {
+    const t = searchParams?.get("tab");
+    if (t === "notifications" || t === "messages" || t === "vitrine" || t === "stats" || t === "simple-stats" || t === "pour-vous") {
+      setActiveTab(t as Tab);
+    }
+  }, [searchParams]);
   const [unreadNotifs, setUnreadNotifs] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
 

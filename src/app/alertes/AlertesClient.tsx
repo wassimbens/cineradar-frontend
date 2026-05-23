@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3003";
 
@@ -8,6 +8,18 @@ export default function AlertesClient() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isPro, setIsPro] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("cineradar_token");
+    if (!token) return;
+    fetch(`${API_URL}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.isPremium) setIsPro(true);
+      })
+      .catch(() => {});
+  }, []);
   const [form, setForm] = useState({
     filmTitre: "",
     email: "",
@@ -161,16 +173,31 @@ export default function AlertesClient() {
             q: "Quand recevrai-je une notification ?",
             r: "Le programme est mis à jour chaque matin. Vous recevrez un email le jour même où le film apparaît dans la programmation d'un cinéma de votre zone.",
           },
-          {
-            q: "Puis-je créer plusieurs alertes ?",
-            r: "Oui, vous pouvez créer autant d'alertes que vous voulez, pour différents films ou différentes villes.",
-          },
         ].map(({ q, r }) => (
           <div key={q} className="card p-5" style={{ borderRadius: 12 }}>
             <p className="font-semibold text-sm mb-1" style={{ color: "var(--text)" }}>{q}</p>
             <p className="text-sm" style={{ color: "var(--text-3)", lineHeight: 1.6 }}>{r}</p>
           </div>
         ))}
+
+        {/* Réponse conditionnelle selon le statut Pro */}
+        <div className="card p-5" style={{ borderRadius: 12 }}>
+          <p className="font-semibold text-sm mb-1" style={{ color: "var(--text)" }}>
+            Puis-je créer plusieurs alertes ?
+          </p>
+          {isPro ? (
+            <p className="text-sm" style={{ color: "var(--text-3)", lineHeight: 1.6 }}>
+              Oui, vous pouvez créer autant d&apos;alertes que vous voulez, pour différents films ou différentes villes.
+            </p>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--text-3)", lineHeight: 1.6 }}>
+              Les comptes gratuits sont limités à <strong style={{ color: "var(--text-2)" }}>3 alertes</strong>.{" "}
+              Les membres{" "}
+              <a href="/premium" className="font-semibold no-underline" style={{ color: "var(--red)" }}>Pro</a>{" "}
+              peuvent créer autant d&apos;alertes qu&apos;ils souhaitent, pour différents films ou différentes villes.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

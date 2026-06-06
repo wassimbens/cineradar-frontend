@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cineradar.fr";
 
-export const revalidate = 3600; // regénère toutes les heures
+export const revalidate = 86400; // regénère une fois par jour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

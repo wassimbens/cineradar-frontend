@@ -1,7 +1,4 @@
 {
-  "/profil/page": "app/profil/page.js",
-  "/films/[id]/page": "app/films/[id]/page.js",
-  "/listes/page": "app/listes/page.js",
-  "/listes/[slug]/page": "app/listes/[slug]/page.js",
-  "/page": "app/page.js"
+  "/recherche/page": "app/recherche/page.js",
+  "/_not-found/page": "app/_not-found/page.js"
 }

@@ -12,6 +12,9 @@ import ProfilActions from "@/components/ProfilActions";
 import CommunityRating from "@/components/CommunityRating";
 import FilmDetailHeader from "../FilmDetailHeader";
 
+// Régénération ISR : une fois par jour pour limiter les ISR Writes Vercel
+export const revalidate = 86400;
+
 interface Props {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ date?: string; ville?: string; version?: string }>;

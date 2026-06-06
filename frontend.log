@@ -1190,3 +1190,36 @@ Failed to set fetch cache http://localhost:3003/api/films/all-classics Error: Fa
  GET /listes/mafieux-npux 200 in 66ms
  GET /listes/mafieux-npux 200 in 66ms
  ✓ Compiled / in 218ms (376 modules)
+ GET / 200 in 1323ms
+ GET / 200 in 159ms
+ GET / 200 in 141ms
+ ✓ Compiled in 889ms (878 modules)
+ ✓ Compiled in 181ms (509 modules)
+ ⨯ src\app\page.tsx (357:10) @ CinemasProches
+ ⨯ ReferenceError: CinemasProches is not defined
+    at HomePage (./src/app/page.tsx:718:97)
+digest: "1328027883"
+[0m [90m 355 |[39m[0m
+[0m [90m 356 |[39m         {[90m/* Cinémas près de moi (géolocalisation) */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 357 |[39m         [33m<[39m[33mCinemasProches[39m [33m/[39m[33m>[39m[0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 358 |[39m[0m
+[0m [90m 359 |[39m         {[90m/* Comment ça marche */[39m}[0m
+[0m [90m 360 |[39m         [33m<[39m[33mCommentCaMarche[39m [33m/[39m[33m>[39m[0m
+ ⨯ src\app\page.tsx (357:10) @ CinemasProches
+ ⨯ ReferenceError: CinemasProches is not defined
+    at HomePage (./src/app/page.tsx:718:97)
+digest: "1328027883"
+[0m [90m 355 |[39m[0m
+[0m [90m 356 |[39m         {[90m/* Cinémas près de moi (géolocalisation) */[39m}[0m
+[0m[31m[1m>[22m[39m[90m 357 |[39m         [33m<[39m[33mCinemasProches[39m [33m/[39m[33m>[39m[0m
+[0m [90m     |[39m          [31m[1m^[22m[39m[0m
+[0m [90m 358 |[39m[0m
+[0m [90m 359 |[39m         {[90m/* Comment ça marche */[39m}[0m
+[0m [90m 360 |[39m         [33m<[39m[33mCommentCaMarche[39m [33m/[39m[33m>[39m[0m
+ ✓ Compiled in 364ms (878 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 200 in 141ms
+ GET / 200 in 241ms
+ ✓ Compiled in 518ms (509 modules)
+ ✓ Compiled in 367ms (509 modules)

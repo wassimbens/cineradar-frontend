@@ -3,19 +3,9 @@ const nextConfig = {
   compress: true,
 
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "image.tmdb.org",          pathname: "/t/p/**" },
-      { protocol: "https", hostname: "img.youtube.com",         pathname: "/vi/**" },
-      { protocol: "https", hostname: "m.media-amazon.com",      pathname: "/images/**" },
-      { protocol: "https", hostname: "ia.media-imdb.com",       pathname: "/**" },
-      { protocol: "https", hostname: "www.ugc.fr",              pathname: "/dynamique/**" },
-      { protocol: "https", hostname: "**.allocine.fr" },
-      { protocol: "https", hostname: "**.pathe.com" },
-      { protocol: "https", hostname: "**.mk2.com" },
-      { protocol: "https", hostname: "**.omdbapi.com" },
-      // Fallback générique pour toute source HTTPS (images web)
-      { protocol: "https", hostname: "**" },
-    ],
+    // Les images proviennent de CDNs tiers déjà optimisés (TMDB w500, etc.)
+    // Désactiver l'optimiseur Vercel évite de consommer le quota Image Optimization.
+    unoptimized: true,
   },
 
   // En-têtes de sécurité sur toutes les routes

@@ -6,6 +6,9 @@ import { SeanceGroupByFilm } from "@/components/SeanceGroup";
 import ProgrammeNav from "./ProgrammeNav";
 import CinemaFavoriButton from "@/components/CinemaFavoriButton";
 
+// Régénération ISR : une fois par jour pour limiter les ISR Writes Vercel
+export const revalidate = 86400;
+
 // Import dynamique pour éviter l'erreur SSR de Leaflet (window n'existe pas côté serveur)
 const MapCinema = dynamic(() => import("@/components/MapCinema"), { ssr: false });
 

@@ -24,33 +24,28 @@ function pickTopClassics(films: Film[], count = 6): Film[] {
 }
 
 /**
- * Film du jour : rotation déterministe basée sur le numéro du jour.
- * Même film toute la journée, change automatiquement à minuit.
- * Sélection parmi les films avec le plus de séances + bonne note.
+ * Film du jour : rotation déterministe sur le pool scoré du backend.
+ * Le backend trie déjà par score combiné (séances + popularité + note).
+ * On choisit simplement l'entrée à l'indice (dayIndex % poolSize).
+ * → Film différent chaque jour, même pendant 3 mois sans répétition.
  */
-function pickFilmDuJour(trending: Film[]): Film | null {
-  if (!trending.length) return null;
-  // Trier par séances desc, puis note desc → liste stable
-  const sorted = [...trending].sort((a, b) => {
-    const seanceDiff = (b.seancesCount ?? 0) - (a.seancesCount ?? 0);
-    if (seanceDiff !== 0) return seanceDiff;
-    return (b.imdbNote ?? b.tmdbNote ?? 0) - (a.imdbNote ?? a.tmdbNote ?? 0);
-  });
-  // Indice déterministe : nb de jours depuis l'epoch Unix
+function pickFilmDuJour(pool: Film[]): Film | null {
+  if (!pool.length) return null;
   const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-  return sorted[dayIndex % sorted.length];
+  return pool[dayIndex % pool.length];
 }
 
 async function getHomeData() {
   try {
-    const [trending, allClassics, cinemas, stats] = await Promise.all([
+    const [trending, filmDuJourPool, allClassics, cinemas, stats] = await Promise.all([
       api.getTrendingFilms().catch(() => [] as Film[]),
+      api.getFilmDuJourPool().catch(() => [] as Film[]),
       api.getClassicFilms().catch(() => [] as Film[]),
       api.getCinemas("Paris").catch(() => []),
       api.getStats().catch(() => ({ films: 0, cinemas: 0, seances: 0 })),
     ]);
 
-    // Garder uniquement les films avec des séances, triés par séances desc puis popularité
+    // Trending : films avec séances, triés par séances desc puis popularité
     const validTrending = trending
       .filter(f => (f.seancesCount ?? 0) > 0)
       .sort((a, b) => {
@@ -59,7 +54,8 @@ async function getHomeData() {
         return popularityScore(b) - popularityScore(a);
       });
 
-    const filmDuJour = pickFilmDuJour(validTrending);
+    // Film du jour : pioche dans le pool large scoré par le backend
+    const filmDuJour = pickFilmDuJour(filmDuJourPool);
 
     return {
       trending: validTrending.slice(0, 6),

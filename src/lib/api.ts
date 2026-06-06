@@ -153,6 +153,9 @@ export const api = {
   getTrendingFilms: () =>
     apiFetch<Film[]>("/api/films/trending", 60 * 10),
 
+  getFilmDuJourPool: () =>
+    apiFetch<Film[]>("/api/films/film-du-jour-pool", 60 * 60),
+
   getClassicFilms: () =>
     apiFetch<Film[]>("/api/films/classics", 60 * 60),
 

@@ -21,17 +21,22 @@ export default async function AdminPage() {
     return res.json();
   }
 
-  if (!SECRET) return notFound();
+  if (!SECRET) {
+    return <div style={{color:"red",padding:40}}>❌ ADMIN_SECRET manquant (vide)</div>;
+  }
 
-  const [overview, users, films, geo, activity] = await Promise.all([
-    fetchAdmin("overview"),
+  const overview = await fetchAdmin("overview");
+
+  if (!overview) {
+    return <div style={{color:"red",padding:40}}>❌ Backend inaccessible — API: {API} — Secret défini: {SECRET ? "oui" : "non"}</div>;
+  }
+
+  const [users, films, geo, activity] = await Promise.all([
     fetchAdmin("users?limit=50"),
     fetchAdmin("films"),
     fetchAdmin("geo"),
     fetchAdmin("activity"),
   ]);
-
-  if (!overview) return notFound();
 
   return (
     <AdminDashboard

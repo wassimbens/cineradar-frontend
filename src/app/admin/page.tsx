@@ -13,22 +13,31 @@ export default async function AdminPage() {
   const SECRET = process.env.ADMIN_SECRET ?? "";
 
   async function fetchAdmin(path: string) {
-    const res = await fetch(`${API}/admin/dashboard/${path}`, {
-      headers: { "x-admin-secret": SECRET },
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return res.json();
+    try {
+      const res = await fetch(`${API}/admin/dashboard/${path}`, {
+        headers: { "x-admin-secret": SECRET },
+        cache: "no-store",
+      });
+      if (!res.ok) return null;
+      return res.json();
+    } catch (e) {
+      return null;
+    }
   }
 
   if (!SECRET) {
     return <div style={{color:"red",padding:40}}>❌ ADMIN_SECRET manquant (vide)</div>;
   }
 
-  const overview = await fetchAdmin("overview");
+  let overview: unknown = null;
+  try {
+    overview = await fetchAdmin("overview");
+  } catch(e) {
+    return <div style={{color:"red",padding:40}}>❌ Exception overview: {String(e)}</div>;
+  }
 
   if (!overview) {
-    return <div style={{color:"red",padding:40}}>❌ Backend inaccessible — API: {API} — Secret défini: {SECRET ? "oui" : "non"}</div>;
+    return <div style={{color:"orange",padding:40}}>⚠️ overview null — API: {API} — Secret: {SECRET ? SECRET.slice(0,4)+"***" : "VIDE"}</div>;
   }
 
   const [users, films, geo, activity] = await Promise.all([

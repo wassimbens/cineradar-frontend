@@ -29,12 +29,8 @@ export default async function AdminPage() {
     return <div style={{color:"red",padding:40}}>❌ ADMIN_SECRET manquant (vide)</div>;
   }
 
-  let overview: unknown = null;
-  try {
-    overview = await fetchAdmin("overview");
-  } catch(e) {
-    return <div style={{color:"red",padding:40}}>❌ Exception overview: {String(e)}</div>;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const overview: any = await fetchAdmin("overview");
 
   if (!overview) {
     return <div style={{color:"orange",padding:40}}>⚠️ overview null — API: {API} — Secret: {SECRET ? SECRET.slice(0,4)+"***" : "VIDE"}</div>;
